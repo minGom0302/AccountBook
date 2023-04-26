@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="code_category01_array">
+        <item>99</item>
+        <item>98</item>
+    </string-array>
+</resources>

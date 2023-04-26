@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="category01_expanding_array">
+        <item>고정비</item>
+        <item>변동비</item>
+        <item>준변동비</item>
+    </string-array>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="category02_array">
+        <item>계좌</item>
+        <item>카드</item>
+    </string-array>
+</resources>

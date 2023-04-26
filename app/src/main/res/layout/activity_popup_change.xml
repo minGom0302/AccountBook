@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/background_rectangle"
+        tools:context=".activity.Popup_change">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:text="@string/text03"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:background="@color/light_blue02"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="@string/nickname"
+            android:textSize="16sp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/popupChange_nicknameEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_rectangle"
+            android:padding="10dp"
+            android:layout_marginHorizontal="10dp"
+            android:inputType="text"
+            android:hint="@string/text02"
+            android:textColorHint="@color/gray01"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:importantForAutofill="no" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginHorizontal="5dp"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/popupChange_okBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ok"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_click01"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/popupChange_closeBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/close"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_click01"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

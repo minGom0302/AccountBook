@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="day_array">
+        <item> </item>
+        <item>01일</item>
+        <item>02일</item>
+        <item>03일</item>
+        <item>04일</item>
+        <item>05일</item>
+        <item>06일</item>
+        <item>07일</item>
+        <item>08일</item>
+        <item>09일</item>
+        <item>10일</item>
+        <item>11일</item>
+        <item>12일</item>
+        <item>13일</item>
+        <item>14일</item>
+        <item>15일</item>
+        <item>16일</item>
+        <item>17일</item>
+        <item>18일</item>
+        <item>19일</item>
+        <item>20일</item>
+        <item>21일</item>
+        <item>22일</item>
+        <item>23일</item>
+        <item>24일</item>
+        <item>25일</item>
+        <item>26일</item>
+        <item>27일</item>
+        <item>28일</item>
+        <item>29일</item>
+        <item>30일</item>
+        <item>말일</item>
+    </string-array>
+</resources>

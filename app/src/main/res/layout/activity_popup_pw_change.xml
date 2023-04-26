@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <LinearLayout
+        android:id="@+id/popupPwChangeLayout"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/background_rectangle"
+        tools:context=".activity.Popup_PwChange">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:paddingVertical="10dp"
+            android:text="@string/pwChange"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:background="@color/light_blue02"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="@string/text05"
+            android:textSize="16sp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/popupPwChange_pwEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_rectangle"
+            android:padding="10dp"
+            android:layout_marginHorizontal="20dp"
+            android:inputType="textPassword"
+            android:hint="@string/text10"
+            android:textColorHint="@color/gray01"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:importantForAutofill="no" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/text07"
+            android:textColor="@color/gray01"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text06"
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/popupPwChange_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text08"
+                android:textColor="@color/red01"
+                android:textAlignment="textEnd"/>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/popupPwChange_oneMoreEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_rectangle"
+            android:padding="10dp"
+            android:layout_marginHorizontal="20dp"
+            android:inputType="textPassword"
+            android:hint="@string/text10"
+            android:textColorHint="@color/gray01"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:importantForAutofill="no" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginHorizontal="5dp"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/popupPwChange_okBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ok"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_click01"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/popupPwChange_closeBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/close"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_click01"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

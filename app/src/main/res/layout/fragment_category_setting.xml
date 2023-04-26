@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/settingLayout"
+        tools:context=".fragment.CategorySettingFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:layout_marginVertical="20dp"
+            android:layout_marginHorizontal="15dp"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+            <GridLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:columnCount="3"
+                tools:ignore="NestedWeights">
+
+                <TextView
+                    android:layout_rowWeight="0.7"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="center"
+                    android:text="@string/criteria"
+                    android:textSize="15sp"
+                    android:textColor="@color/black" />
+
+                <Spinner
+                    android:id="@+id/f04_spinnerCategory01"
+                    android:layout_rowWeight="0.7"
+                    android:layout_columnWeight="1.5"
+                    android:background="@drawable/spinner_frame01"
+                    android:spinnerMode="dropdown" />
+
+                <Spinner
+                    android:id="@+id/f04_spinnerCategory02"
+                    android:layout_width="130dp"
+                    android:layout_rowWeight="0.7"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/spinner_frame01"
+                    android:spinnerMode="dropdown" />
+
+                <TextView
+                    android:layout_rowWeight="1"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="center"
+                    android:text="@string/contents"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"/>
+
+                <EditText
+                    android:id="@+id/f04_contentsEt"
+                    android:layout_rowWeight="1"
+                    android:layout_columnWeight="1.5"
+                    android:layout_column="1"
+                    android:layout_columnSpan="2"
+                    android:layout_gravity="center_vertical"
+                    android:padding="10dp"
+                    android:background="@drawable/background_rectangle"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:inputType="text"
+                    android:imeOptions="actionDone"
+                    android:maxLength="20"
+                    android:importantForAutofill="no"
+                    tools:ignore="LabelFor" />
+
+                <TextView
+                    android:id="@+id/f04_payDayTv"
+                    android:layout_rowWeight="0.7"
+                    android:layout_columnWeight="1.2"
+                    android:layout_gravity="center"
+                    android:text="@string/payDay"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"/>
+
+                <Spinner
+                    android:id="@+id/f04_spinnerDay"
+                    android:layout_height="30dp"
+                    android:layout_rowWeight="0.7"
+                    android:layout_columnWeight="1"
+                    android:background="@drawable/spinner_frame01"
+                    android:spinnerMode="dropdown" />
+            </GridLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:orientation="vertical">
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/f04_newBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_click01"
+                    android:text="@string/newInput"
+                    android:textColor="@color/white"/>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/f04_saveBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_click01"
+                    android:text="@string/save"
+                    android:textColor="@color/white"/>
+           </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioGroup
+                android:id="@+id/f04_rbGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/f04_rb01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="15dp"
+                    android:checked="true"
+                    android:background="@drawable/check_click01"
+                    android:button="@null"
+                    android:text="@string/category"
+                    android:textColor="@drawable/text_color01" />
+                <RadioButton
+                    android:id="@+id/f04_rb02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="15dp"
+                    android:background="@drawable/check_click01"
+                    android:button="@null"
+                    android:text="@string/backInput"
+                    android:textColor="@drawable/text_color01" />
+            </RadioGroup>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_blue02"
+                android:layout_gravity="bottom"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="10dp"
+            android:orientation="horizontal"
+            android:background="@color/light_blue01"
+            tools:ignore="RtlSymmetry">
+            <CheckBox
+                android:id="@+id/f04_allCheckCb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:text="기준"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:textAlignment="center" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="세부기준"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:textAlignment="center" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="10dp"
+                android:text="내용"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:textAlignment="center" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="결제일"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray01"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/f04_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:background="@color/light_blue01"/>
+
+    </LinearLayout>
+</layout>

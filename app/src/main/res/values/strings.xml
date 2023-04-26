@@ -1,0 +1,57 @@
+<resources>
+    <string name="app">너만을 위한 가계부</string>
+    <string name="app_name">AccountBook</string>
+    <string name="login">로그인</string>
+    <string name="menu01">메인 달력</string>
+    <string name="menu02">통계</string>
+    <string name="menu03">마이페이지</string>
+    <string name="menu04">카테고리 설정</string>
+    <string name="tool_menu01">월 마감</string>
+    <string name="tool_menu02">계좌 이체</string>
+    <string name="logout">로그아웃</string>
+    <string name="totalSpending">총 지출</string>
+    <string name="totalIncome">총 수입</string>
+    <string name="code">코드</string>
+    <string name="criteria">기준</string>
+    <string name="contents">내용</string>
+    <string name="payDay">결제일</string>
+    <string name="category">카테고리</string>
+    <string name="backInput">계좌등록</string>
+    <string name="save">저장</string>
+    <string name="newInput">새로 입력</string>
+    <string name="menuSetting">메뉴 설정</string>
+    <string name="reset">내용 초기화</string>
+    <string name="pwChange">비밀번호 변경</string>
+    <string name="ok">확인</string>
+    <string name="close">닫기</string>
+    <string name="nickname">닉네임</string>
+    <string name="income">수입</string>
+    <string name="spending">지출</string>
+    <string name="bank">계좌</string>
+    <string name="won">원</string>
+    <string name="money">금액</string>
+    <string name="memo">메모</string>
+    <string name="date">날짜</string>
+    <string name="bank_income">입금 계좌</string>
+    <string name="bank_expanding">출금 계좌</string>
+    <string name="zero">0</string>
+
+    <string name="text01">※ 둘 중 하나 선택</string>
+    <string name="text02">새로운 닉네임을 입력해주세요.</string>
+    <string name="text03">닉네임 바꾸기</string>
+    <string name="text04">오늘 날짜로 이동</string>
+    <string name="text05">새로운 비밀번호</string>
+    <string name="text06">다시 한 번</string>
+    <string name="text07">※ 8자리 이상 영어, 숫자, 특수문자 포함</string>
+    <string name="text08">일치하지 않습니다.</string>
+    <string name="text09">일치합니다.</string>
+    <string name="text10">비밀번호를 입력해주세요.</string>
+    <string name="text11">이체할 금액을 입력해주세요.</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="todo">TODO</string>
+
+
+</resources>
