@@ -35,6 +35,7 @@
     <string name="bank_income">입금 계좌</string>
     <string name="bank_expanding">출금 계좌</string>
     <string name="zero">0</string>
+    <string name="checkDelete">선택 삭제</string>
 
     <string name="text01">※ 둘 중 하나 선택</string>
     <string name="text02">새로운 닉네임을 입력해주세요.</string>

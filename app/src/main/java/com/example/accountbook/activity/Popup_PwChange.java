@@ -6,6 +6,8 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -53,14 +55,19 @@ public class Popup_PwChange extends Activity implements TextWatcher {
     // 다이어로그 화면에 띄우기
     private void showDialog(int cnd, String msg) {
         hideKeyboard();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
         builder.setTitle("안내").setMessage(msg);
         builder.setPositiveButton("예", ((dialogInterface, i) -> {
             if(cnd == 0) pwChange();
             else if(cnd == 1) finish();
         }));
         builder.setNegativeButton("아니오", ((dialogInterface, i) -> { }));
+
         AlertDialog alertDialog = builder.create();
+        alertDialog.setOnShowListener(dialogInterface -> {
+            alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+            alertDialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+        });
         alertDialog.show();
     }
 
@@ -68,7 +75,9 @@ public class Popup_PwChange extends Activity implements TextWatcher {
     // 조건 일치 확인 후 비밀번호 변경하기
     private void pwChange() {
         if(pwEquals && pwPatternOk) {
-            Toast.makeText(this, "비밀번호 변경이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+            Intent mIntent = new Intent();
+            mIntent.putExtra("pw", binding.popupPwChangeOneMoreEt.getText().toString());
+            setResult(RESULT_OK, mIntent);
             finish();
         } else if(!pwPatternOk) {
             Toast.makeText(this, "비밀번호 조건에 맞지 않습니다.", Toast.LENGTH_SHORT).show();

@@ -18,78 +18,96 @@
             android:layout_marginHorizontal="15dp"
             android:orientation="horizontal"
             android:baselineAligned="false">
-            <GridLayout
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:columnCount="3"
+                android:orientation="vertical"
                 tools:ignore="NestedWeights">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/criteria"
+                        android:textSize="15sp"
+                        android:textColor="@color/black" />
+                    <Spinner
+                        android:id="@+id/f04_spinnerCategory01"
+                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="@drawable/spinner_frame01"
+                        android:spinnerMode="dropdown" />
+                    <Spinner
+                        android:id="@+id/f04_spinnerCategory02"
+                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/spinner_frame01"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
 
-                <TextView
-                    android:layout_rowWeight="0.7"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="center"
-                    android:text="@string/criteria"
-                    android:textSize="15sp"
-                    android:textColor="@color/black" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginVertical="10dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/contents"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"/>
 
-                <Spinner
-                    android:id="@+id/f04_spinnerCategory01"
-                    android:layout_rowWeight="0.7"
-                    android:layout_columnWeight="1.5"
-                    android:background="@drawable/spinner_frame01"
-                    android:spinnerMode="dropdown" />
+                    <EditText
+                        android:id="@+id/f04_contentsEt"
+                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_marginStart="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:padding="10dp"
+                        android:background="@drawable/background_rectangle"
+                        android:textSize="15sp"
+                        android:textColor="@color/light_blue02"
+                        android:inputType="text"
+                        android:imeOptions="actionDone"
+                        android:maxLength="20"
+                        android:importantForAutofill="no"
+                        tools:ignore="LabelFor" />
+                </LinearLayout>
 
-                <Spinner
-                    android:id="@+id/f04_spinnerCategory02"
-                    android:layout_width="130dp"
-                    android:layout_rowWeight="0.7"
-                    android:layout_marginStart="5dp"
-                    android:background="@drawable/spinner_frame01"
-                    android:spinnerMode="dropdown" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/f04_payDayTv"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/payDay"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"/>
+                    <Spinner
+                        android:id="@+id/f04_spinnerDay"
+                        android:layout_height="match_parent"
+                        android:layout_width="100dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/spinner_frame01"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+            </LinearLayout>
 
-                <TextView
-                    android:layout_rowWeight="1"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="center"
-                    android:text="@string/contents"
-                    android:textSize="15sp"
-                    android:textColor="@color/black"/>
-
-                <EditText
-                    android:id="@+id/f04_contentsEt"
-                    android:layout_rowWeight="1"
-                    android:layout_columnWeight="1.5"
-                    android:layout_column="1"
-                    android:layout_columnSpan="2"
-                    android:layout_gravity="center_vertical"
-                    android:padding="10dp"
-                    android:background="@drawable/background_rectangle"
-                    android:textSize="15sp"
-                    android:textColor="@color/black"
-                    android:inputType="text"
-                    android:imeOptions="actionDone"
-                    android:maxLength="20"
-                    android:importantForAutofill="no"
-                    tools:ignore="LabelFor" />
-
-                <TextView
-                    android:id="@+id/f04_payDayTv"
-                    android:layout_rowWeight="0.7"
-                    android:layout_columnWeight="1.2"
-                    android:layout_gravity="center"
-                    android:text="@string/payDay"
-                    android:textSize="15sp"
-                    android:textColor="@color/black"/>
-
-                <Spinner
-                    android:id="@+id/f04_spinnerDay"
-                    android:layout_height="30dp"
-                    android:layout_rowWeight="0.7"
-                    android:layout_columnWeight="1"
-                    android:background="@drawable/spinner_frame01"
-                    android:spinnerMode="dropdown" />
-            </GridLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -149,60 +167,13 @@
                 android:layout_gravity="bottom"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingEnd="10dp"
-            android:orientation="horizontal"
-            android:background="@color/light_blue01"
-            tools:ignore="RtlSymmetry">
-            <CheckBox
-                android:id="@+id/f04_allCheckCb"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:text="기준"
-                android:textSize="15sp"
-                android:textColor="@color/white"
-                android:textAlignment="center" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="세부기준"
-                android:textSize="15sp"
-                android:textColor="@color/white"
-                android:textAlignment="center" />
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginHorizontal="10dp"
-                android:text="내용"
-                android:textSize="15sp"
-                android:textColor="@color/white"
-                android:textAlignment="center" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="결제일"
-                android:textSize="15sp"
-                android:textColor="@color/white"
-                android:textAlignment="center" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray01"/>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/f04_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1.5"
+            android:paddingTop="15dp"
+            android:paddingBottom="5dp"
             android:background="@color/light_blue01"/>
 
     </LinearLayout>

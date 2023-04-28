@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import com.example.accountbook.fragment.ListFragment;
 import com.example.accountbook.fragment.MyPageFragment;
 import com.example.accountbook.item.BackspaceHandler;
 import com.example.accountbook.item.Singleton_Date;
+import com.example.accountbook.viewmodel.UserViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,11 +35,12 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private BackspaceHandler bsh;
-    private CalendarFragment f01 = new CalendarFragment();
+    private final CalendarFragment f01 = new CalendarFragment();
     private ListFragment f02 = null;
     private MyPageFragment f03 = null;
     private CategorySettingFragment f04 = null;
     private Singleton_Date s_date;
+    private UserViewModel userViewModel;
 
     @SuppressLint("SimpleDateFormat")
     @Override
@@ -48,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = binding.drawerLayout;
         bsh = new BackspaceHandler(this);
         s_date = Singleton_Date.getInstance();
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel.setUserViewModel(this);
 
         // 상단 액션바 설정
         setSupportActionBar(binding.toolbar);
@@ -55,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.image_menu); // 버튼 이미지 추가
         s_date.setDate(new SimpleDateFormat("yyyy년 MM월").format(new Date(System.currentTimeMillis()))); // 초기 타이틀 값 설정
         Objects.requireNonNull(getSupportActionBar()).setTitle(s_date.getDate());
+        binding.navigationView.setItemIconTintList(null); // 네비게이션 아이콘 메뉴들 색상 그대로 표현하기 설정
 
         // 첫 화면 띄우기
         getSupportFragmentManager().beginTransaction().add(R.id.containerLayout, f01).commit();
@@ -71,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "로그아웃 클릭", Toast.LENGTH_SHORT).show();
         });
         TextView userName = binding.navigationView.getHeaderView(0).findViewById(R.id.userName);
-        userName.setText("일단 테스트중");
+        userName.setText(userViewModel.getUserName());
     }
 
 

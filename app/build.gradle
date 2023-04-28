@@ -32,8 +32,13 @@ android {
 }
 
 dependencies {
-    // MaterialCalendarView : 달력에 주말 색 바꾸고 선택 시 색 변경하기위한 외부 라이브러리
+    // MaterialCalendarView : 달력에 주말 색 바꾸고 선택 시 색 변경하기위한 외부 라이브러리 > 커스텀 달력 라이브러리
     implementation 'com.prolificinteractive:material-calendarview:1.4.3'
+
+    // Retrofit 라이브러리
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    // Gson 변환기 라이브러리
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'

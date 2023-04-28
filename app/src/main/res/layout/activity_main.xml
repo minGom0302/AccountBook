@@ -5,9 +5,9 @@
     android:background="@color/white">
 
     <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/drawerLayout"
         tools:context=".activity.MainActivity">
 
         <LinearLayout
@@ -19,6 +19,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:titleTextColor="@color/black"
                 android:theme="@style/ThemeOverlay.Material3.NavigationView"/>
             <!--화면-->
             <FrameLayout
@@ -37,6 +38,8 @@
             android:layout_marginEnd="60dp"
             android:fitsSystemWindows="true"
             android:textSize="16sp"
+            android:background="@color/white"
+            app:itemTextColor="@color/black"
             app:headerLayout="@layout/navi_header"
             app:menu="@menu/navi_menu" />
 

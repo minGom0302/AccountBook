@@ -6,10 +6,12 @@
         <item
             android:id="@+id/tool_menu01"
             android:title="@string/tool_menu01"
+            android:icon="@drawable/image_menu01"
             app:showAsAction="always" />
         <item
             android:id="@+id/tool_menu02"
             android:title="@string/tool_menu02"
+            android:icon="@drawable/image_calendar"
             app:showAsAction="ifRoom" />
     </group>
 </menu>

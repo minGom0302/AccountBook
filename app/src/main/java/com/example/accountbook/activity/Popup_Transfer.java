@@ -88,7 +88,7 @@ public class Popup_Transfer extends Activity implements TextWatcher {
     // 다이어로그 화면에 띄우기
     private void showDialog(int cnd, String msg) {
         hideKeyboard();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
         builder.setTitle("안내").setMessage(msg);
         builder.setPositiveButton("예", ((dialogInterface, i) -> {
             if(cnd == 0) {

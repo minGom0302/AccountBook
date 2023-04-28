@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
+    
+    <LinearLayout
+        android:id="@+id/reCa_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
+        android:paddingHorizontal="10dp"
+        android:orientation="horizontal"
+        tools:ignore="RtlSymmetry">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/reCa_deleteBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/image_delete"
+            android:background="@null"/>
+        <TextView
+            android:id="@+id/reCa_category01"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:layout_marginHorizontal="10dp"
+            android:layout_gravity="center"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:textAlignment="center" />
+        <TextView
+            android:id="@+id/reCa_category02"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:layout_gravity="center"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:textAlignment="center" />
+        <TextView
+            android:id="@+id/reCa_contentsTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="10dp"
+            android:layout_gravity="center"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:maxLines="1"
+            android:ellipsize="end" />
+        <TextView
+            android:id="@+id/reCa_payDayTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:layout_gravity="center"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

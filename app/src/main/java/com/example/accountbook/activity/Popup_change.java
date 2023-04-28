@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
@@ -39,10 +41,22 @@ public class Popup_change extends Activity {
 
     private void returnSet() {
         hideKeyboard();
-        Intent mIntent = new Intent();
-        mIntent.putExtra("nickName", binding.popupChangeNicknameEt.getText().toString());
-        setResult(RESULT_OK, mIntent);
-        finish();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
+        builder.setTitle("안내").setMessage("입력한 내용으로 저장하시겠습니까?");
+        builder.setPositiveButton("예", ((dialogInterface, i) -> {
+            Intent mIntent = new Intent();
+            mIntent.putExtra("nickName", binding.popupChangeNicknameEt.getText().toString());
+            setResult(RESULT_OK, mIntent);
+            finish();
+        }));
+        builder.setNegativeButton("아니오", (((dialogInterface, i) -> {  })));
+
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(dialogInterface -> {
+            dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+            dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+        });
+        dialog.show();
     }
 
     @Override

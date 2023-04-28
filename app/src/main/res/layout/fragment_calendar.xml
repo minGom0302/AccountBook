@@ -53,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:text="@string/text04"
+                android:textColor="@color/black"
                 android:background="@null"/>
         </LinearLayout>
 
@@ -60,7 +61,7 @@
             android:id="@+id/calendar"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="0.8"
             app:mcv_tileWidth="match_parent"
             app:mcv_selectionColor="@color/light_blue01"
             app:mcv_showOtherDates="none"/>
