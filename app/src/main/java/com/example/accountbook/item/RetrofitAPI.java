@@ -46,4 +46,9 @@ public interface RetrofitAPI {
 
     @DELETE("category/delete/{seq}")
     Call<Integer> deleteCategoryInfo(@Path("seq") int seq);
+
+
+    /* save money info */
+    @DELETE("money/delete/all/{userSeq}")
+    Call<Integer> deleteMoneyAll(@Path("userSeq") int userSeq);
 }

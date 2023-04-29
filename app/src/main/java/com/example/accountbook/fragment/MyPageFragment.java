@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
@@ -30,6 +31,7 @@ import com.example.accountbook.activity.LoginActivity;
 import com.example.accountbook.activity.Popup_PwChange;
 import com.example.accountbook.activity.Popup_change;
 import com.example.accountbook.databinding.FragmentMyPageBinding;
+import com.example.accountbook.viewmodel.SaveMoneyViewModel;
 import com.example.accountbook.viewmodel.UserViewModel;
 
 import java.util.Objects;
@@ -37,6 +39,7 @@ import java.util.Objects;
 public class MyPageFragment extends Fragment {
     private FragmentMyPageBinding binding;
     private UserViewModel userViewModel;
+    private SaveMoneyViewModel moneyViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,6 +53,8 @@ public class MyPageFragment extends Fragment {
     private void init() {
         // 뷰모델 연결
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        moneyViewModel = new ViewModelProvider(requireActivity()).get(SaveMoneyViewModel.class);
+        moneyViewModel.setSaveMoneyViewModel(getActivity());
 
         // 화면 유저 정보 설정
         binding.f03NameTv.setText(userViewModel.getUserName());
@@ -82,7 +87,7 @@ public class MyPageFragment extends Fragment {
             } else if(cnd == 1) {
                 showDialog(2, "정말로 모든 내용을 삭제하시겠습니까?");
             } else if(cnd == 2) {
-                Toast.makeText(getContext(), "내용 초기화", Toast.LENGTH_SHORT).show();
+                moneyViewModel.deleteAll();
             }
         }));
         builder.setNegativeButton("아니오", ((dialogInterface, i) -> { }));
