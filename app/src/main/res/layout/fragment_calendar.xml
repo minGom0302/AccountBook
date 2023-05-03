@@ -33,18 +33,16 @@
                     android:textColor="@color/black"/>
                 <TextView
                     android:id="@+id/f01_monthPlus"
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="20dp"
-                    android:text="+2,253,200"
                     android:textColor="@color/blue01"/>
                 <TextView
                     android:id="@+id/f01_monthMinus"
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="-1,852,100"
                     android:textColor="@color/red01"/>
             </GridLayout>
             <androidx.appcompat.widget.AppCompatButton
@@ -86,7 +84,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_gravity="center"
-                    android:text="+1,500,000"
                     android:textColor="@color/blue01"/>
                 <TextView
                     android:id="@+id/f01_dayMinus"
@@ -94,7 +91,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_gravity="center"
-                    android:text="-894,000"
                     android:textColor="@color/red01"/>
                 <!-- src : 버튼의 이미지(+) 모양 설정
                      backgroundTint : 동그라미 색상 설정
@@ -104,6 +100,7 @@
                     android:id="@+id/f01_floatingBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:src="@drawable/image_add"
                     android:backgroundTint="@color/light_blue01"
                     app:fabSize="mini"
@@ -113,6 +110,8 @@
                 android:id="@+id/f01_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:padding="10dp"
+                android:background="@color/light_blue01"
                 app:layout_constraintTop_toBottomOf="@id/f01_linearLayout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

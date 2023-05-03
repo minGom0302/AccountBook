@@ -36,6 +36,15 @@
     <string name="bank_expanding">출금 계좌</string>
     <string name="zero">0</string>
     <string name="checkDelete">선택 삭제</string>
+    <string name="balanceMoney">잔액</string>
+    <string name="use">사용</string>
+    <string name="unUse">미사용</string>
+    <string name="refresh">새로고침</string>
+    <string name="semiCategory01">고정비</string>
+    <string name="semiCategory02">변동비</string>
+    <string name="semiCategory03">준변동비</string>
+
+
 
     <string name="text01">※ 둘 중 하나 선택</string>
     <string name="text02">새로운 닉네임을 입력해주세요.</string>
@@ -48,6 +57,8 @@
     <string name="text09">일치합니다.</string>
     <string name="text10">비밀번호를 입력해주세요.</string>
     <string name="text11">이체할 금액을 입력해주세요.</string>
+    <string name="text12">지출 중분류 사용 여부</string>
+    <string name="text13">※ 날짜를 클릭하여 변경 가능</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

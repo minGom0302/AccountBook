@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/reCaLi_layout"
+    android:background="@drawable/background_rectangle02"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/reCaLi_contents"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:background="@color/light_blue02"/>
+
+    <TextView
+        android:id="@+id/reCaLi_money"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textAlignment="center" />
+
+</LinearLayout>

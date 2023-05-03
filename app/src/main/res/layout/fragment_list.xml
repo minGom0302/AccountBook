@@ -2,16 +2,181 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".fragment.ListFragment">
 
-        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:id="@+id/f02_dateTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="10dp"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"/>
+
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="15dp"
+            android:text="@string/text13"
+            android:textColor="@color/gray01"
+            android:textAlignment="textEnd"/>
 
-    </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+            <RadioGroup
+                android:id="@+id/f02_rbGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/f02_rb01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="15dp"
+                    android:checked="true"
+                    android:background="@drawable/check_click02"
+                    android:button="@null"
+                    android:text="@string/income"
+                    android:textColor="@drawable/text_color01" />
+                <RadioButton
+                    android:id="@+id/f02_rb02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:paddingHorizontal="15dp"
+                    android:background="@drawable/check_click02"
+                    android:button="@null"
+                    android:text="@string/spending"
+                    android:textColor="@drawable/text_color01" />
+                <RadioButton
+                    android:id="@+id/f02_rb03"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="15dp"
+                    android:background="@drawable/check_click02"
+                    android:button="@null"
+                    android:text="@string/balanceMoney"
+                    android:textColor="@drawable/text_color01" />
+            </RadioGroup>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/f02_plusTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/blue01"
+                    android:textAlignment="textEnd" />
+                <TextView
+                    android:id="@+id/f02_minusTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/red01"
+                    android:textAlignment="textEnd" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="10dp">
+            <ScrollView
+                android:id="@+id/f02_categoryRecyclerView01"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:background="@drawable/background_rectangle02"
+                            android:text="@string/semiCategory01"
+                            android:textColor="@color/black" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/f02_rView01_01"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:background="@drawable/background_rectangle02"
+                            android:text="@string/semiCategory02"
+                            android:textColor="@color/black" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/f02_rView01_02"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:background="@drawable/background_rectangle02"
+                            android:text="@string/semiCategory03"
+                            android:textColor="@color/black" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/f02_rView01_03"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/f02_categoryRecyclerView02"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/light_blue02"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/f02_moneyRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.8"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:background="@color/light_blue01" />
+    </LinearLayout>
 </layout>

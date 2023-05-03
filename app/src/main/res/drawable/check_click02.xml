@@ -2,10 +2,10 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_checked="true"
-        android:drawable="@drawable/background_rectangle"/>
+        android:drawable="@drawable/background_rectangle_lightblue"/>
     <item
         android:state_checked="false"
-        android:drawable="@drawable/background_rectangle_lightblue"/>
+        android:drawable="@drawable/background_rectangle"/>
     <item
-        android:drawable="@drawable/background_rectangle_lightblue"/>
+        android:drawable="@drawable/background_rectangle"/>
 </selector>

@@ -106,6 +106,54 @@
                 android:text="@string/reset"
                 android:textColor="@color/white"
                 android:background="@drawable/btn_click01"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text12"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"/>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/f03_infoBtn01"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="5dp"
+                    android:scaleType="fitCenter"
+                    android:background="@drawable/btn_click01"/>
+            </LinearLayout>
+            <RadioGroup
+                android:id="@+id/f03_YN_RadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/f03_Y_Rb"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="15dp"
+                    android:checked="true"
+                    android:background="@drawable/check_click02"
+                    android:button="@null"
+                    android:text="@string/use"
+                    android:textColor="@drawable/text_color01"
+                    android:textAlignment="center" />
+                <RadioButton
+                    android:id="@+id/f03_N_Rb"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="15dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/check_click02"
+                    android:button="@null"
+                    android:text="@string/unUse"
+                    android:textColor="@drawable/text_color01"
+                    android:textAlignment="center" />
+            </RadioGroup>
         </LinearLayout>
 
     </LinearLayout>

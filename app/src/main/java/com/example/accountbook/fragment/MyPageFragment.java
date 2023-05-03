@@ -31,15 +31,17 @@ import com.example.accountbook.activity.LoginActivity;
 import com.example.accountbook.activity.Popup_PwChange;
 import com.example.accountbook.activity.Popup_change;
 import com.example.accountbook.databinding.FragmentMyPageBinding;
+import com.example.accountbook.viewmodel.CategorySettingViewModel;
 import com.example.accountbook.viewmodel.SaveMoneyViewModel;
 import com.example.accountbook.viewmodel.UserViewModel;
 
 import java.util.Objects;
 
-public class MyPageFragment extends Fragment {
+public class MyPageFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
     private FragmentMyPageBinding binding;
     private UserViewModel userViewModel;
     private SaveMoneyViewModel moneyViewModel;
+    private CategorySettingViewModel categorySettingViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,11 +56,24 @@ public class MyPageFragment extends Fragment {
         // 뷰모델 연결
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         moneyViewModel = new ViewModelProvider(requireActivity()).get(SaveMoneyViewModel.class);
+        categorySettingViewModel = new ViewModelProvider(requireActivity()).get(CategorySettingViewModel.class);
         moneyViewModel.setSaveMoneyViewModel(getActivity());
+        categorySettingViewModel.setViewModel(getActivity(), getViewLifecycleOwner());
+
+
+        // 중분류 사용 여부 설정
+        if(categorySettingViewModel.getSpendingTypeUse()) {
+            binding.f03YRb.setChecked(true);
+        } else {
+            binding.f03NRb.setChecked(true);
+        }
 
         // 화면 유저 정보 설정
         binding.f03NameTv.setText(userViewModel.getUserName());
         binding.f03NicknameTv.setText(userViewModel.getUserNickname());
+
+        // 중분류 사용 여부 체크
+        binding.f03YNRadioGroup.setOnCheckedChangeListener(this);
 
         // button setting
         binding.f03NicknameBtn.setOnClickListener(v ->
@@ -73,6 +88,9 @@ public class MyPageFragment extends Fragment {
         binding.f03ContentsReset.setOnClickListener(v ->
             showDialog(1, "지금까지 기록한 내용을 모두 삭제하시겠습니까?")
         );
+        binding.f03InfoBtn01.setOnClickListener(v -> {
+            showDialog(99, "지출의 중분류는 고정비/변동비/준변동비를 말합니다.\n미사용 선택 시 중분류는 화면에서 보여지지 않습니다.");
+        });
     }
 
 
@@ -118,4 +136,13 @@ public class MyPageFragment extends Fragment {
             userViewModel.pwChange(pw);
         }
     });
+
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int i) {
+        if(binding.f03YRb.isChecked()) {
+            categorySettingViewModel.setSpendingTypeUse(true);
+        } else if(binding.f03NRb.isChecked()) {
+            categorySettingViewModel.setSpendingTypeUse(false);
+        }
+    }
 }

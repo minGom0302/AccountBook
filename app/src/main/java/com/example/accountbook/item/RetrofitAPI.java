@@ -1,6 +1,7 @@
 package com.example.accountbook.item;
 
 import com.example.accountbook.dto.CategoryDTO;
+import com.example.accountbook.dto.MoneyDTO;
 import com.example.accountbook.dto.UserInfoDTO;
 
 import java.util.List;
@@ -49,6 +50,12 @@ public interface RetrofitAPI {
 
 
     /* save money info */
+    @GET("money/search/{userSeq}")
+    Call<List<MoneyDTO>> getMoneyInfo(
+            @Path("userSeq") int userSeq,
+            @Query("dateCondition") String dateCondition
+    );
+
     @DELETE("money/delete/all/{userSeq}")
     Call<Integer> deleteMoneyAll(@Path("userSeq") int userSeq);
 }

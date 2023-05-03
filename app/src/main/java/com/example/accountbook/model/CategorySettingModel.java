@@ -122,6 +122,12 @@ public class CategorySettingModel {
     }
 
 
+    // 중분류 사용 여부 저장
+    public void setSpendingTypeUse(boolean isUse) {
+        spClient.setSpendingTypeUse(isUse);
+    }
+
+
     // insert category by api
     public void insertCategory(CategoryDTO dto) {
         api.insertCategoryInfo(dto.getUserSeq(), dto.getCode(), dto.getCategory01(), dto.getCategory02(), dto.getContents(), dto.getPayDay()).enqueue(new Callback<Integer>() {
@@ -142,4 +148,5 @@ public class CategorySettingModel {
     public MutableLiveData<List<CategoryDTO>> getCategoryList() {
         return categoryList;
     }
+    public boolean getSpendingTypeUse() { return spClient.getSpendingTypeUse(); }
 }

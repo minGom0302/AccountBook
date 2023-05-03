@@ -1,6 +1,7 @@
 package com.example.accountbook.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -74,7 +76,20 @@ public class MainActivity extends AppCompatActivity {
 
         // 네비게이션 드로어에 헤드에 로그아웃 이벤트 설정과 TextView 이름 설정
         binding.navigationView.getHeaderView(0).findViewById(R.id.logoutBtn).setOnClickListener(v -> {
-            Toast.makeText(this, "로그아웃 클릭", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
+            builder.setTitle("안내").setMessage("로그아웃 하시겠습니까?");
+            builder.setNegativeButton("아니오", ((dialogInterface, i) -> { }));
+            builder.setPositiveButton("예", ((dialogInterface, i) -> {
+                startActivity(new Intent(this, LoginActivity.class));
+                finishAffinity();
+            }));
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.setOnShowListener(dialogInterface -> {
+                alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+                alertDialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+            });
+            alertDialog.show();
         });
         TextView userName = binding.navigationView.getHeaderView(0).findViewById(R.id.userName);
         userName.setText(userViewModel.getUserName());
@@ -86,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     private void changeFragment(int type) {
         switch (type) {
             case R.id.item_calendar:
-                showOptionMenu(true);
+                showOptionMenu(true, 1);
                 Objects.requireNonNull(getSupportActionBar()).setTitle(s_date.getDate()); // title 변경
                 getSupportFragmentManager().beginTransaction().show(f01).commit();
                 if(f02 != null) getSupportFragmentManager().beginTransaction().hide(f02).commit();
@@ -94,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 if(f04 != null) getSupportFragmentManager().beginTransaction().hide(f04).commit();
                 break;
             case R.id.item_list:
-                showOptionMenu(false);
+                showOptionMenu(false, 0);
                 Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu02); // title 변경
                 findViewById(R.id.tool_menu01).setVisibility(View.GONE);
                 if(f02 == null) {
@@ -108,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 if(f04 != null) getSupportFragmentManager().beginTransaction().hide(f04).commit();
                 break;
             case R.id.item_myPage:
-                showOptionMenu(false);
+                showOptionMenu(false, 1);
                 Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu03); // title 변경
                 if(f03 == null) {
                     f03 = new MyPageFragment();
@@ -121,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 if(f04 != null) getSupportFragmentManager().beginTransaction().hide(f04).commit();
                 break;
             case R.id.item_categorySettings:
-                showOptionMenu(false);
+                showOptionMenu(false, 1);
                 Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu04); // title 변경
                 if(f04 == null) {
                     f04 = new CategorySettingFragment();
@@ -144,15 +159,22 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
     // 좌측 상단 메뉴를 화면 별 보이기/숨기기
-    private void showOptionMenu(boolean isShow) {
+    private void showOptionMenu(boolean isShow, int type) {
         int visible;
+        int menu03_refresh_visible;
         if(isShow) {
             visible = View.VISIBLE;
         } else {
             visible = View.GONE;
         }
+        if(type == 0) {
+            menu03_refresh_visible = View.VISIBLE;
+        } else {
+            menu03_refresh_visible = View.GONE;
+        }
         findViewById(R.id.tool_menu01).setVisibility(visible);
         findViewById(R.id.tool_menu02).setVisibility(visible);
+        findViewById(R.id.tool_menu03).setVisibility(menu03_refresh_visible);
     }
 
 
@@ -169,6 +191,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.tool_menu02:
                 startActivity(new Intent(this, Popup_Transfer.class));
+                break;
+            case R.id.tool_menu03:
+                Toast.makeText(this, "새로고침 클릭함", Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
