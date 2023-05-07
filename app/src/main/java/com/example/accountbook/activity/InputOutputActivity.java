@@ -192,8 +192,8 @@ public class InputOutputActivity extends AppCompatActivity {
 
     // 다이얼로그 띄우기
     private void mShowDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("안내").setTitle("해당 화면을 닫으시겠습니까?");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
+        builder.setTitle("안내").setMessage("해당 화면을 닫으시겠습니까?");
         builder.setPositiveButton("예", ((dialogInterface, i) -> {
             Intent intent = new Intent();
             intent.putExtra("date", date);

@@ -90,7 +90,7 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
     private void mShowDialog(int cnd, String msg) {
         hideKeyboard();
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
-        builder.setTitle("안내").setTitle(msg);
+        builder.setTitle("안내").setMessage(msg);
         builder.setPositiveButton("예", ((dialogInterface, i) -> {
             if(cnd == 0) {
                 saveInfo();
