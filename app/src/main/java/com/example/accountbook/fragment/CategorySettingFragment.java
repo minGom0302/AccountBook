@@ -227,10 +227,12 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
         hideKeyboard();
         if(binding.f04Rb01.isChecked()) {
+            binding.f04EndDayLayout.setVisibility(View.VISIBLE);
             viewModel.setCategoryList01(0); // 대분류 셋팅 (수입, 지출)
             viewModel.setCategoryList(0); // recyclerview setting
             rbCheckValue = 0;
         } else if(binding.f04Rb02.isChecked()) {
+            binding.f04EndDayLayout.setVisibility(View.INVISIBLE);
             viewModel.setCategoryList01(1); // 대분류 셋팅 (계좌, 카드)
             viewModel.setCategoryList(1); // recyclerview setting
             rbCheckValue = 1;
