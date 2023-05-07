@@ -106,4 +106,6 @@ public class SaveMoneyModel {
     }
     public boolean getIsChange() { return spClient.getIsChange(); }
     public void setIsChange(boolean isChange) { spClient.setIsChange(isChange); }
+    public boolean getIsChangeCal() { return spClient.getIsChangeCal(); }
+    public void setIsChangeCal(boolean isChangeCal) { spClient.setIsChangeCal(isChangeCal); }
 }

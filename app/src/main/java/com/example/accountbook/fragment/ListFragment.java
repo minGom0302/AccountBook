@@ -225,8 +225,7 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
     }
 
 
-    // MainActivity 에서 refresh 버튼을 누를 경우 호출하여 화면 갱신하기에 사용
-    // 또한 MainActivity 에서 화면 전환할 때 호출하여 자료 최신화
+    // 화면 전환할 때 호출하여 자료 최신화
     @SuppressLint("SimpleDateFormat")
     public void listRefresh() {
         if(moneyViewModel.getIsChange() || categorySettingViewModel.getIsChangeCa()) {

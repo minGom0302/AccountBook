@@ -247,7 +247,7 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
         builder.setTitle("안내").setMessage(msg);
         builder.setPositiveButton("예", ((dialogInterface, i) -> {
-            if(cnd == 0) showDialog(1, "해당 코드로 등록한 내용이 있으면 코드가 꼬일 수 있습니다.\n그래도 삭제하시겠습니까?", dto);
+            if(cnd == 0) showDialog(1, "'" + dto.getContents() + "' (으)로 등록한 가계부 정보도 모두 삭제됩니다.\n그래도 삭제하시겠습니까?", dto);
             else if(cnd == 1) viewModel.deleteCategory(dto, rbCheckValue);
             else if(cnd == 2) viewModel.insertCategory(dto, rbCheckValue);
         }));

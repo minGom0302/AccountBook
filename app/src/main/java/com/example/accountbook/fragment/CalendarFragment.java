@@ -192,14 +192,14 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
     });
 
 
-    // MainActivity 에서 refresh 버튼을 누를 경우 호출하여 화면 갱신하기에 사용
-    // 또한 MainActivity 에서 화면 전환할 때 호출하여 자료 최신화
+    // MainActivity 에서 화면 전환할 때 호출하여 자료 최신화
     @SuppressLint("SimpleDateFormat")
     public void calendarRefresh() {
-        if(moneyViewModel.getIsChange()) {
-            moneyViewModel.setIsChange(false);
+        if(moneyViewModel.getIsChange() || moneyViewModel.getIsChangeCal()) {
+            if(moneyViewModel.getIsChange()) moneyViewModel.setIsChange(false);
+            else if(moneyViewModel.getIsChangeCal()) moneyViewModel.setIsChangeCal(false);
+
             moneyViewModel.againSet(new SimpleDateFormat("yyyy-MM-dd").format(choiceDate), 99);
-            Log.e("Test Cal", "true");
         }
     }
 }

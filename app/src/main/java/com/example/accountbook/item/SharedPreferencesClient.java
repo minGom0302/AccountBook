@@ -22,6 +22,7 @@ public class SharedPreferencesClient {
     public void setSpendingTypeUse(boolean isUse) { sp_e.putBoolean("category02Use", isUse).commit(); }
     public void setIsChange(boolean isChange) { sp_e.putBoolean("isChange", isChange).commit(); }
     public void setIsChangeCa(boolean isChangeCa) { sp_e.putBoolean("isChangeCa", isChangeCa).commit(); }
+    public void setIsChangeCal(boolean isChangeCal) { sp_e.putBoolean("isChangeCal", isChangeCal).commit(); }
 
     // Getter
     public int getUserSeq() { return sp.getInt("userSeq", 0); }
@@ -30,5 +31,6 @@ public class SharedPreferencesClient {
     public String getUserNickname() { return sp.getString("userNickname", ""); }
     public Boolean getSpendingTypeUse() { return sp.getBoolean("category02Use", true); }
     public boolean getIsChange() { return sp.getBoolean("isChange", false); }
-    public boolean getisChangeCa() { return sp.getBoolean("isChangeCa", false); }
+    public boolean getIsChangeCa() { return sp.getBoolean("isChangeCa", false); }
+    public boolean getIsChangeCal() { return sp.getBoolean("isChangeCal", false); }
 }

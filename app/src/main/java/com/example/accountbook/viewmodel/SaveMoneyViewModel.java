@@ -271,6 +271,9 @@ public class SaveMoneyViewModel extends ViewModel {
     }
 
     // 화면 이동 시 값 체크하여 변화가 있을 경우 갱신을 해준다. > calendar/list
+    // 카테고리에서 삭제 후 이동할 때 갱신을 도와준다.
     public boolean getIsChange() { return model.getIsChange(); }
     public void setIsChange(boolean isChange) { model.setIsChange(isChange); }
+    public boolean getIsChangeCal() { return model.getIsChangeCal(); }
+    public void setIsChangeCal(boolean isChangeCal) { model.setIsChangeCal(isChangeCal); }
 }
