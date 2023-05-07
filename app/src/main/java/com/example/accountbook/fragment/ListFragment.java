@@ -1,10 +1,15 @@
 package com.example.accountbook.fragment;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -22,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.accountbook.R;
+import com.example.accountbook.activity.Popup_DatePicker;
 import com.example.accountbook.adapter.CategoryListAdapter;
 import com.example.accountbook.adapter.MoneyListAdapter;
 import com.example.accountbook.databinding.FragmentListBinding;
@@ -46,10 +52,10 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
     private SaveMoneyViewModel moneyViewModel;
     private CategorySettingViewModel categorySettingViewModel;
     private String searchDate;
-    private boolean first = true;
-    private int year, month, day;
+    private int year, month;
     private int cnd = 0;
     private TextView beforeTextView = null;
+    private final Calendar calendar = Calendar.getInstance();
 
     @Nullable
     @Override
@@ -66,6 +72,8 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
         // 첫 화면 년월 설정
         Date date = new Date(System.currentTimeMillis());
         setDateTitle(dateFormat.format(date));
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH) + 1;
 
         // 뷰모델 설정 및 초기데이터 가져오기
         categorySettingViewModel = new ViewModelProvider(requireActivity()).get(CategorySettingViewModel.class);
@@ -157,53 +165,23 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
             binding.f02MoneyRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         });
 
-        // 날짜 타이틀 클릭하면 Date Picker 띄우기
-        binding.f02DateTv.setOnClickListener(v ->
-            setDatePicker()
-        );
+        // 날짜 타이틀 클릭하면 popup 띄우기
+        binding.f02DateTv.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), Popup_DatePicker.class);
+            intent.putExtra("year", year);
+            intent.putExtra("month", month);
+            Popup_datePickerResult.launch(intent);
+        });
         // 라디오그룹 (수입/지출/잔액) 클릭하여 변경 시 작동할 리스너 설정
         binding.f02RbGroup.setOnCheckedChangeListener(this);
     }
 
 
     // 년월 설정 메소드
+    @SuppressLint("SetTextI18n")
     private void setDateTitle(String date) {
-        binding.f02DateTv.setText(date);
+        binding.f02DateTv.setText(date + " ▼");
         searchDate = date.replaceAll("년 ", "-").replaceAll("월", "___");
-    }
-
-
-    // date picker를 통해 날짜를 선택하고 선택한 년월을 가져온다.
-    private void setDatePicker() {
-        // 오늘 날짜(년, 월, 일) 변수에 담기
-        int mYear;
-        int mMonth;
-        int mDay;
-        if(first) {
-            Calendar calendar = Calendar.getInstance();
-            mYear = calendar.get(Calendar.YEAR); // 년
-            mMonth= calendar.get(Calendar.MONTH); // 월
-            mDay = calendar.get(Calendar.DAY_OF_MONTH); // 일
-        } else {
-            mYear = this.year;
-            mMonth = this.month;
-            mDay = this.day;
-        }
-
-        @SuppressLint("DefaultLocale")
-        // DatePickerDialog 생성
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), (view, year, month, day) -> {
-            this.year = year;
-            this.month = month;
-            this.day = day;
-            String m = String.format("%02d", month + 1);
-            first = false;
-
-            setDateTitle(year + "년 " + m + "월");
-            moneyViewModel.againSet(searchDate, cnd); // 월이 바뀌면 다시 정보 가져오기
-        }, mYear, mMonth, mDay);
-
-        datePickerDialog.show();
     }
 
 
@@ -269,4 +247,18 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
             }
         }
     }
+
+    // startActivityForResult가 deprecated 되어 사용하지 않고 아래 방식으로 사용함 > 월 바꾼 것을 리턴받아 자료를 다시 가져옴
+    @SuppressLint("DefaultLocale")
+    private final ActivityResultLauncher<Intent> Popup_datePickerResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if(result.getResultCode() == RESULT_OK) {
+            assert result.getData() != null;
+            this.year = result.getData().getIntExtra("year", calendar.get(Calendar.YEAR));
+            this.month = result.getData().getIntExtra("month", calendar.get(Calendar.MONTH));
+            String m = String.format("%02d", month);
+
+            setDateTitle(year + "년 " + m + "월");
+            moneyViewModel.againSet(searchDate, cnd); // 월이 바뀌면 다시 정보 가져오기
+        }
+    });
 }

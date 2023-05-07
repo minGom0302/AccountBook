@@ -183,7 +183,7 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
     }
 
 
-    // startActivityForResult가 deprecated 되어 사용하지 않고 아래 방식으로 사용함 > 비밀번호 변경에 관한 건
+    // startActivityForResult가 deprecated 되어 사용하지 않고 아래 방식으로 사용함
     private final ActivityResultLauncher<Intent> inOutActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if(result.getResultCode() == RESULT_OK) {
             assert result.getData() != null;

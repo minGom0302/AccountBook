@@ -115,7 +115,6 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
         String memo = binding.popupIoMemoEt.getText().toString();
         if(bankSeq.equals("")) bankSeq = "0"; // 빈칸 선택했을 경우 0으로 저장
         Intent intent = new Intent();
-        Log.e("bankSeq", bankSeq);
         intent.putExtra("bankSeq", Integer.parseInt(bankSeq));
         intent.putExtra("money", money);
         intent.putExtra("memo", memo);

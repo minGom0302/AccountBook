@@ -3,4 +3,8 @@
     <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:background">@color/white</item>
     </style>
+
+    <style name="MyNumberPickerTheme">
+        <item name="colorControlNormal">@color/light_blue02</item>
+    </style>
 </resources>
