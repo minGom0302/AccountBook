@@ -84,6 +84,13 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
             binding.f04Recyclerview.setAdapter(adapter_01);
             binding.f04Recyclerview.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
 
+            binding.f04SaveBtn.setEnabled(false);
+            binding.f04ContentsEt.setText("");
+            binding.f04ContentsEt.setEnabled(false);
+            binding.f04SpinnerCategory01.setEnabled(false);
+            binding.f04SpinnerCategory02.setEnabled(false);
+            binding.f04SpinnerDay.setEnabled(false);
+
             // recyclerview item 클릭 시 발생할 이벤트 > adapter 작성한 내용을 가져와서 작성
             adapter_01.setOnItemClickListener((v, categoryDTO) -> {
                 binding.f04SpinnerDay.setSelection(Arrays.binarySearch(dayList.get(1), categoryDTO.getPayDay()));
@@ -94,6 +101,7 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
                 binding.f04SpinnerCategory01.setEnabled(false);
                 binding.f04SpinnerCategory02.setEnabled(false);
                 binding.f04SpinnerDay.setEnabled(false);
+                binding.f04SaveBtn.setEnabled(false);
             });
             // recyclerview delete btn 클릭 시 발생할 이벤트
             adapter_01.setOnItemDeleteListener((v, categoryDTO) ->
@@ -109,6 +117,7 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
             binding.f04SpinnerCategory01.setEnabled(true);
             binding.f04SpinnerCategory02.setEnabled(true);
             binding.f04SpinnerDay.setEnabled(true);
+            binding.f04SaveBtn.setEnabled(true);
             binding.f04SpinnerDay.setSelection(0);
             binding.f04SpinnerCategory01.setSelection(0);
             binding.f04SpinnerCategory02.setSelection(0);
@@ -130,7 +139,7 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
     private void spinnerSetting() {
         // 날짜 스피너 설정
         dayList = viewModel.getDayList();
-        SpinnerAdapter dayAdapter = new SpinnerAdapter(dayList.get(0), dayList.get(1), getContext());
+        SpinnerAdapter dayAdapter = new SpinnerAdapter(dayList.get(0), dayList.get(1), getContext(), 1);
         binding.f04SpinnerDay.setAdapter(dayAdapter);
         // 스피너들 설정
         binding.f04SpinnerDay.setDropDownVerticalOffset(80);
@@ -197,10 +206,10 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
     // 변경사항 발생 시 스피너 값들 설정
     private void setCategory(int type) {
         if(type == 0) {
-            SpinnerAdapter categoryAdapter01 = new SpinnerAdapter(categoryList01.get(0), categoryList01.get(1), getContext());
+            SpinnerAdapter categoryAdapter01 = new SpinnerAdapter(categoryList01.get(0), categoryList01.get(1), getContext(), 1);
             binding.f04SpinnerCategory01.setAdapter(categoryAdapter01);
         } else if(type == 1) {
-            SpinnerAdapter categoryAdapter02 = new SpinnerAdapter(categoryList02.get(0), categoryList02.get(1), getContext());
+            SpinnerAdapter categoryAdapter02 = new SpinnerAdapter(categoryList02.get(0), categoryList02.get(1), getContext(), 1);
             binding.f04SpinnerCategory02.setAdapter(categoryAdapter02);
         }
     }

@@ -56,6 +56,26 @@ public interface RetrofitAPI {
             @Query("dateCondition") String dateCondition
     );
 
+    @GET("money/search/day/{userSeq}")
+    Call<List<MoneyDTO>> getMoneyInfoForDay(
+            @Path("userSeq") int userSeq,
+            @Query("date") String date
+    );
+
+    @POST("money/insert")
+    Call<Integer> insertMoneyInfo (
+            @Query("userSeq") int userSeq,
+            @Query("settingsSeq") int settingsSeq,
+            @Query("bankSeq") int bankSeq,
+            @Query("in_sp") String in_sp,
+            @Query("date") String date,
+            @Query("money") String money,
+            @Query("memo") String memo
+    );
+
     @DELETE("money/delete/all/{userSeq}")
     Call<Integer> deleteMoneyAll(@Path("userSeq") int userSeq);
+
+    @DELETE("money/delete/{moneySeq}")
+    Call<Integer> deleteMoneyInfo(@Path("moneySeq") int moneySeq);
 }

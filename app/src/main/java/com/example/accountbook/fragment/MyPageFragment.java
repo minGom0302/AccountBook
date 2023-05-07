@@ -98,17 +98,22 @@ public class MyPageFragment extends Fragment implements RadioGroup.OnCheckedChan
     private void showDialog(int cnd, String msg) {
         AlertDialog.Builder builder =  new AlertDialog.Builder(getContext(), R.style.DialogTheme);
         builder.setTitle("안내").setMessage(msg);
-        builder.setPositiveButton("예", ((dialogInterface, i) -> {
-            if(cnd == 0) {
-                requireActivity().startActivity(new Intent(getContext(), LoginActivity.class));
-                requireActivity().finishAffinity();
-            } else if(cnd == 1) {
-                showDialog(2, "정말로 모든 내용을 삭제하시겠습니까?");
-            } else if(cnd == 2) {
-                moneyViewModel.deleteAll();
-            }
-        }));
-        builder.setNegativeButton("아니오", ((dialogInterface, i) -> { }));
+        if(cnd != 99) {
+            builder.setPositiveButton("예", ((dialogInterface, i) -> {
+                if (cnd == 0) {
+                    requireActivity().startActivity(new Intent(getContext(), LoginActivity.class));
+                    requireActivity().finishAffinity();
+                } else if (cnd == 1) {
+                    showDialog(2, "정말로 모든 내용을 삭제하시겠습니까?");
+                } else if (cnd == 2) {
+                    moneyViewModel.deleteAll();
+                }
+            }));
+            builder.setNegativeButton("아니오", ((dialogInterface, i) -> {
+            }));
+        } else {
+            builder.setPositiveButton("확인", ((dialogInterface, i) -> { }));
+        }
 
         AlertDialog alertDialog = builder.create();
         alertDialog.setOnShowListener(dialogInterface -> {

@@ -31,7 +31,7 @@ public class Popup_change extends Activity {
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
         binding.popupChangeOkBtn.setOnClickListener(v ->
-            returnSet()
+            returnSet(0, "입력한 내용으로 저장하시겠습니까?")
         );
         binding.popupChangeCloseBtn.setOnClickListener(v -> {
             hideKeyboard();
@@ -39,15 +39,19 @@ public class Popup_change extends Activity {
         });
     }
 
-    private void returnSet() {
+    private void returnSet(int cnd, String msg) {
         hideKeyboard();
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
-        builder.setTitle("안내").setMessage("입력한 내용으로 저장하시겠습니까?");
+        builder.setTitle("안내").setMessage(msg);
         builder.setPositiveButton("예", ((dialogInterface, i) -> {
-            Intent mIntent = new Intent();
-            mIntent.putExtra("nickName", binding.popupChangeNicknameEt.getText().toString());
-            setResult(RESULT_OK, mIntent);
-            finish();
+            if(cnd == 0) {
+                Intent mIntent = new Intent();
+                mIntent.putExtra("nickName", binding.popupChangeNicknameEt.getText().toString());
+                setResult(RESULT_OK, mIntent);
+                finish();
+            } else if(cnd == 1) {
+                finish();
+            }
         }));
         builder.setNegativeButton("아니오", (((dialogInterface, i) -> {  })));
 
@@ -70,4 +74,8 @@ public class Popup_change extends Activity {
         imm.hideSoftInputFromWindow(binding.popupChangeNicknameEt.getWindowToken(), 0);
     }
 
+    @Override
+    public void onBackPressed() {
+        returnSet(1, "해당 창을 종료하시겠습니까?");
+    }
 }

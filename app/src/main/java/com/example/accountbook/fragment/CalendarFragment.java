@@ -1,10 +1,14 @@
 package com.example.accountbook.fragment;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -29,6 +33,7 @@ import com.example.accountbook.calendar_deco.TodayDecorator;
 import com.example.accountbook.databinding.FragmentCalendarBinding;
 import com.example.accountbook.dto.MoneyDTO;
 import com.example.accountbook.item.Singleton_Date;
+import com.example.accountbook.viewmodel.CategorySettingViewModel;
 import com.example.accountbook.viewmodel.SaveMoneyViewModel;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -47,7 +52,8 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
     private SaveMoneyViewModel moneyViewModel;
     private FragmentCalendarBinding binding;
     private String nowStrDate;
-    private Date nowDate;
+    private Date nowDate, choiceDate;
+    private EventDecorator oldEd = null;
 
     @Nullable
     @Override
@@ -59,12 +65,12 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
         return binding.getRoot();
     }
 
-
     @SuppressLint("SimpleDateFormat")
     private void init() {
         s_date = Singleton_Date.getInstance();
         nowDate = new Date(System.currentTimeMillis());
         nowStrDate = new SimpleDateFormat("yyyy-MM-dd").format(nowDate);
+        choiceDate = nowDate;
 
         binding.calendar.setSelectedDate(nowDate); // 오늘 날짜로 셋팅
         binding.calendar.setTopbarVisible(false); // 달력에서 상단 타이틀 (날짜) 없애기
@@ -81,12 +87,18 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
 
         // 플로팅버튼 클릭 시 이벤트 진행 > 입력 화면으로 전환
         binding.f01FloatingBtn.setOnClickListener(v -> {
-            requireActivity().startActivity(new Intent(getContext(), InputOutputActivity.class));
+            Date floatingChoiceDate = binding.calendar.getSelectedDate().getDate();
+            String floatingChoiceStrDate = new SimpleDateFormat("yyyy-MM-dd").format(floatingChoiceDate);
+
+            Intent intent = new Intent(getContext(), InputOutputActivity.class);
+            intent.putExtra("date", floatingChoiceStrDate);
+            inOutActivity.launch(intent);
         });
         // 오늘 날짜로 이동 클릭 시 달력을 오늘 날짜로 이동시키기
         binding.f01MoveToday.setOnClickListener(v -> {
             binding.calendar.setCurrentDate(nowDate);
             binding.calendar.setSelectedDate(CalendarDay.today());
+            moneyViewModel.setCalendarDayLiveData(nowStrDate);
         });
 
     }
@@ -105,7 +117,6 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
         // 월이 바뀜으로 DB에서 데이터 다시 가져오기 > 바뀐 월의 1일로 아래 리스트도 가져오고 선택함 > 해당 월일 경우 오늘 날짜로 셋팅
         String changeDate = new SimpleDateFormat("yyyy-MM-dd").format(date.getDate());
         String beforeDate = nowStrDate;
-        Date choiceDate;
         // 해당 월인지 확인하여 아닐 경우 달력의 1일, 맞을 경우 오늘 날짜로 날짜 셋팅
         if(changeDate.substring(0, changeDate.length() -3).equals(beforeDate.substring(0, beforeDate.length() -3))) {
             choiceDate = nowDate;
@@ -123,13 +134,14 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
     @Override
     @SuppressLint("SimpleDateFormat")
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+        choiceDate = date.getDate();
         String strDate = new SimpleDateFormat("yyyy-MM-dd").format(date.getDate());
         moneyViewModel.setCalendarDayLiveData(strDate); // 날짜 클릭 시 해당 날짜의 금액 계산과 리스트를 가져오도록 함
     }
 
 
     // live data 모음
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "SimpleDateFormat"})
     private void setViewModel() {
         // 상단 월 별 계산
         moneyViewModel.getPlusAndMinusLiveData().observe(getViewLifecycleOwner(), plusMinusList -> {
@@ -138,7 +150,7 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
         });
         // 날짜 선택에 따른 하단 리스트 보이기
         moneyViewModel.getCalendarDayLiveData().observe(getViewLifecycleOwner(), dayList -> {
-            MoneyListAdapter moneyListAdapter = new MoneyListAdapter(dayList, 2);
+            MoneyListAdapter moneyListAdapter = new MoneyListAdapter(dayList, 2, moneyViewModel, getActivity());
             binding.f01Recyclerview.setAdapter(moneyListAdapter);
             binding.f01Recyclerview.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         });
@@ -162,7 +174,32 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
                 }
             }
 
-            binding.calendar.addDecorator(new EventDecorator(Color.RED, calendarDayList));
+            // 기존에 등록한 녹색 점 데코 없애고 새로운 데코 넣기
+            if(oldEd != null) binding.calendar.removeDecorator(oldEd);
+            EventDecorator newEd = new EventDecorator(Color.GREEN, calendarDayList);
+            binding.calendar.addDecorator(newEd);
+            oldEd = newEd;
         });
+    }
+
+
+    // startActivityForResult가 deprecated 되어 사용하지 않고 아래 방식으로 사용함 > 비밀번호 변경에 관한 건
+    private final ActivityResultLauncher<Intent> inOutActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if(result.getResultCode() == RESULT_OK) {
+            assert result.getData() != null;
+            moneyViewModel.againSet(result.getData().getStringExtra("date"), 99);
+        }
+    });
+
+
+    // MainActivity 에서 refresh 버튼을 누를 경우 호출하여 화면 갱신하기에 사용
+    // 또한 MainActivity 에서 화면 전환할 때 호출하여 자료 최신화
+    @SuppressLint("SimpleDateFormat")
+    public void calendarRefresh() {
+        if(moneyViewModel.getIsChange()) {
+            moneyViewModel.setIsChange(false);
+            moneyViewModel.againSet(new SimpleDateFormat("yyyy-MM-dd").format(choiceDate), 99);
+            Log.e("Test Cal", "true");
+        }
     }
 }

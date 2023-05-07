@@ -24,6 +24,7 @@ public class SaveMoneyViewModel extends ViewModel {
     private final MutableLiveData<List<Integer>> plusAndMinusLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<MoneyDTO>> calendarDayLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<Integer>> dayMoneyLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<MoneyDTO>> ioMoneyLiveData = new MutableLiveData<>();
     private int setMoneyInfoCnd;
     private String setCalendarDate;
 
@@ -43,6 +44,8 @@ public class SaveMoneyViewModel extends ViewModel {
             secondMoneyLiveData.postValue(null);
             if(cnd == 99) { // calendar 용, 나머지는 list
                 setCalendarDayLiveData(setCalendarDate);
+            } else if(cnd == 98) {
+                setIoMoneyLiveData();
             }
         });
         if(cnd == 99) { // calendar 용, 나머지는 list
@@ -59,13 +62,18 @@ public class SaveMoneyViewModel extends ViewModel {
     }
 
 
+    // 특정 기록 선택 삭제 > saveMoneyInfo table
+    public void deleteSaveMoneyInfo(int moneySeq) {
+        model.deleteSaveMoneyInfo(moneySeq, setCalendarDate);
+    }
+
+
     // 월 바뀔 때 money info list 다시 가져오기
     public void againSet(String date, int cnd) {
         setMoneyInfoCnd = cnd;
         setCalendarDate = date;
         if(cnd == 99) {
             model.getMoneyDataByDate(date.substring(0, date.length()-3) + "___");
-            Log.e("TEST", date);
         } else {
             model.getMoneyDataByDate(date);
         }
@@ -74,6 +82,7 @@ public class SaveMoneyViewModel extends ViewModel {
 
     // money info list 를 상황에 맞게 리스트를 만들어서 리턴해줌
     public void setMoneyInfo(int cnd) {
+        setMoneyInfoCnd = cnd;
         List<MoneyDTO> dtoList = new ArrayList<>();
         List<String> codeList = new ArrayList<>(); // code 값 중복 체크를 위해 리스트를 따로 만듬
         String category = "";
@@ -101,7 +110,11 @@ public class SaveMoneyViewModel extends ViewModel {
                 }
             } else if(cnd == 2) {
                 // 추가하기 전 뱅크 코드가 0인 것 걸러내기 > 리스트를 전체 가져오기 위해 null값을 0으로 대체했기에 없는 값 뺴고 계산
-                if (!dto.getBankCode().equals("0")) {
+                if (!dto.getDate().equals("0")) {
+                    if(dto.getBankCode().equals("0")) {
+                        dto.setBankCode("미설정");
+                        dto.setBankContents("미설정 계좌");
+                    }
                     // 잔액 표시를 위한 것 > 은행코드 확인하여 있으면 계산하고 없으면 추가
                     if (codeList.contains(dto.getBankCode())) {
                         // 들어 있으면 해당 표지션(값)에 금액만 더하기
@@ -122,7 +135,11 @@ public class SaveMoneyViewModel extends ViewModel {
                         if (dto.getCategory01().equals("99")) {
                             money += Integer.parseInt(dto.getMoney());
                         } else if (dto.getCategory01().equals("98")) {
-                            money -= Integer.parseInt(dto.getMoneyMemo());
+                            money -= Integer.parseInt(dto.getMoney());
+                        }
+                        Log.e("TEST", String.valueOf(money));
+                        if(dto.getBankContents().equals("0")) {
+                            dto.setBankContents("");
                         }
                         dtoList.add(new MoneyDTO(dto.getCategory01(), money, dto.getBankCode(), dto.getBankContents()));
                         codeList.add(dto.getBankCode());
@@ -200,6 +217,36 @@ public class SaveMoneyViewModel extends ViewModel {
     }
 
 
+    // InputOutputActivity > 데이터 가공해서 넘기기
+    private void setIoMoneyLiveData() {
+        List<String> codeList = new ArrayList<>();
+        List<MoneyDTO> dtoList = new ArrayList<>();
+
+        for(MoneyDTO dto : Objects.requireNonNull(moneyLiveData.getValue())) {
+            if(!dto.getCategory02().equals("01")) { // 계좌이체 뺀 것들만 담기
+                if(codeList.contains(dto.getSettingsCode())) {
+                    // 들어 있으면 해당 표지션(값)에 금액만 더하기
+                    int position = codeList.indexOf(dto.getSettingsCode());
+                    String beforeMoney = dtoList.get(position).getMoney();
+                    String afterMoney = String.valueOf(Integer.parseInt(beforeMoney) + Integer.parseInt(dto.getMoney()));
+                    dtoList.get(position).setMoney(afterMoney);
+                } else {
+                    // 들어있지 않으면 새로 추가하기
+                    dtoList.add(dto);
+                    codeList.add(dto.getSettingsCode());
+                }
+            }
+        }
+
+        ioMoneyLiveData.postValue(dtoList);
+    }
+
+
+    // money info 저장하기
+    public void insertMoneyInfo(int settingsSeq, int bankSeq, String in_sp, String date, String money, String memo) {
+        model.insertMoneyInfo(settingsSeq, bankSeq, in_sp, date, money, memo);
+    }
+
     // Getter
     public MutableLiveData<List<MoneyDTO>> getMoneyInfoByDate() {
         return returnMoneyLiveData;
@@ -219,4 +266,11 @@ public class SaveMoneyViewModel extends ViewModel {
     public MutableLiveData<List<MoneyDTO>> getMoneyLiveData() {
         return moneyLiveData;
     }
+    public MutableLiveData<List<MoneyDTO>> getIoMoneyLiveData() {
+        return ioMoneyLiveData;
+    }
+
+    // 화면 이동 시 값 체크하여 변화가 있을 경우 갱신을 해준다. > calendar/list
+    public boolean getIsChange() { return model.getIsChange(); }
+    public void setIsChange(boolean isChange) { model.setIsChange(isChange); }
 }

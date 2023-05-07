@@ -6,6 +6,7 @@ public class MoneyDTO {
     private String category01;
     private String category02;
     private String settingsContents;
+    private int moneySeq;
     private int settingsSeq;
     private String date;
     private String money;
@@ -77,6 +78,10 @@ public class MoneyDTO {
         return intMoney;
     }
 
+    public int getMoneySeq() {
+        return moneySeq;
+    }
+
     public void setUserSeq(int userSeq) {
         this.userSeq = userSeq;
     }
@@ -123,5 +128,9 @@ public class MoneyDTO {
 
     public void setIntMoney(int intMoney) {
         this.intMoney = intMoney;
+    }
+
+    public void setMoneySeq(int moneySeq) {
+        this.moneySeq = moneySeq;
     }
 }

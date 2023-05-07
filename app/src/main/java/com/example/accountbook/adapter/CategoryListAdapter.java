@@ -1,6 +1,7 @@
 package com.example.accountbook.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     private final List<MoneyDTO> moneyList;
     private OnItemClickListener itemClickListener;
     private final DecimalFormat decimalFormat = new DecimalFormat("#,###");
-    private int type;
+    private final int type;
 
 
     // interface 선언
@@ -33,8 +34,8 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     }
 
 
-    public CategoryListAdapter(List<MoneyDTO> dtoList, int type) {
-        this.moneyList = dtoList;
+    public CategoryListAdapter(List<MoneyDTO> moneyList, int type) {
+        this.moneyList = moneyList;
         this.type = type;
     }
 
@@ -55,6 +56,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
                     String code = null;
                     if(type == 0) code = moneyList.get(position).getSettingsCode();
                     else if(type == 1) code = moneyList.get(position).getBankCode();
+                    else if(type == 2) code = moneyList.get(position).getSettingsCode();
                     if(itemClickListener != null) {
                         itemClickListener.onItemClick(view, code);
                     }
@@ -78,13 +80,13 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         MoneyDTO dto = moneyList.get(position);
 
-        if(type == 0) {
+        if(type == 0 || type == 2) {
             holder.contentsTv.setText(dto.getSettingsContents());
         } else if(type == 1){
             holder.contentsTv.setText(dto.getBankContents());
         }
 
-        if(type == 0) {
+        if(type == 0 || type == 2) {
             holder.moneyTv.setText(decimalFormat.format(Integer.parseInt(dto.getMoney())));
         } else if(type == 1) {
             holder.moneyTv.setText(decimalFormat.format(dto.getIntMoney()));

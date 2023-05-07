@@ -3,186 +3,158 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_margin="20dp"
+        android:layout_height="wrap_content"
         tools:context=".activity.InputOutputActivity">
-
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:orientation="horizontal">
-            <RadioButton
-                android:id="@+id/io_rb01"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:paddingHorizontal="30dp"
-                android:button="@null"
-                android:background="@drawable/check_click02"
-                android:checked="true"
-                android:text="@string/income"
-                android:textSize="18sp"
-                android:textColor="@drawable/text_color01"
-                android:textAlignment="center" />
-            <RadioButton
-                android:id="@+id/io_rb02"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="30dp"
-                android:button="@null"
-                android:background="@drawable/check_click02"
-                android:text="@string/spending"
-                android:textSize="18sp"
-                android:textColor="@drawable/text_color01"
-                android:textAlignment="center" />
-        </RadioGroup>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:text="@string/date"
-                android:textSize="16sp"
-                android:textColor="@color/black"/>
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/io_dateTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textSize="16sp"
-                android:textColor="@color/black"
-                android:background="@drawable/background_rectangle"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:text="@string/bank"
-                android:textSize="16sp"
-                android:textColor="@color/black"/>
-            <Spinner
-                android:id="@+id/io_spinnerBank"
-                android:layout_width="250dp"
-                android:layout_height="40dp"
-                android:background="@drawable/spinner_frame01"
-                android:spinnerMode="dropdown" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                android:text="@string/contents"
-                android:textSize="16sp"
-                android:textColor="@color/black"/>
-            <Spinner
-                android:id="@+id/io_spinnerContents"
-                android:layout_width="250dp"
-                android:layout_height="40dp"
-                android:background="@drawable/spinner_frame01"
-                android:spinnerMode="dropdown" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:text="@string/money"
-                android:textSize="16sp"
-                android:textColor="@color/black"/>
-            <EditText
-                android:id="@+id/io_moneyEt"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:background="@drawable/background_rectangle"
-                android:textColor="@color/black"
-                android:inputType="number"
-                android:importantForAutofill="no"
-                tools:ignore="LabelFor" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:text="@string/won"
-                android:textSize="16sp"
-                android:textColor="@color/black"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:text="@string/memo"
-                android:textSize="16sp"
-                android:textColor="@color/black"/>
-            <EditText
-                android:id="@+id/io_memoEt"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="10dp"
-                android:background="@drawable/background_rectangle"
-                android:textColor="@color/black"
-                android:inputType="textMultiLine"
-                android:importantForAutofill="no"
-                android:maxLines="8"
-                tools:ignore="LabelFor" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="30dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/io_saveBtn"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/text18"
+                android:textSize="15sp"
+                android:textColor="@color/gray01"
+                android:textAlignment="textEnd"/>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="@string/save"
+                android:layout_marginHorizontal="20dp"
+                android:paddingVertical="10dp"
+                android:paddingHorizontal="20dp"
+                android:text="@string/income"
+                android:textSize="16sp"
                 android:textColor="@color/white"
-                android:background="@drawable/btn_click01"/>
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/io_closeBtn"
+                android:background="@drawable/background_rectangle_lightblue02"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/io_incomeRv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="25dp"
+                android:nestedScrollingEnabled="false" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@string/close"
+                android:layout_marginTop="20dp"
+                android:layout_marginHorizontal="20dp"
+                android:paddingVertical="10dp"
+                android:paddingHorizontal="20dp"
+                android:text="@string/spending"
+                android:textSize="16sp"
                 android:textColor="@color/white"
-                android:background="@drawable/btn_click01"/>
+                android:background="@drawable/background_rectangle_lightblue02"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="25dp">
+                <LinearLayout
+                    android:id="@+id/io_rv01"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:ignore="UselessParent">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/semiCategory01"
+                            android:textColor="@color/black"
+                            android:background="@drawable/background_rectangle02"/>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/io_expendingRv01"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:nestedScrollingEnabled="false" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:background="@drawable/background_rectangle02"
+                            android:text="@string/semiCategory02"
+                            android:textColor="@color/black" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/io_expendingRv02"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:nestedScrollingEnabled="false" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:background="@drawable/background_rectangle02"
+                            android:text="@string/semiCategory03"
+                            android:textColor="@color/black" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/io_expendingRv03"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:nestedScrollingEnabled="false" />
+                    </LinearLayout>
+                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/io_rv02"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:paddingVertical="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/io_closeBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/close"
+                    android:textColor="@color/white"
+                    android:background="@drawable/btn_click01"/>
+            </LinearLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 </layout>

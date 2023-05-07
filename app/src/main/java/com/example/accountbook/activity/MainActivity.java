@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private MyPageFragment f03 = null;
     private CategorySettingFragment f04 = null;
     private Singleton_Date s_date;
-    private UserViewModel userViewModel;
+    private int calAndList = 0;
 
     @SuppressLint("SimpleDateFormat")
     @Override
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = binding.drawerLayout;
         bsh = new BackspaceHandler(this);
         s_date = Singleton_Date.getInstance();
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         userViewModel.setUserViewModel(this);
 
         // 상단 액션바 설정
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         binding.navigationView.setItemIconTintList(null); // 네비게이션 아이콘 메뉴들 색상 그대로 표현하기 설정
 
         // 첫 화면 띄우기
-        getSupportFragmentManager().beginTransaction().add(R.id.containerLayout, f01).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.containerLayout, f01, "f01").commit();
 
         // 네비게이션 드로어에 메뉴를 클릭했을 때 발생하는 이벤트
         binding.navigationView.setNavigationItemSelectedListener(menuItem -> {
@@ -101,15 +101,17 @@ public class MainActivity extends AppCompatActivity {
     private void changeFragment(int type) {
         switch (type) {
             case R.id.item_calendar:
-                showOptionMenu(true, 1);
+                showOptionMenu(true);
                 Objects.requireNonNull(getSupportActionBar()).setTitle(s_date.getDate()); // title 변경
                 getSupportFragmentManager().beginTransaction().show(f01).commit();
+                f01.calendarRefresh(); // 화면 갱신
+                calAndList = 0; // refresh 버튼 누를 때 갱신을 하기 위한 구분자
                 if(f02 != null) getSupportFragmentManager().beginTransaction().hide(f02).commit();
                 if(f03 != null) getSupportFragmentManager().beginTransaction().hide(f03).commit();
                 if(f04 != null) getSupportFragmentManager().beginTransaction().hide(f04).commit();
                 break;
             case R.id.item_list:
-                showOptionMenu(false, 0);
+                showOptionMenu(false);
                 Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu02); // title 변경
                 findViewById(R.id.tool_menu01).setVisibility(View.GONE);
                 if(f02 == null) {
@@ -117,13 +119,15 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().add(R.id.containerLayout, f02).commit();
                 } else {
                     getSupportFragmentManager().beginTransaction().show(f02).commit();
+                    f02.listRefresh(); // 화면 갱신
                 }
+                calAndList = 1; // refresh 버튼 누를 때 갱신을 하기 위한 구분자
                 if(f01 != null) getSupportFragmentManager().beginTransaction().hide(f01).commit();
                 if(f03 != null) getSupportFragmentManager().beginTransaction().hide(f03).commit();
                 if(f04 != null) getSupportFragmentManager().beginTransaction().hide(f04).commit();
                 break;
             case R.id.item_myPage:
-                showOptionMenu(false, 1);
+                showOptionMenu(false);
                 Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu03); // title 변경
                 if(f03 == null) {
                     f03 = new MyPageFragment();
@@ -136,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 if(f04 != null) getSupportFragmentManager().beginTransaction().hide(f04).commit();
                 break;
             case R.id.item_categorySettings:
-                showOptionMenu(false, 1);
+                showOptionMenu(false);
                 Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu04); // title 변경
                 if(f04 == null) {
                     f04 = new CategorySettingFragment();
@@ -152,29 +156,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // 좌측 상단에 메뉴(월마감, 계좌이체) 표시하기
+    // 좌측 상단에 메뉴(월마감, 계좌이체, 새로고침) 표시하기
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toollbar_menu, menu);
         return true;
     }
     // 좌측 상단 메뉴를 화면 별 보이기/숨기기
-    private void showOptionMenu(boolean isShow, int type) {
+    private void showOptionMenu(boolean isShow) {
         int visible;
-        int menu03_refresh_visible;
         if(isShow) {
             visible = View.VISIBLE;
         } else {
             visible = View.GONE;
         }
-        if(type == 0) {
-            menu03_refresh_visible = View.VISIBLE;
-        } else {
-            menu03_refresh_visible = View.GONE;
-        }
         findViewById(R.id.tool_menu01).setVisibility(visible);
         findViewById(R.id.tool_menu02).setVisibility(visible);
-        findViewById(R.id.tool_menu03).setVisibility(menu03_refresh_visible);
     }
 
 
@@ -191,9 +188,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.tool_menu02:
                 startActivity(new Intent(this, Popup_Transfer.class));
-                break;
-            case R.id.tool_menu03:
-                Toast.makeText(this, "새로고침 클릭함", Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);

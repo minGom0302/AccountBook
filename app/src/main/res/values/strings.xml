@@ -43,7 +43,8 @@
     <string name="semiCategory01">고정비</string>
     <string name="semiCategory02">변동비</string>
     <string name="semiCategory03">준변동비</string>
-
+    <string name="register">등록하기</string>
+    <string name="bankAndCard">계좌/카드</string>
 
 
     <string name="text01">※ 둘 중 하나 선택</string>
@@ -59,6 +60,11 @@
     <string name="text11">이체할 금액을 입력해주세요.</string>
     <string name="text12">지출 중분류 사용 여부</string>
     <string name="text13">※ 날짜를 클릭하여 변경 가능</string>
+    <string name="text14">※ 계좌/카드는 설정화면에서 설정 가능</string>
+    <string name="text15">(빈칸 가능)</string>
+    <string name="text16">금액을 입력해주세요.</string>
+    <string name="text17">메모할 내용을 입력해주세요.</string>
+    <string name="text18">※ 해당 목록은 카테고리 설정에서 변경할 수 있습니다.</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

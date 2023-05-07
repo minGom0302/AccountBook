@@ -20,6 +20,8 @@ public class SharedPreferencesClient {
     public void setUserName(String userName) { sp_e.putString("userName", userName).commit(); }
     public void setUserNickname(String userNickname) { sp_e.putString("userNickname", userNickname).commit(); }
     public void setSpendingTypeUse(boolean isUse) { sp_e.putBoolean("category02Use", isUse).commit(); }
+    public void setIsChange(boolean isChange) { sp_e.putBoolean("isChange", isChange).commit(); }
+    public void setIsChangeCa(boolean isChangeCa) { sp_e.putBoolean("isChangeCa", isChangeCa).commit(); }
 
     // Getter
     public int getUserSeq() { return sp.getInt("userSeq", 0); }
@@ -27,4 +29,6 @@ public class SharedPreferencesClient {
     public String getUserName() { return sp.getString("userName", ""); }
     public String getUserNickname() { return sp.getString("userNickname", ""); }
     public Boolean getSpendingTypeUse() { return sp.getBoolean("category02Use", true); }
+    public boolean getIsChange() { return sp.getBoolean("isChange", false); }
+    public boolean getisChangeCa() { return sp.getBoolean("isChangeCa", false); }
 }

@@ -126,4 +126,9 @@ public class Popup_PwChange extends Activity implements TextWatcher {
     }
     @Override
     public void afterTextChanged(Editable editable) { }
+
+    @Override
+    public void onBackPressed() {
+        showDialog(1, "해당 창을 종료하시겠습니까?");
+    }
 }

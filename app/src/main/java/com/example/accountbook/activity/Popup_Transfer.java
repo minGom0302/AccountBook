@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -99,6 +100,10 @@ public class Popup_Transfer extends Activity implements TextWatcher {
         }));
         builder.setNegativeButton("아니오", ((dialogInterface, i) -> { }));
         AlertDialog alertDialog = builder.create();
+        alertDialog.setOnShowListener(dialogInterface -> {
+            alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+            alertDialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+        });
         alertDialog.show();
     }
 
@@ -130,4 +135,7 @@ public class Popup_Transfer extends Activity implements TextWatcher {
             binding.popupTransferMoneyEt.setSelection(result.length());
         }
     }
+
+    @Override
+    public void onBackPressed() { showDialog(1, "해당 창을 종료하시겠습니까?"); }
 }

@@ -17,12 +17,13 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Query;
 
 public class SaveMoneyModel {
     private final RetrofitAPI api;
     private final SharedPreferencesClient spClient;
     private final Activity activity;
-    private MutableLiveData<List<MoneyDTO>> moneyLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<MoneyDTO>> moneyLiveData = new MutableLiveData<>();
 
     public SaveMoneyModel(Activity activity) {
         this.activity = activity;
@@ -30,6 +31,8 @@ public class SaveMoneyModel {
         spClient = new SharedPreferencesClient(activity);
     }
 
+
+    // saveMoneyInfo 전체 삭제
     public void deleteAll() {
         api.deleteMoneyAll(spClient.getUserSeq()).enqueue(new Callback<Integer>() {
             @Override
@@ -44,6 +47,26 @@ public class SaveMoneyModel {
         });
     }
 
+
+    // 특정 saveMoneyInfo 삭제
+    public void deleteSaveMoneyInfo(int moneySeq, String date) {
+        api.deleteMoneyInfo(moneySeq).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
+                Toast.makeText(activity, "삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                getMoneyDataByDate(date.substring(0, date.length()-3) + "___");
+                spClient.setIsChange(true);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Integer> call, @NonNull Throwable t) {
+                Toast.makeText(activity, "잠시 후 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    // 해당 월의 saveMoneyInfo 가져오기
     public void getMoneyDataByDate(String date) {
         api.getMoneyInfo(spClient.getUserSeq(), date).enqueue(new Callback<List<MoneyDTO>>() {
             @Override
@@ -61,7 +84,26 @@ public class SaveMoneyModel {
     }
 
 
+    // 입력한 money info 저장하기
+    public void insertMoneyInfo(int settingsSeq, int bankSeq, String in_sp, String date, String money, String memo) {
+        api.insertMoneyInfo(spClient.getUserSeq(), settingsSeq, bankSeq, in_sp, date, money, memo).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
+                Toast.makeText(activity, "저장되었습니다.", Toast.LENGTH_SHORT).show();
+                spClient.setIsChange(true);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Integer> call, @NonNull Throwable t) {
+                Toast.makeText(activity, "잠시 후 다시 시도해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
     public MutableLiveData<List<MoneyDTO>> getMoneyLiveData() {
         return moneyLiveData;
     }
+    public boolean getIsChange() { return spClient.getIsChange(); }
+    public void setIsChange(boolean isChange) { spClient.setIsChange(isChange); }
 }

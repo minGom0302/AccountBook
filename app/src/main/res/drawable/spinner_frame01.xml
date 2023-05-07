@@ -12,6 +12,8 @@
                         android:left="12dp"/>
                     <corners
                         android:radius="4dp"/>
+                    <solid
+                        android:color="@color/white"/>
                 </shape>
             </item>
 
