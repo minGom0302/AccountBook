@@ -7,15 +7,16 @@ public class CategoryDTO {
     private String category01;
     private String category02;
     private String contents;
-    private String payDay;
+    private int endDay;
+    private String strEndDay;
 
-    public CategoryDTO(int userSeq, String code, String category01, String category02, String contents, String payDay) {
+    public CategoryDTO(int userSeq, String code, String category01, String category02, String contents, int endDay) {
         this.userSeq = userSeq;
         this.code = code;
         this.category01 = category01;
         this.category02 = category02;
         this.contents = contents;
-        this.payDay = payDay;
+        this.endDay = endDay;
     }
 
     public int getSeq() {
@@ -54,10 +55,16 @@ public class CategoryDTO {
     public void setContents(String contents) {
         this.contents = contents;
     }
-    public String getPayDay() {
-        return payDay;
+    public int getEndDay() {
+        return endDay;
     }
-    public void setPayDay(String payDay) {
-        this.payDay = payDay;
+    public void setEndDay(int endDay) {
+        this.endDay = endDay;
+    }
+    public String getStrEndDay() {
+        return strEndDay;
+    }
+    public void setStrEndDay(String strEndDay) {
+        this.strEndDay = strEndDay;
     }
 }

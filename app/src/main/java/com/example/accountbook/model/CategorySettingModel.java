@@ -33,18 +33,6 @@ public class CategorySettingModel {
     }
 
 
-    public List<String[]> dayValueWithCode() {
-        String[] dayCode = activity.getResources().getStringArray(R.array.code_day_array);
-        String[] dayValue = activity.getResources().getStringArray(R.array.day_array);
-
-        List<String[]> dayList = new ArrayList<>();
-        dayList.add(dayCode);
-        dayList.add(dayValue);
-
-        return dayList;
-    }
-
-
     public List<String[]> categoryValueWithCode01(int type) {
         List<String[]> categoryList01 = new ArrayList<>();
 
@@ -75,9 +63,9 @@ public class CategorySettingModel {
 
             categoryList02.add(categoryCodeIn);
             categoryList02.add(categoryValueIn);
-        } else { // 카테고리가 지출이 아닐경우 카테고리2가 가려지기 때문에 day로 하여 셋팅값을 00으로 맞추기
-            String[] dayCode = activity.getResources().getStringArray(R.array.code_day_array);
-            String[] dayValue = activity.getResources().getStringArray(R.array.day_array);
+        } else { // 카테고리가 지출이 아닐경우 카테고리2가 가려지기 때문에 셋팅값을 00으로 맞추기
+            String[] dayCode = {"00"};
+            String[] dayValue = {""};
 
             categoryList02.add(dayCode);
             categoryList02.add(dayValue);
@@ -93,7 +81,19 @@ public class CategorySettingModel {
             @Override
             public void onResponse(@NonNull Call<List<CategoryDTO>> call, @NonNull Response<List<CategoryDTO>> response) {
                 if(response.isSuccessful() && response.body() != null) {
-                    categoryList.setValue(response.body());
+                    List<CategoryDTO> dtoList = new ArrayList<>();
+                    for(CategoryDTO dto : response.body()) {
+                        if(dto.getEndDay() == 999999) {
+                            dto.setStrEndDay("");
+                        } else {
+                            StringBuilder buffer = new StringBuilder(String.valueOf(dto.getEndDay()));
+                            buffer.insert(4, "-");
+                            dto.setStrEndDay(buffer.toString());
+                        }
+                        dtoList.add(dto);
+                    }
+
+                    categoryList.setValue(dtoList);
                 }
             }
 
@@ -124,15 +124,9 @@ public class CategorySettingModel {
     }
 
 
-    // 중분류 사용 여부 저장
-    public void setSpendingTypeUse(boolean isUse) {
-        spClient.setSpendingTypeUse(isUse);
-    }
-
-
     // insert category by api
     public void insertCategory(CategoryDTO dto) {
-        api.insertCategoryInfo(dto.getUserSeq(), dto.getCode(), dto.getCategory01(), dto.getCategory02(), dto.getContents(), dto.getPayDay()).enqueue(new Callback<Integer>() {
+        api.insertCategoryInfo(dto.getUserSeq(), dto.getCode(), dto.getCategory01(), dto.getCategory02(), dto.getContents(), dto.getEndDay()).enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
                 setCategoryList();
@@ -154,4 +148,8 @@ public class CategorySettingModel {
     public boolean getSpendingTypeUse() { return spClient.getSpendingTypeUse(); }
     public boolean getIsChangeCa() { return spClient.getIsChangeCa(); }
     public void setIsChangeCa(boolean isChangeCa) { spClient.setIsChangeCa(isChangeCa); }
+    // 중분류 사용 여부 저장
+    public void setSpendingTypeUse(boolean isUse) {
+        spClient.setSpendingTypeUse(isUse);
+    }
 }

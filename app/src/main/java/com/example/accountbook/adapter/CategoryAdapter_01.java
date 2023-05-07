@@ -1,5 +1,6 @@
 package com.example.accountbook.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,7 +49,7 @@ public class CategoryAdapter_01 extends RecyclerView.Adapter<CategoryAdapter_01.
     public class MyViewHolder extends RecyclerView.ViewHolder {
         LinearLayout layout;
         AppCompatImageButton deleteBtn;
-        TextView category01, category02, contents, payDay;
+        TextView category01, category02, contents, endDay;
 
         public MyViewHolder(@NonNull View view) {
             super(view);
@@ -57,7 +58,7 @@ public class CategoryAdapter_01 extends RecyclerView.Adapter<CategoryAdapter_01.
             category01 = view.findViewById(R.id.reCa_category01);
             category02 = view.findViewById(R.id.reCa_category02);
             contents = view.findViewById(R.id.reCa_contentsTv);
-            payDay = view.findViewById(R.id.reCa_payDayTv);
+            endDay = view.findViewById(R.id.reCa_endDayTv);
 
             // 아이템 클릭 시 위에 선언한 함수 실행
             layout.setOnClickListener(clickView -> {
@@ -89,11 +90,13 @@ public class CategoryAdapter_01 extends RecyclerView.Adapter<CategoryAdapter_01.
         return new MyViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         CategoryDTO dto = categoryList.get(position);
         holder.contents.setText(dto.getContents());
-        holder.payDay.setText(dto.getPayDay());
+        holder.endDay.setText(dto.getStrEndDay());
+
         switch (dto.getCategory01()) {
             case "99":
                 holder.category01.setText("수입");

@@ -19,7 +19,6 @@ import java.util.Objects;
 
 public class CategorySettingViewModel extends ViewModel {
     private CategorySettingModel model;
-    private List<String[]> dayList;
     private MutableLiveData<List<CategoryDTO>> categoryList ;
     private final MutableLiveData<List<String[]>> categoryList01 = new MutableLiveData<>();
     private final MutableLiveData<List<String[]>> categoryList02 = new MutableLiveData<>();
@@ -29,7 +28,6 @@ public class CategorySettingViewModel extends ViewModel {
     public void setViewModel(Activity activity, LifecycleOwner owner) {
         model = new CategorySettingModel(activity);
 
-        dayList = model.dayValueWithCode();
         categoryList = model.getCategoryList(); // model에 있는 list와 연결
         categoryList.observe(owner, categoryDTOS -> setCategoryList(categoryListInteger));
 
@@ -41,11 +39,6 @@ public class CategorySettingViewModel extends ViewModel {
     public void valueSettings(int type, int categoryType) {
         categoryList01.setValue(model.categoryValueWithCode01(type));
         categoryList02.setValue(model.categoryValueWithCode02(type, categoryType));
-    }
-
-    // 날짜 넘기기
-    public List<String[]> getDayList() {
-        return dayList;
     }
 
     // 카테고리/계좌의 값 넘기기

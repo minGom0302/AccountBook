@@ -34,7 +34,7 @@
                         android:layout_width="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/criteria"
-                        android:textSize="15sp"
+                        android:textSize="14sp"
                         android:textColor="@color/black" />
                     <Spinner
                         android:id="@+id/f04_spinnerCategory01"
@@ -64,7 +64,7 @@
                         android:layout_width="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/contents"
-                        android:textSize="15sp"
+                        android:textSize="14sp"
                         android:textColor="@color/black"/>
 
                     <EditText
@@ -76,7 +76,7 @@
                         android:layout_gravity="center_vertical"
                         android:padding="10dp"
                         android:background="@drawable/background_rectangle"
-                        android:textSize="15sp"
+                        android:textSize="14sp"
                         android:textColor="@color/light_blue02"
                         android:inputType="text"
                         android:imeOptions="actionDone"
@@ -91,20 +91,29 @@
                     android:layout_weight="1"
                     android:orientation="horizontal">
                     <TextView
-                        android:id="@+id/f04_payDayTv"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_gravity="center"
-                        android:text="@string/payDay"
-                        android:textSize="15sp"
+                        android:text="@string/endDay"
+                        android:textSize="14sp"
                         android:textColor="@color/black"/>
-                    <Spinner
-                        android:id="@+id/f04_spinnerDay"
+                    <TextView
+                        android:id="@+id/f04_endDayTv"
                         android:layout_height="match_parent"
-                        android:layout_width="100dp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_marginStart="10dp"
-                        android:background="@drawable/spinner_frame01"
-                        android:spinnerMode="dropdown" />
+                        android:padding="10dp"
+                        android:gravity="center"
+                        android:textColor="@color/light_blue02"
+                        android:background="@drawable/background_rectangle" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/f04_infoBtn"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="5dp"
+                        android:background="@drawable/btn_click01"
+                        android:scaleType="fitCenter" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -127,8 +136,8 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/btn_click01"
                     android:text="@string/save"
-                    android:textColor="@color/white"/>
-           </LinearLayout>
+                    android:textColor="@color/white"/>/
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

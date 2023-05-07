@@ -45,6 +45,7 @@
     <string name="semiCategory03">준변동비</string>
     <string name="register">등록하기</string>
     <string name="bankAndCard">계좌/카드</string>
+    <string name="endDay">사용 종료 일자</string>
 
 
     <string name="text01">※ 둘 중 하나 선택</string>

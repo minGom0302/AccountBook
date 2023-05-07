@@ -42,7 +42,7 @@ public interface RetrofitAPI {
             @Query("category01") String category01,
             @Query("category02") String category02,
             @Query("contents") String contents,
-            @Query("payDay") String payDay
+            @Query("endDay") int endDay
     );
 
     @DELETE("category/delete/{seq}")
