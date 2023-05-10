@@ -10,15 +10,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.accountbook.R;
 import com.example.accountbook.databinding.ActivityMainBinding;
@@ -42,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private MyPageFragment f03 = null;
     private CategorySettingFragment f04 = null;
     private Singleton_Date s_date;
-    private int calAndList = 0;
 
     @SuppressLint("SimpleDateFormat")
     @Override
@@ -101,19 +96,15 @@ public class MainActivity extends AppCompatActivity {
     private void changeFragment(int type) {
         switch (type) {
             case R.id.item_calendar:
-                showOptionMenu(true);
                 Objects.requireNonNull(getSupportActionBar()).setTitle(s_date.getDate()); // title 변경
                 getSupportFragmentManager().beginTransaction().show(f01).commit();
                 f01.calendarRefresh(); // 화면 갱신
-                calAndList = 0; // refresh 버튼 누를 때 갱신을 하기 위한 구분자
                 if(f02 != null) getSupportFragmentManager().beginTransaction().hide(f02).commit();
                 if(f03 != null) getSupportFragmentManager().beginTransaction().hide(f03).commit();
                 if(f04 != null) getSupportFragmentManager().beginTransaction().hide(f04).commit();
                 break;
             case R.id.item_list:
-                showOptionMenu(false);
                 Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu02); // title 변경
-                findViewById(R.id.tool_menu01).setVisibility(View.GONE);
                 if(f02 == null) {
                     f02 = new ListFragment();
                     getSupportFragmentManager().beginTransaction().add(R.id.containerLayout, f02).commit();
@@ -121,13 +112,11 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().show(f02).commit();
                     f02.listRefresh(); // 화면 갱신
                 }
-                calAndList = 1; // refresh 버튼 누를 때 갱신을 하기 위한 구분자
                 if(f01 != null) getSupportFragmentManager().beginTransaction().hide(f01).commit();
                 if(f03 != null) getSupportFragmentManager().beginTransaction().hide(f03).commit();
                 if(f04 != null) getSupportFragmentManager().beginTransaction().hide(f04).commit();
                 break;
             case R.id.item_myPage:
-                showOptionMenu(false);
                 Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu03); // title 변경
                 if(f03 == null) {
                     f03 = new MyPageFragment();
@@ -140,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
                 if(f04 != null) getSupportFragmentManager().beginTransaction().hide(f04).commit();
                 break;
             case R.id.item_categorySettings:
-                showOptionMenu(false);
                 Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu04); // title 변경
                 if(f04 == null) {
                     f04 = new CategorySettingFragment();
@@ -156,39 +144,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // 좌측 상단에 메뉴(월마감, 계좌이체, 새로고침) 표시하기
+    // 상단에 메뉴 표시하기
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toollbar_menu, menu);
         return true;
     }
-    // 좌측 상단 메뉴를 화면 별 보이기/숨기기
-    private void showOptionMenu(boolean isShow) {
-        int visible;
-        if(isShow) {
-            visible = View.VISIBLE;
-        } else {
-            visible = View.GONE;
-        }
-        findViewById(R.id.tool_menu01).setVisibility(visible);
-        findViewById(R.id.tool_menu02).setVisibility(visible);
-    }
 
 
-    // 메뉴 클릭 시 네비게이션 드로어 보여주기, 좌측 메뉴 클릭에 따른 이벤트 설정
+    // 메뉴 클릭 시 네비게이션 드로어 보여주기, 좌측 메뉴 클릭에 따른 이벤트 설정 > 좌측 메뉴만 설정 > 나머지는 calendarFragment
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                drawerLayout.openDrawer(GravityCompat.START);
-                break;
-            case R.id.tool_menu01:
-                Toast.makeText(this, "월마감 클릭함", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.tool_menu02:
-                startActivity(new Intent(this, Popup_Transfer.class));
-                break;
+        if (item.getItemId() == android.R.id.home) {
+            drawerLayout.openDrawer(GravityCompat.START);
         }
         return super.onOptionsItemSelected(item);
     }

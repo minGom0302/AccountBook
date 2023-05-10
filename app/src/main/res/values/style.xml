@@ -7,4 +7,10 @@
     <style name="MyNumberPickerTheme">
         <item name="colorControlNormal">@color/light_blue02</item>
     </style>
+
+    <style name="NoTitlePopup" parent="Theme.AppCompat.Light.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:background">@color/white</item>
+    </style>
 </resources>

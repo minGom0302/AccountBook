@@ -7,7 +7,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/background_rectangle"
+        android:background="@drawable/background_rectangle02"
         tools:context=".activity.Popup_change">
 
         <TextView

@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.accountbook.dto.MoneyDTO;
+import com.example.accountbook.dto.TransferMoneyDTO;
 import com.example.accountbook.model.SaveMoneyModel;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Objects;
 public class SaveMoneyViewModel extends ViewModel {
     private SaveMoneyModel model;
     private MutableLiveData<List<MoneyDTO>> moneyLiveData;
+    private MutableLiveData<List<TransferMoneyDTO>> transferMoneyLiveData;
     private final MutableLiveData<List<MoneyDTO>> returnMoneyLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<MoneyDTO>> secondMoneyLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<Integer>> plusAndMinusLiveData = new MutableLiveData<>();
@@ -31,6 +33,12 @@ public class SaveMoneyViewModel extends ViewModel {
     public void setSaveMoneyViewModel(Activity activity) {
         model = new SaveMoneyModel(activity);
         moneyLiveData = model.getMoneyLiveData();
+    }
+    // 계좌이체용
+    public void setSaveMoneyTransferViewModel(Activity activity, String date) {
+        model = new SaveMoneyModel(activity);
+        transferMoneyLiveData = model.getTransferMoneyLiveData();
+        model.getTransferMoneyInfo(date);
     }
 
     public void setMoneyInfoViewModel(Activity activity, LifecycleOwner owner, String date, int cnd) {
@@ -68,12 +76,20 @@ public class SaveMoneyViewModel extends ViewModel {
     }
 
 
+    // 계좌이체 내역 삭제
+    public void deleteTransferMoneyInfo(int seq, String date) {
+        model.deleteTransferMoneyInfo(seq, date);
+    }
+
+
     // 월 바뀔 때 money info list 다시 가져오기
     public void againSet(String date, int cnd) {
         setMoneyInfoCnd = cnd;
         setCalendarDate = date;
         if(cnd == 99) {
             model.getMoneyDataByDate(date.substring(0, date.length()-3) + "___");
+        } else if (cnd == 98){
+            model.getTransferMoneyInfo(date);
         } else {
             model.getMoneyDataByDate(date);
         }
@@ -198,7 +214,7 @@ public class SaveMoneyViewModel extends ViewModel {
         int minusMoney = 0;
 
         for(MoneyDTO dto : Objects.requireNonNull(moneyLiveData.getValue())) {
-            if(dto.getDate().equals(date)) {
+            if(dto.getDate().equals(date) && !dto.getCategory02().equals("01")) {
                 dtoList.add(dto);
                 if(dto.getCategory01().equals("99") && !dto.getCategory02().equals("01")) {
                     plusMoney += Integer.parseInt(dto.getMoney());
@@ -242,9 +258,15 @@ public class SaveMoneyViewModel extends ViewModel {
     }
 
 
+    // 계좌이체 내역 저장
+    public void insertTransferMoneyInfo(int incomeBankSeq, int expandingBankSeq, String date, String money, String memo, String incomeBank, String expandingBank, int incomeSettingsSeq, int expandingSettingsSeq) {
+        model.insertTransferMoneyInfo(incomeBankSeq, expandingBankSeq, date, money, memo, incomeBank, expandingBank, incomeSettingsSeq, expandingSettingsSeq);
+    }
+
+
     // money info 저장하기
-    public void insertMoneyInfo(int settingsSeq, int bankSeq, String in_sp, String date, String money, String memo) {
-        model.insertMoneyInfo(settingsSeq, bankSeq, in_sp, date, money, memo);
+    public void insertMoneyInfo(int settingsSeq, int bankSeq, String in_sp, String date, String money, String memo, int isFinish) {
+        model.insertMoneyInfo(settingsSeq, bankSeq, in_sp, date, money, memo, isFinish);
     }
 
     // Getter
@@ -268,6 +290,9 @@ public class SaveMoneyViewModel extends ViewModel {
     }
     public MutableLiveData<List<MoneyDTO>> getIoMoneyLiveData() {
         return ioMoneyLiveData;
+    }
+    public MutableLiveData<List<TransferMoneyDTO>> getTransferMoneyLiveData() {
+        return transferMoneyLiveData;
     }
 
     // 화면 이동 시 값 체크하여 변화가 있을 경우 갱신을 해준다. > calendar/list

@@ -21,6 +21,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
@@ -53,12 +55,13 @@ public class MyPageFragment extends Fragment implements RadioGroup.OnCheckedChan
     }
 
     private void init() {
+        setHasOptionsMenu(true);
         // 뷰모델 연결
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         moneyViewModel = new ViewModelProvider(requireActivity()).get(SaveMoneyViewModel.class);
         categorySettingViewModel = new ViewModelProvider(requireActivity()).get(CategorySettingViewModel.class);
         moneyViewModel.setSaveMoneyViewModel(getActivity());
-        categorySettingViewModel.setViewModel(getActivity(), getViewLifecycleOwner());
+        categorySettingViewModel.setViewModel(getActivity(), getViewLifecycleOwner(), 0);
 
 
         // 중분류 사용 여부 설정
@@ -149,5 +152,12 @@ public class MyPageFragment extends Fragment implements RadioGroup.OnCheckedChan
         } else if(binding.f03NRb.isChecked()) {
             categorySettingViewModel.setSpendingTypeUse(false);
         }
+    }
+
+    // 좌측 상단에 메뉴(월마감, 계좌이체) 없애기
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        menu.setGroupVisible(R.id.toolbar_menu, false);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }

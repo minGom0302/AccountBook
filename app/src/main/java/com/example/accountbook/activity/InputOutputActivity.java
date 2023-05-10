@@ -60,7 +60,7 @@ public class InputOutputActivity extends AppCompatActivity {
         saveMoneyViewModel.setMoneyInfoViewModel(this, this, date, 98);
         saveMoneyViewModel.getIoMoneyLiveData().observe(this, this::setRecyclerView);
         categoryViewModel = new ViewModelProvider(this).get(CategorySettingViewModel.class);
-        categoryViewModel.setViewModel(this, this);
+        categoryViewModel.setViewModel(this, this, 0);
         // 카테고리 메뉴 가져와서 카드/계좌 분류하고 리스트도 가져옴 > 팝업 띄울 때 넘겨준다.
         categoryViewModel.getCategoryList().observe( this, categoryList -> {
             this.categoryList = categoryList;
@@ -219,7 +219,7 @@ public class InputOutputActivity extends AppCompatActivity {
             String money = result.getData().getStringExtra("money");
             String memo = result.getData().getStringExtra("memo");
 
-            saveMoneyViewModel.insertMoneyInfo(settingsSeq, bankSeq, in_sp, date, money, memo);
+            saveMoneyViewModel.insertMoneyInfo(settingsSeq, bankSeq, in_sp, date, money, memo, 1);
 
             String be = choiceTv.getText().toString().replaceAll(",", "");
             String af = new DecimalFormat("#,###").format(Integer.parseInt(be) + Integer.parseInt(money));

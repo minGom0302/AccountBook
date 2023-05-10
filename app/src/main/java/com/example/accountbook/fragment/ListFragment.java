@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
@@ -69,6 +71,7 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
 
     @SuppressLint("SetTextI18n")
     private void init() {
+        setHasOptionsMenu(true);
         // 첫 화면 년월 설정
         Date date = new Date(System.currentTimeMillis());
         setDateTitle(dateFormat.format(date));
@@ -77,7 +80,7 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
 
         // 뷰모델 설정 및 초기데이터 가져오기
         categorySettingViewModel = new ViewModelProvider(requireActivity()).get(CategorySettingViewModel.class);
-        categorySettingViewModel.setViewModel(getActivity(), getViewLifecycleOwner());
+        categorySettingViewModel.setViewModel(getActivity(), getViewLifecycleOwner(), 0);
         moneyViewModel = new ViewModelProvider(this).get(SaveMoneyViewModel.class);
         moneyViewModel.setMoneyInfoViewModel(getActivity(), getViewLifecycleOwner(), searchDate, 0);
 
@@ -260,4 +263,11 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
             moneyViewModel.againSet(searchDate, cnd); // 월이 바뀌면 다시 정보 가져오기
         }
     });
+
+    // 좌측 상단에 메뉴(월마감, 계좌이체) 없애기
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        menu.setGroupVisible(R.id.toolbar_menu, false);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 }

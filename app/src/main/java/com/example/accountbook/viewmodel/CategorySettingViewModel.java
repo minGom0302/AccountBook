@@ -23,11 +23,11 @@ public class CategorySettingViewModel extends ViewModel {
     private final MutableLiveData<List<String[]>> categoryList01 = new MutableLiveData<>();
     private final MutableLiveData<List<String[]>> categoryList02 = new MutableLiveData<>();
     private final MutableLiveData<List<CategoryDTO>> categoryListForShow = new MutableLiveData<>();
-    private int categoryListInteger = 0;
+    private int categoryListInteger;
 
-    public void setViewModel(Activity activity, LifecycleOwner owner) {
+    public void setViewModel(Activity activity, LifecycleOwner owner, int cnd) {
         model = new CategorySettingModel(activity);
-
+        categoryListInteger = cnd;
         categoryList = model.getCategoryList(); // model에 있는 list와 연결
         categoryList.observe(owner, categoryDTOS -> setCategoryList(categoryListInteger));
 
@@ -66,9 +66,9 @@ public class CategorySettingViewModel extends ViewModel {
         List<CategoryDTO> dtoList = new ArrayList<>();
         for(CategoryDTO dto : Objects.requireNonNull(categoryList.getValue())) {
             // 카테고리를 선택했을 때 코드값이 99, 98인 것만 셋팅
-            if(cnd == 0 && (dto.getCategory01().equals("99") || dto.getCategory01().equals("98")) && !dto.getCategory02().equals("01")) dtoList.add(dto);
+            if(cnd == 0 && (dto.getCategory01().equals("99") || dto.getCategory01().equals("98"))) dtoList.add(dto);
             // 계좌등록을 선택했을 떄 코드값이 97, 96인 것만 셋팅
-            else if(cnd == 1 && (dto.getCategory01().equals("97") || dto.getCategory01().equals("96")) && !dto.getCategory02().equals("01")) dtoList.add(dto);
+            else if(cnd == 1 && (dto.getCategory01().equals("97") || dto.getCategory01().equals("96"))) dtoList.add(dto);
         }
 
         categoryListForShow.setValue(dtoList);

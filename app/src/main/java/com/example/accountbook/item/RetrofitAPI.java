@@ -2,6 +2,7 @@ package com.example.accountbook.item;
 
 import com.example.accountbook.dto.CategoryDTO;
 import com.example.accountbook.dto.MoneyDTO;
+import com.example.accountbook.dto.TransferMoneyDTO;
 import com.example.accountbook.dto.UserInfoDTO;
 
 import java.util.List;
@@ -56,8 +57,8 @@ public interface RetrofitAPI {
             @Query("dateCondition") String dateCondition
     );
 
-    @GET("money/search/day/{userSeq}")
-    Call<List<MoneyDTO>> getMoneyInfoForDay(
+    @GET("money/transfer/search/{userSeq}")
+    Call<List<TransferMoneyDTO>> getTransferMoneyInfo(
             @Path("userSeq") int userSeq,
             @Query("date") String date
     );
@@ -73,9 +74,26 @@ public interface RetrofitAPI {
             @Query("memo") String memo
     );
 
+    @POST("money/transfer/insert")
+    Call<Integer> insertTransferMoneyInfo (
+            @Query("userSeq") int userSeq,
+            @Query("incomeBankSeq") int incomeBankSeq,
+            @Query("expandingBankSeq") int expandingBankSeq,
+            @Query("date") String date,
+            @Query("money") String money,
+            @Query("memo") String memo,
+            @Query("incomeBank") String incomeBank,
+            @Query("expandingBank") String expandingBank,
+            @Query("incomeSettingsSeq") int incomeSettingsSeq,
+            @Query("expandingSettingsSeq") int expandingSettingsSeq
+    );
+
     @DELETE("money/delete/all/{userSeq}")
     Call<Integer> deleteMoneyAll(@Path("userSeq") int userSeq);
 
     @DELETE("money/delete/{moneySeq}")
     Call<Integer> deleteMoneyInfo(@Path("moneySeq") int moneySeq);
+
+    @DELETE("money/transfer/delete/{seq}")
+    Call<Integer> deleteTransferMoneyInfo(@Path("seq") int seq);
 }

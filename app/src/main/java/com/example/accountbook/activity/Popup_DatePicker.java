@@ -1,19 +1,12 @@
 package com.example.accountbook.activity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.view.View;
 import android.view.Window;
 import android.widget.NumberPicker;
-import android.widget.Toast;
 
 import com.example.accountbook.R;
 import com.example.accountbook.databinding.ActivityPopupDatePickerBinding;

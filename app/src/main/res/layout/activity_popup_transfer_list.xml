@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="500dp"
+        android:orientation="vertical"
+        android:background="@color/light_blue01"
+        tools:context=".activity.Popup_TransferList">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:text="@string/tool_menu03"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:background="@color/light_blue01" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="10dp"
+            android:background="@color/white" />
+
+        <TextView
+            android:id="@+id/popupTransferList_dateTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/background_rectangle"
+            android:padding="10dp"
+            android:textColor="@color/black" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/popupTransferList_rv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/light_blue01" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/popupTransferList_okBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/ok"
+            android:background="@drawable/background_rectangle" />
+    </LinearLayout>
+</layout>

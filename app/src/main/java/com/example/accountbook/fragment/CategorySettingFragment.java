@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -69,6 +71,7 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
     // 초기값 설정
     @SuppressLint({"NotifyDataSetChanged", "DefaultLocale"})
     private void init() {
+        setHasOptionsMenu(true);
         imm = (InputMethodManager) requireActivity().getSystemService(INPUT_METHOD_SERVICE);
         adapter_01 = new CategoryAdapter_01(null);
         year = calendar.get(Calendar.YEAR);
@@ -82,7 +85,7 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
         // 뷰모델 연결 > Fragment끼리 동일한 ViewModel 사용하기 위해 owner 를 아래와 같이 설정
         viewModel = new ViewModelProvider(requireActivity()).get(CategorySettingViewModel.class);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
-        viewModel.setViewModel(getActivity(), getViewLifecycleOwner());
+        viewModel.setViewModel(getActivity(), getViewLifecycleOwner(), 0);
 
         spinnerSetting();
 
@@ -156,7 +159,7 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
             } else {
                 endDay = Integer.parseInt(binding.f04EndDayTv.getText().toString().replaceAll("-", ""));
             }
-            CategoryDTO insertDto = new CategoryDTO(userViewModel.getUserSeq(), category01 + category02 + String.format("%02d", categoryDTOS.size()+1)
+            CategoryDTO insertDto = new CategoryDTO(userViewModel.getUserSeq(), category01 + category02 + String.format("%03d", categoryDTOS.size()+1)
                                                     , category01 , category02, binding.f04ContentsEt.getText().toString(), endDay);
             showDialog(2, "입력한 정보로 저장하시겠습니까?", insertDto);
         });
@@ -291,4 +294,12 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
             binding.f04EndDayTv.setText(year + "-" + String.format("%02d", month));
         }
     });
+
+
+    // 좌측 상단에 메뉴(월마감, 계좌이체) 없애기
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        menu.setGroupVisible(R.id.toolbar_menu, false);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 }

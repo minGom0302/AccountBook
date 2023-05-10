@@ -18,6 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -25,12 +28,14 @@ import android.widget.Toast;
 import com.example.accountbook.R;
 import com.example.accountbook.activity.InputOutputActivity;
 import com.example.accountbook.activity.MainActivity;
+import com.example.accountbook.activity.Popup_Transfer;
 import com.example.accountbook.adapter.MoneyListAdapter;
 import com.example.accountbook.calendar_deco.EventDecorator;
 import com.example.accountbook.calendar_deco.SaturdayDecorator;
 import com.example.accountbook.calendar_deco.SundayDecorator;
 import com.example.accountbook.calendar_deco.TodayDecorator;
 import com.example.accountbook.databinding.FragmentCalendarBinding;
+import com.example.accountbook.dto.CategoryDTO;
 import com.example.accountbook.dto.MoneyDTO;
 import com.example.accountbook.item.Singleton_Date;
 import com.example.accountbook.viewmodel.CategorySettingViewModel;
@@ -43,15 +48,17 @@ import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 
 public class CalendarFragment extends Fragment implements OnMonthChangedListener, OnDateSelectedListener {
     private Singleton_Date s_date; // 날짜 변환한 거 저장하기
     private SaveMoneyViewModel moneyViewModel;
+    private CategorySettingViewModel categoryViewModel;
     private FragmentCalendarBinding binding;
+    private int incomeSeq, spendingSeq;
     private String nowStrDate;
+    private String[] bankCodeArray, bankValueArray;
     private Date nowDate, choiceDate;
     private EventDecorator oldEd = null;
 
@@ -67,6 +74,8 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
 
     @SuppressLint("SimpleDateFormat")
     private void init() {
+        setHasOptionsMenu(true); // 상단에 메뉴 표시하기
+
         s_date = Singleton_Date.getInstance();
         nowDate = new Date(System.currentTimeMillis());
         nowStrDate = new SimpleDateFormat("yyyy-MM-dd").format(nowDate);
@@ -83,6 +92,8 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
         // 뷰 모델 설정
         moneyViewModel = new ViewModelProvider(this).get(SaveMoneyViewModel.class);
         moneyViewModel.setMoneyInfoViewModel(getActivity(), getViewLifecycleOwner(),  nowStrDate, 99);
+        categoryViewModel = new ViewModelProvider(this).get(CategorySettingViewModel.class);
+        categoryViewModel.setViewModel(getActivity(), this, 1);
         setViewModel();
 
         // 플로팅버튼 클릭 시 이벤트 진행 > 입력 화면으로 전환
@@ -159,13 +170,13 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
             binding.f01DayPlus.setText("+ " + new DecimalFormat("#,###").format(plusMinusList.get(0)));
             binding.f01DayMinus.setText("- " + new DecimalFormat("#,###").format(plusMinusList.get(1)));
         });
-
+        // money info 변화 감지하여 달력에 녹색 점 찍기
         moneyViewModel.getMoneyLiveData().observe(getViewLifecycleOwner(), moneyList -> {
             ArrayList<CalendarDay> calendarDayList = new ArrayList<>();
 
             for(MoneyDTO dto : moneyList) {
                 String date = dto.getDate();
-                if(!date.equals("0")) {
+                if(!date.equals("0") && !dto.getCategory02().equals("01")) {
                     int year = Integer.parseInt(date.substring(0, 4));
                     // 달력이 0부터 시작해서 1월은 0, 2월은 1이다. 따라서 month 는 -1로 계산해줘야한다.
                     int month = Integer.parseInt(date.substring(5, date.length() - 3)) - 1;
@@ -180,6 +191,27 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
             binding.calendar.addDecorator(newEd);
             oldEd = newEd;
         });
+        // bank transfer (계좌 이체) 에 넘길 계좌 코드 array, 실제 값 array 설정
+        categoryViewModel.getCategoryListForShow().observe(getViewLifecycleOwner(), categoryList -> {
+            bankCodeArray = new String[categoryList.size()];
+            bankValueArray = new String[categoryList.size()];
+
+            for(int i=0; i<categoryList.size(); i++) {
+                CategoryDTO dto = categoryList.get(i);
+                bankCodeArray[i] = String.valueOf(dto.getSeq());
+                bankValueArray[i] = dto.getContents();
+            }
+        });
+        categoryViewModel.getCategoryList().observe(getViewLifecycleOwner(), categoryList -> {
+            // 셋팅값 가져오기 > money info 에 저장하기 위해 계좌이체 항목을 찾아야함
+            for(CategoryDTO dto : categoryList) {
+                if(dto.getCode().equals("9901001")) {
+                    incomeSeq = dto.getSeq();
+                } else if(dto.getCode().equals("9801001")) {
+                    spendingSeq = dto.getSeq();
+                }
+            }
+        });
     }
 
 
@@ -188,6 +220,22 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
         if(result.getResultCode() == RESULT_OK) {
             assert result.getData() != null;
             moneyViewModel.againSet(result.getData().getStringExtra("date"), 99);
+        }
+    });
+
+    @SuppressLint("SimpleDateFormat")
+    private final ActivityResultLauncher<Intent> transferPopup = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if(result.getResultCode() == RESULT_OK) {
+            assert  result.getData() != null;
+            String date = result.getData().getStringExtra("date");
+            int incomeCode = Integer.parseInt(result.getData().getStringExtra("incomeCode"));
+            int spendingCode = Integer.parseInt(result.getData().getStringExtra("spendingCode"));
+            String incomeBank = result.getData().getStringExtra("incomeBank");
+            String spendingBank = result.getData().getStringExtra("spendingBank");
+            String money = result.getData().getStringExtra("money");
+            String memo = result.getData().getStringExtra("memo");
+
+            moneyViewModel.insertTransferMoneyInfo(incomeCode, spendingCode, date, money, memo, incomeBank, spendingBank, incomeSeq, spendingSeq);
         }
     });
 
@@ -201,5 +249,31 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
 
             moneyViewModel.againSet(new SimpleDateFormat("yyyy-MM-dd").format(choiceDate), 99);
         }
+    }
+
+    // 좌측 상단에 메뉴(월마감, 계좌이체) 표시하기
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    // 상단 메뉴 클릭 시 실행 > 계좌이체, 월마감
+    @SuppressLint({"NonConstantResourceId", "SimpleDateFormat"})
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.tool_menu01:
+                Toast.makeText(getContext(), "월마감 클릭함", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.tool_menu02:
+                Intent intent = new Intent(getContext(), Popup_Transfer.class);
+                intent.putExtra("codeArray", bankCodeArray);
+                intent.putExtra("valueArray", bankValueArray);
+                intent.putExtra("date", new SimpleDateFormat("yyyy-MM-dd").format(choiceDate));
+                Log.e("C_DATE", new SimpleDateFormat("yyyy-MM-dd").format(choiceDate));
+                transferPopup.launch(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
