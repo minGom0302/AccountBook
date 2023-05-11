@@ -12,7 +12,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.example.accountbook.R;
@@ -20,14 +19,10 @@ import com.example.accountbook.adapter.BankListAdapter;
 import com.example.accountbook.databinding.ActivityPopupTransferListBinding;
 import com.example.accountbook.viewmodel.SaveMoneyViewModel;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 public class Popup_TransferList extends AppCompatActivity {
     private ActivityPopupTransferListBinding binding;
     private SaveMoneyViewModel moneyViewModel;
     private String date;
-    private int year, month;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +40,7 @@ public class Popup_TransferList extends AppCompatActivity {
         String strDate = date.substring(0, date.length() - 3).replaceAll("-", "년 ") + "월 ▼";
 
         moneyViewModel = new ViewModelProvider(this).get(SaveMoneyViewModel.class);
-        moneyViewModel.setSaveMoneyTransferViewModel(getParent(), date.substring(0, date.length() - 3) + "___");
+        moneyViewModel.setSaveMoneyTransferViewModel(this, date.substring(0, date.length() - 3) + "___");
         moneyViewModel.getTransferMoneyLiveData().observe(this, transferList -> {
             BankListAdapter adapter = new BankListAdapter(transferList);
             binding.popupTransferListRv.setAdapter(adapter);
@@ -88,8 +83,8 @@ public class Popup_TransferList extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> Popup_datePickerResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if(result.getResultCode() == RESULT_OK) {
             assert result.getData() != null;
-            this.year = result.getData().getIntExtra("year", Integer.parseInt(date.substring(0, 4)));
-            this.month = result.getData().getIntExtra("month", Integer.parseInt(date.substring(5, 7)));
+            int year = result.getData().getIntExtra("year", Integer.parseInt(date.substring(0, 4)));
+            int month = result.getData().getIntExtra("month", Integer.parseInt(date.substring(5, 7)));
             String m = String.format("%02d", month);
             date = year + "-" + m;
 
