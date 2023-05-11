@@ -6,4 +6,7 @@
     <item
         android:state_enabled="true"
         android:drawable="@drawable/background_rectangle_lightblue"/>
+    <item
+        android:state_enabled="false"
+        android:drawable="@drawable/background_rectangle_gray"/>
 </selector>

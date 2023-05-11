@@ -15,10 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,7 +25,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.example.accountbook.R;
 import com.example.accountbook.activity.Popup_DatePicker;
@@ -52,10 +49,11 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
     private List<String[]> categoryList02;
     private List<CategoryDTO> categoryDTOS;
     private String category01, category02;
-    private int year, month;
+    private int year, month, categorySeq;
     private InputMethodManager imm;
     private CategoryAdapter_01 adapter_01;
     private int rbCheckValue = 0;
+    private boolean isModifyMode = false;
     private final Calendar calendar = Calendar.getInstance();
 
     @Override
@@ -96,30 +94,16 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
             binding.f04Recyclerview.setAdapter(adapter_01);
             binding.f04Recyclerview.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
 
-            binding.f04SaveBtn.setEnabled(false);
-            binding.f04ContentsEt.setText("");
-            binding.f04ContentsEt.setEnabled(false);
-            binding.f04SpinnerCategory01.setEnabled(false);
-            binding.f04SpinnerCategory02.setEnabled(false);
-            binding.f04EndDayTv.setEnabled(false);
-            binding.f04EndDayTv.setText("");
+            setLayoutAndBtn(3, "", "", 0, 0, false);
 
             // recyclerview item 클릭 시 발생할 이벤트 > adapter 작성한 내용을 가져와서 작성
             adapter_01.setOnItemClickListener((v, categoryDTO) -> {
-                binding.f04SpinnerCategory01.setSelection(Arrays.asList(categoryList01.get(0)).indexOf(categoryDTO.getCategory01()));
-                binding.f04SpinnerCategory02.setSelection(Arrays.asList(categoryList02.get(0)).indexOf(categoryDTO.getCategory02()));
-                binding.f04ContentsEt.setText(categoryDTO.getContents());
-                binding.f04EndDayTv.setText(String.valueOf(categoryDTO.getStrEndDay()));
-                binding.f04ContentsEt.setEnabled(false);
-                binding.f04SpinnerCategory01.setEnabled(false);
-                binding.f04SpinnerCategory02.setEnabled(false);
-                binding.f04EndDayTv.setEnabled(false);
-                binding.f04SaveBtn.setEnabled(false);
+                this.categorySeq = categoryDTO.getSeq();
+                setLayoutAndBtn(0, categoryDTO.getContents(), categoryDTO.getStrEndDay(), Arrays.asList(categoryList01.get(0)).indexOf(categoryDTO.getCategory01())
+                        , Arrays.asList(categoryList02.get(0)).indexOf(categoryDTO.getCategory02()), false);
             });
             // recyclerview delete btn 클릭 시 발생할 이벤트
-            adapter_01.setOnItemDeleteListener((v, categoryDTO) ->
-                showDialog(0, "'" + categoryDTO.getContents() + "' 을(를) 삭제하시겠습니까?", categoryDTO)
-            );
+            adapter_01.setOnItemDeleteListener((v, categoryDTO) -> showDialog(0, "'" + categoryDTO.getContents() + "' 을(를) 삭제하시겠습니까?", categoryDTO));
         });
 
         // end day 클릭 이벤트
@@ -137,15 +121,12 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
         // 버튼 클릭 이벤트
         binding.f04NewBtn.setOnClickListener(v -> {
             hideKeyboard();
-            binding.f04EndDayTv.setText("");
-            binding.f04EndDayTv.setEnabled(true);
-            binding.f04ContentsEt.setText("");
-            binding.f04ContentsEt.setEnabled(true);
-            binding.f04SpinnerCategory01.setEnabled(true);
-            binding.f04SpinnerCategory02.setEnabled(true);
-            binding.f04SaveBtn.setEnabled(true);
-            binding.f04SpinnerCategory01.setSelection(0);
-            binding.f04SpinnerCategory02.setSelection(0);
+            isModifyMode = false;
+            setLayoutAndBtn(1, "", "", 0, 0, true);
+        });
+        binding.f04ModifyBtn.setOnClickListener(v -> {
+            isModifyMode = true;
+            setLayoutAndBtn(2, "", "", 0, 0, true);
         });
         binding.f04SaveBtn.setOnClickListener(v -> { // 새로운 카테고리/계좌 정보 저장
             hideKeyboard();
@@ -159,9 +140,16 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
             } else {
                 endDay = Integer.parseInt(binding.f04EndDayTv.getText().toString().replaceAll("-", ""));
             }
-            CategoryDTO insertDto = new CategoryDTO(userViewModel.getUserSeq(), category01 + category02 + String.format("%03d", categoryDTOS.size()+1)
-                                                    , category01 , category02, binding.f04ContentsEt.getText().toString(), endDay);
-            showDialog(2, "입력한 정보로 저장하시겠습니까?", insertDto);
+
+            if(isModifyMode) {
+                CategoryDTO modifyDto = new CategoryDTO(userViewModel.getUserSeq(), category01 + category02 + String.format("%03d", categoryDTOS.size())
+                        , category01, category02, binding.f04ContentsEt.getText().toString(), endDay);
+                showDialog(4, "입력한 정보로 수정하시겠습니까?", modifyDto);
+            } else {
+                CategoryDTO insertDto = new CategoryDTO(userViewModel.getUserSeq(), category01 + category02 + String.format("%03d", categoryDTOS.size()+1)
+                        , category01 , category02, binding.f04ContentsEt.getText().toString(), endDay);
+                showDialog(2, "입력한 정보로 저장하시겠습니까?", insertDto);
+            }
         });
     }
 
@@ -240,18 +228,31 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
             viewModel.setCategoryList(1); // recyclerview setting
             rbCheckValue = 1;
         }
-        binding.f04ContentsEt.setText("");
-        binding.f04ContentsEt.setEnabled(true);
-        binding.f04SpinnerCategory01.setEnabled(true);
-        binding.f04SpinnerCategory02.setEnabled(true);
-        binding.f04EndDayTv.setText("");
-        binding.f04EndDayTv.setEnabled(true);
     }
 
 
     // 키보드 내리기
     private void hideKeyboard() {
         imm.hideSoftInputFromWindow(binding.f04ContentsEt.getWindowToken(), 0);
+    }
+
+
+    // 위쪽 입력화면과 버튼 설정
+    private void setLayoutAndBtn(int cnd, String contents, String endDay, int spinner01, int spinner02, boolean isTrue) {
+        if(cnd != 2) {
+            binding.f04ContentsEt.setText(contents);
+            binding.f04EndDayTv.setText(endDay);
+            binding.f04SpinnerCategory01.setSelection(spinner01);
+            binding.f04SpinnerCategory02.setSelection(spinner02);
+        }
+
+        binding.f04ContentsEt.setEnabled(isTrue);
+        binding.f04EndDayTv.setEnabled(isTrue);
+        binding.f04SpinnerCategory01.setEnabled(isTrue);
+        binding.f04SpinnerCategory02.setEnabled(isTrue);
+        binding.f04NewBtn.setEnabled(cnd != 1);
+        binding.f04SaveBtn.setEnabled(isTrue);
+        binding.f04ModifyBtn.setEnabled(cnd == 0);
     }
 
 
@@ -269,6 +270,7 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
                     showDialog(1, "'" + dto.getContents() + "' (으)로 등록한 가계부 정보도 모두 삭제됩니다.\n그래도 삭제하시겠습니까?", dto);
                 else if (cnd == 1) viewModel.deleteCategory(dto, rbCheckValue);
                 else if (cnd == 2) viewModel.insertCategory(dto, rbCheckValue);
+                else if (cnd == 4) viewModel.updateCategory(dto, rbCheckValue, categorySeq);
             }));
             builder.setNegativeButton("아니오", ((dialogInterface, i) -> { }));
         } else {

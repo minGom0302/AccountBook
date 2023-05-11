@@ -46,6 +46,16 @@ public interface RetrofitAPI {
             @Query("endDay") int endDay
     );
 
+    @PUT("category/update/{seq}")
+    Call<Integer> updateCategoryInfo(
+            @Path("seq") int seq,
+            @Query("code") String code,
+            @Query("category01") String category01,
+            @Query("category02") String category02,
+            @Query("contents") String contents,
+            @Query("endDay") int endDay
+    );
+
     @DELETE("category/delete/{seq}")
     Call<Integer> deleteCategoryInfo(@Path("seq") int seq);
 

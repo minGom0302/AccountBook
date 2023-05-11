@@ -126,18 +126,29 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/f04_newBtn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:background="@drawable/btn_click01"
                     android:text="@string/newInput"
                     android:textColor="@color/white"/>
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/f04_modifyBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/btn_click01"
+                    android:text="@string/modify"
+                    android:textColor="@color/white"/>
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/f04_saveBtn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/btn_click01"
                     android:text="@string/save"
-                    android:textColor="@color/white"/>/
+                    android:textColor="@color/white"/>
             </LinearLayout>
         </LinearLayout>
 
