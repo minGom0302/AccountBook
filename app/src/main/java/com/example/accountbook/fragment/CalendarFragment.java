@@ -11,19 +11,18 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.accountbook.R;
 import com.example.accountbook.activity.InputOutputActivity;
@@ -49,6 +48,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class CalendarFragment extends Fragment implements OnMonthChangedListener, OnDateSelectedListener {
@@ -56,7 +56,9 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
     private SaveMoneyViewModel moneyViewModel;
     private CategorySettingViewModel categoryViewModel;
     private FragmentCalendarBinding binding;
-    private int incomeSeq, spendingSeq;
+    private List<CategoryDTO> categoryList;
+    private List<MoneyDTO> forwardList;
+    private int incomeSeq, spendingSeq, plusForwardSeq, minusForwardSeq;
     private String nowStrDate;
     private String[] bankCodeArray, bankValueArray;
     private Date nowDate, choiceDate;
@@ -158,6 +160,7 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
         moneyViewModel.getPlusAndMinusLiveData().observe(getViewLifecycleOwner(), plusMinusList -> {
             binding.f01MonthPlus.setText("+ " + new DecimalFormat("#,###").format(plusMinusList.get(0)));
             binding.f01MonthMinus.setText("- " + new DecimalFormat("#,###").format(plusMinusList.get(1)));
+            moneyViewModel.setMoneyInfo(2); // 잔액(월 마감)
         });
         // 날짜 선택에 따른 하단 리스트 보이기
         moneyViewModel.getCalendarDayLiveData().observe(getViewLifecycleOwner(), dayList -> {
@@ -191,6 +194,8 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
             binding.calendar.addDecorator(newEd);
             oldEd = newEd;
         });
+        // 월 마감을 위해 잔액을 항상 가지고 있고 바뀔 때 마다 감지
+        moneyViewModel.getMoneyInfoByDate().observe(getViewLifecycleOwner(), moneyList -> this.forwardList = moneyList);
         // bank transfer (계좌 이체) 에 넘길 계좌 코드 array, 실제 값 array 설정
         categoryViewModel.getCategoryListForShow().observe(getViewLifecycleOwner(), categoryList -> {
             bankCodeArray = new String[categoryList.size()];
@@ -204,11 +209,22 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
         });
         categoryViewModel.getCategoryList().observe(getViewLifecycleOwner(), categoryList -> {
             // 셋팅값 가져오기 > money info 에 저장하기 위해 계좌이체 항목을 찾아야함
+            // 이월처리하기 위해 forwardSeq 찾아야함
+            this.categoryList = categoryList;
             for(CategoryDTO dto : categoryList) {
-                if(dto.getCode().equals("9901001")) {
-                    incomeSeq = dto.getSeq();
-                } else if(dto.getCode().equals("9801001")) {
-                    spendingSeq = dto.getSeq();
+                switch (dto.getCode()) {
+                    case "9901001":
+                        incomeSeq = dto.getSeq();
+                        break;
+                    case "9801001":
+                        spendingSeq = dto.getSeq();
+                        break;
+                    case "9900001":
+                        plusForwardSeq = dto.getSeq();
+                        break;
+                    case "9889001" :
+                        minusForwardSeq = dto.getSeq();
+                        break;
                 }
             }
         });
@@ -258,19 +274,57 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
     }
 
     // 상단 메뉴 클릭 시 실행 > 계좌이체, 월마감
-    @SuppressLint({"NonConstantResourceId", "SimpleDateFormat"})
+    @SuppressLint({"NonConstantResourceId", "SimpleDateFormat", "DefaultLocale"})
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.tool_menu01:
-                Toast.makeText(getContext(), "월마감 클릭함", Toast.LENGTH_SHORT).show();
+                String beforeDate = new SimpleDateFormat("yyyy-MM-dd").format(choiceDate);
+                String saveDate = beforeDate.substring(0, 4) + "-" + String.format("%02d", Integer.parseInt(beforeDate.substring(5, 7))+1) + "-01";
+                int size = forwardList.size();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.DialogTheme);
+                builder.setTitle("안내").setMessage("월마감을 하면 잔액이 이월처리됩니다.\n계속하시곘습니까?");
+                builder.setPositiveButton("예", ((dialogInterface, i) -> {
+                    int count = 1;
+                    int isFinish = 2;
+                    for(MoneyDTO dto : forwardList) {
+                        if(dto.getBankContents().equals("미설정 계좌")) {
+                            if(size == count) isFinish = 1;
+                            if(dto.getIntMoney() < 0) {
+                                moneyViewModel.insertMoneyInfo(minusForwardSeq, 0, "98", saveDate, String.valueOf(dto.getIntMoney()).replace("-", ""), dto.getBankContents()+" 이월 처리", isFinish);
+                            } else {
+                                moneyViewModel.insertMoneyInfo(plusForwardSeq, 0, "99", saveDate, String.valueOf(dto.getIntMoney()).replace("-", ""), dto.getBankContents()+" 이월 처리", isFinish);
+                            }
+                            count++;
+                        }
+                        for(CategoryDTO c_DTO : categoryList) {
+                            if(dto.getBankCode().equals(c_DTO.getCode())) {
+                                if(size == count) isFinish = 1;
+                                if(dto.getIntMoney() < 0) {
+                                    moneyViewModel.insertMoneyInfo(minusForwardSeq, c_DTO.getSeq(), "98", saveDate, String.valueOf(dto.getIntMoney()).replace("-", ""), dto.getBankContents()+" 이월 처리", isFinish);
+                                } else {
+                                    moneyViewModel.insertMoneyInfo(plusForwardSeq, c_DTO.getSeq(), "99", saveDate, String.valueOf(dto.getIntMoney()).replace("-", ""), dto.getBankContents()+" 이월 처리", isFinish);
+                                }
+                                count++;
+                            }
+                        }
+                    }
+                }));
+                builder.setNegativeButton("아니오", ((dialogInterface, i) -> { }));
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.setOnShowListener(dialogInterface -> {
+                    alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+                    alertDialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                });
+                alertDialog.show();
                 break;
             case R.id.tool_menu02:
                 Intent intent = new Intent(getContext(), Popup_Transfer.class);
                 intent.putExtra("codeArray", bankCodeArray);
                 intent.putExtra("valueArray", bankValueArray);
                 intent.putExtra("date", new SimpleDateFormat("yyyy-MM-dd").format(choiceDate));
-                Log.e("C_DATE", new SimpleDateFormat("yyyy-MM-dd").format(choiceDate));
                 transferPopup.launch(intent);
                 break;
         }

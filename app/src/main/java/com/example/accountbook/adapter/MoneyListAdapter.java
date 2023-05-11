@@ -91,19 +91,25 @@ public class MoneyListAdapter extends RecyclerView.Adapter<MoneyListAdapter.MyVi
             holder.layout.setVisibility(View.GONE);
         }
 
-        holder.deleteBtn.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.DialogTheme);
-            builder.setTitle("안내").setMessage("해당 내역을 삭제하시겠습니까?");
-            builder.setPositiveButton("예", ((dialogInterface, i) -> saveMoneyViewModel.deleteSaveMoneyInfo(dto.getMoneySeq())));
-            builder.setNegativeButton("아니오", ((dialogInterface, i) -> { }));
+        if(!dto.getCategory02().equals("01")) {
+            holder.deleteBtn.setVisibility(View.VISIBLE);
+            holder.deleteBtn.setOnClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.DialogTheme);
+                builder.setTitle("안내").setMessage("해당 내역을 삭제하시겠습니까?");
+                builder.setPositiveButton("예", ((dialogInterface, i) -> saveMoneyViewModel.deleteSaveMoneyInfo(dto.getMoneySeq())));
+                builder.setNegativeButton("아니오", ((dialogInterface, i) -> {
+                }));
 
-            AlertDialog alertDialog = builder.create();
-            alertDialog.setOnShowListener(dialogInterface -> {
-                alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-                alertDialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.setOnShowListener(dialogInterface -> {
+                    alertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+                    alertDialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                });
+                alertDialog.show();
             });
-            alertDialog.show();
-        });
+        } else {
+            holder.deleteBtn.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

@@ -1,11 +1,9 @@
 package com.example.accountbook.viewmodel;
 
 import android.app.Activity;
-import android.util.Log;
 
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.accountbook.dto.MoneyDTO;
@@ -13,7 +11,6 @@ import com.example.accountbook.dto.TransferMoneyDTO;
 import com.example.accountbook.model.SaveMoneyModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -153,7 +150,6 @@ public class SaveMoneyViewModel extends ViewModel {
                         } else if (dto.getCategory01().equals("98")) {
                             money -= Integer.parseInt(dto.getMoney());
                         }
-                        Log.e("TEST", String.valueOf(money));
                         if(dto.getBankContents().equals("0")) {
                             dto.setBankContents("");
                         }
