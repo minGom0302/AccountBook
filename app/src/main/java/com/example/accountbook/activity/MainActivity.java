@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setTitle("안내").setMessage("로그아웃 하시겠습니까?");
             builder.setNegativeButton("아니오", ((dialogInterface, i) -> { }));
             builder.setPositiveButton("예", ((dialogInterface, i) -> {
+                userViewModel.setAutoLogin(false);
                 startActivity(new Intent(this, LoginActivity.class));
                 finishAffinity();
             }));
@@ -145,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     // 상단에 메뉴 표시하기
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toollbar_menu, menu);

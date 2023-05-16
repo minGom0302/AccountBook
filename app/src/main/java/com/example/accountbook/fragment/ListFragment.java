@@ -3,7 +3,6 @@ package com.example.accountbook.fragment;
 import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,11 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,24 +23,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.accountbook.R;
 import com.example.accountbook.activity.Popup_DatePicker;
+import com.example.accountbook.activity.Popup_InputOutput;
 import com.example.accountbook.adapter.CategoryListAdapter;
 import com.example.accountbook.adapter.MoneyListAdapter;
 import com.example.accountbook.databinding.FragmentListBinding;
+import com.example.accountbook.dto.CategoryDTO;
 import com.example.accountbook.dto.MoneyDTO;
-import com.example.accountbook.model.SaveMoneyModel;
 import com.example.accountbook.viewmodel.CategorySettingViewModel;
 import com.example.accountbook.viewmodel.SaveMoneyViewModel;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -56,6 +52,7 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
     private String searchDate;
     private int year, month;
     private int cnd = 0;
+    private String[] outPutBankCodeArray, outPutBankValueArray, outPutCategoryCodeArray, outPutCategoryValueArray, outPutcategory01Array;
     private TextView beforeTextView = null;
     private final Calendar calendar = Calendar.getInstance();
 
@@ -84,6 +81,39 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
         moneyViewModel = new ViewModelProvider(this).get(SaveMoneyViewModel.class);
         moneyViewModel.setMoneyInfoViewModel(getActivity(), getViewLifecycleOwner(), searchDate, 0);
 
+        // 카테고리 메뉴 가져와서 카드/계좌 분류하고 리스트도 가져옴 > 팝업 띄울 때 넘겨준다.
+        categorySettingViewModel.getCategoryList().observe(getViewLifecycleOwner(), categoryList -> {
+            String[] bankCodeArray = new String[categoryList.size()];
+            String[] bankValueArray = new String[categoryList.size()];
+            String[] categoryCodeArray = new String[categoryList.size()];
+            String[] categoryValueArray = new String[categoryList.size()];
+            String[] category01Array = new String[categoryList.size()];
+            int bankSize = 1;
+            int categorySize = 0;
+            bankCodeArray[0] = "";
+            bankValueArray[0] = "";
+
+            for(int i=0; i<categoryList.size(); i++) {
+                CategoryDTO dto = categoryList.get(i);
+                if(dto.getCategory01().equals("97") || dto.getCategory01().equals("96")) {
+                    bankCodeArray[bankSize] = String.valueOf(dto.getSeq());
+                    bankValueArray[bankSize] = dto.getContents();
+                    bankSize++;
+                } else if(dto.getCategory01().equals("99") || dto.getCategory01().equals("98")) {
+                    if(!dto.getCategory02().equals("01")) {
+                        categoryCodeArray[categorySize] = String.valueOf(dto.getSeq());
+                        categoryValueArray[categorySize] = dto.getContents();
+                        category01Array[categorySize] = dto.getCategory01();
+                        categorySize++;
+                    }
+                }
+            }
+            outPutBankCodeArray = Arrays.copyOf(bankCodeArray, bankSize);
+            outPutBankValueArray = Arrays.copyOf(bankValueArray, bankSize);
+            outPutCategoryCodeArray = Arrays.copyOf(categoryCodeArray, categorySize);
+            outPutCategoryValueArray = Arrays.copyOf(categoryValueArray, categorySize);
+            outPutcategory01Array = Arrays.copyOf(category01Array, categorySize);
+        });
         // live data (total money) 감지하여 바뀔 경우 실행
         moneyViewModel.getPlusAndMinusLiveData().observe(getViewLifecycleOwner(), integersList -> {
             binding.f02PlusTv.setText("+ " + new DecimalFormat("#,###").format(integersList.get(0)));
@@ -166,6 +196,24 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
             MoneyListAdapter moneyListAdapter = new MoneyListAdapter(moneyDtoList, cnd, moneyViewModel, getActivity());
             binding.f02MoneyRecyclerView.setAdapter(moneyListAdapter);
             binding.f02MoneyRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+
+            moneyListAdapter.setModifyItemClickListener((view, moneyDTO) -> {
+                Intent intent = new Intent(getContext(), Popup_InputOutput.class);
+                intent.putExtra("inputType", false);
+                intent.putExtra("settingsCode", moneyDTO.getSettingsCode());
+                intent.putExtra("money", moneyDTO.getMoney());
+                intent.putExtra("moneySeq", moneyDTO.getMoneySeq());
+                intent.putExtra("date", moneyDTO.getDate());
+                intent.putExtra("memo", moneyDTO.getMoneyMemo());
+                intent.putExtra("codeArray", outPutBankCodeArray);
+                intent.putExtra("valueArray", outPutBankValueArray);
+                intent.putExtra("bankPosition", moneyDTO.getBankContents());
+                intent.putExtra("categoryCodeArray", outPutCategoryCodeArray);
+                intent.putExtra("categoryValueArray", outPutCategoryValueArray);
+                intent.putExtra("categoryPosition", moneyDTO.getSettingsContents());
+                intent.putExtra("category01Value", outPutcategory01Array);
+                modifyPopup.launch(intent);
+            });
         });
 
         // 날짜 타이틀 클릭하면 popup 띄우기
@@ -261,6 +309,24 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
 
             setDateTitle(year + "년 " + m + "월");
             moneyViewModel.againSet(searchDate, cnd); // 월이 바뀌면 다시 정보 가져오기
+        }
+    });
+
+    // 수정화면에서 돌아왔을 때
+    @SuppressLint("SimpleDateFormat")
+    private final ActivityResultLauncher<Intent> modifyPopup = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if(result.getResultCode() == RESULT_OK) {
+            assert  result.getData() != null;
+            Intent returnIntent = result.getData();
+            int seq = returnIntent.getIntExtra("seq", 0);
+            int settingsSeq = returnIntent.getIntExtra("settingsSeq", 0);
+            int bankSeq = returnIntent.getIntExtra("bankSeq", 0);
+            String in_sp = returnIntent.getStringExtra("in_sp");
+            String inputDate = returnIntent.getStringExtra("date");
+            String inputMoney = returnIntent.getStringExtra("money");
+            String inputMemo = returnIntent.getStringExtra("memo");
+
+            moneyViewModel.modifyMoneyInfo(seq, settingsSeq, bankSeq, in_sp, inputDate, inputMoney, inputMemo, searchDate);
         }
     });
 

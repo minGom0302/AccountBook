@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -23,9 +22,7 @@ import com.example.accountbook.adapter.SpinnerAdapter;
 import com.example.accountbook.databinding.ActivityPopupTransferBinding;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 public class Popup_Transfer extends Activity implements TextWatcher {
     private ActivityPopupTransferBinding binding;
@@ -115,7 +112,7 @@ public class Popup_Transfer extends Activity implements TextWatcher {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, android.R.style.Theme_Holo_Light_Dialog_MinWidth, (datePicker, year, month, day) -> {
             mYear = year;
-            mMonth = month + 1;
+            mMonth = month;
             mDay = day;
             String strMonth = String.format("%02d", month+1);
             String strDay = String.format("%02d", day);

@@ -161,6 +161,23 @@ public class SaveMoneyModel {
     }
 
 
+    // 입력한 money info 로 수정하기
+    public void modifyMoneyInfo(int seq, int settingsSeq, int bankSeq, String in_sp, String inputDate, String money, String memo, String choiceDate) {
+        api.modifyMoneyInfo(seq, settingsSeq, bankSeq, in_sp, inputDate, money, memo).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
+                Toast.makeText(activity, "저장되었습니다.", Toast.LENGTH_SHORT).show();
+                getMoneyDataByDate(choiceDate.substring(0, choiceDate.length()-3) + "___");
+                spClient.setIsChange(true);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Integer> call, @NonNull Throwable t) {
+                Toast.makeText(activity, "잠시 후 다시 시도해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public MutableLiveData<List<MoneyDTO>> getMoneyLiveData() {
         return moneyLiveData;
     }

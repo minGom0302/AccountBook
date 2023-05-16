@@ -2,11 +2,9 @@ package com.example.accountbook.model;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.accountbook.activity.LoginActivity;
@@ -31,8 +29,8 @@ public class UserModel {
         spClient = new SharedPreferencesClient(activity);
     }
 
-    public void login(String userId) {
-        api.getUserInfo(userId).enqueue(new Callback<UserInfoDTO>() {
+    public void login(String userId, String userPw, boolean isAutoLogin, boolean isSaveId) {
+        api.getUserInfo(userId, userPw).enqueue(new Callback<UserInfoDTO>() {
             @Override
             public void onResponse(@NonNull Call<UserInfoDTO> call, @NonNull Response<UserInfoDTO> response) {
                 if(response.isSuccessful() && response.body() != null) {
@@ -43,6 +41,10 @@ public class UserModel {
                     spClient.setUserId(dto.getUserId());
                     spClient.setUserName(dto.getUserName());
                     spClient.setUserNickname(dto.getUserNickname());
+                    spClient.setAutoLogin(isAutoLogin);
+                    spClient.setSaveId(isSaveId);
+                } else {
+                    userInfo.postValue(null);
                 }
             }
 
@@ -89,11 +91,17 @@ public class UserModel {
         return userInfo;
     }
     public int getUserSeq() { return spClient.getUserSeq(); }
+    public String getUserId() { return spClient.getUserId(); }
     public String getUserName() { return spClient.getUserName(); }
     public String getUserNickname() { return spClient.getUserNickname(); }
+    public boolean getAutoLogin() { return spClient.getAutoLogin(); }
+    public boolean getSaveId() { return spClient.getSaveId(); }
     // Setter
     public void setUserNickname(String userNickname) {
         spClient.setUserNickname(userNickname);
         nicknameChange(userNickname);
+    }
+    public void setAutoLogin(boolean isAutoLogin) {
+        spClient.setAutoLogin(isAutoLogin);
     }
 }

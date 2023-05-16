@@ -23,10 +23,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.accountbook.R;
 import com.example.accountbook.activity.InputOutputActivity;
 import com.example.accountbook.activity.MainActivity;
+import com.example.accountbook.activity.Popup_InputOutput;
 import com.example.accountbook.activity.Popup_Transfer;
 import com.example.accountbook.adapter.MoneyListAdapter;
 import com.example.accountbook.calendar_deco.EventDecorator;
@@ -47,6 +49,7 @@ import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -60,7 +63,7 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
     private List<MoneyDTO> forwardList;
     private int incomeSeq, spendingSeq, plusForwardSeq, minusForwardSeq;
     private String nowStrDate;
-    private String[] bankCodeArray, bankValueArray;
+    private String[] bankCodeArray, bankValueArray, outPutBankCodeArray, outPutBankValueArray, outPutCategoryCodeArray, outPutCategoryValueArray, outPutcategory01Array;
     private Date nowDate, choiceDate;
     private EventDecorator oldEd = null;
 
@@ -167,6 +170,24 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
             MoneyListAdapter moneyListAdapter = new MoneyListAdapter(dayList, 2, moneyViewModel, getActivity());
             binding.f01Recyclerview.setAdapter(moneyListAdapter);
             binding.f01Recyclerview.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+
+            moneyListAdapter.setModifyItemClickListener((view, moneyDTO) -> {
+                Intent intent = new Intent(getContext(), Popup_InputOutput.class);
+                intent.putExtra("inputType", false);
+                intent.putExtra("settingsCode", moneyDTO.getSettingsCode());
+                intent.putExtra("money", moneyDTO.getMoney());
+                intent.putExtra("moneySeq", moneyDTO.getMoneySeq());
+                intent.putExtra("date", moneyDTO.getDate());
+                intent.putExtra("memo", moneyDTO.getMoneyMemo());
+                intent.putExtra("codeArray", outPutBankCodeArray);
+                intent.putExtra("valueArray", outPutBankValueArray);
+                intent.putExtra("bankPosition", moneyDTO.getBankContents());
+                intent.putExtra("categoryCodeArray", outPutCategoryCodeArray);
+                intent.putExtra("categoryValueArray", outPutCategoryValueArray);
+                intent.putExtra("categoryPosition", moneyDTO.getSettingsContents());
+                intent.putExtra("category01Value", outPutcategory01Array);
+                modifyPopup.launch(intent);
+            });
         });
         // 날짜 선택에 따른 하단금액 계산
         moneyViewModel.getDayMoneyLiveData().observe(getViewLifecycleOwner(), plusMinusList -> {
@@ -200,16 +221,20 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
         categoryViewModel.getCategoryListForShow().observe(getViewLifecycleOwner(), categoryList -> {
             bankCodeArray = new String[categoryList.size()];
             bankValueArray = new String[categoryList.size()];
+            outPutBankCodeArray = new String[categoryList.size()+1];
+            outPutBankValueArray = new String[categoryList.size()+1];
 
             for(int i=0; i<categoryList.size(); i++) {
                 CategoryDTO dto = categoryList.get(i);
                 bankCodeArray[i] = String.valueOf(dto.getSeq());
                 bankValueArray[i] = dto.getContents();
+                outPutBankCodeArray[i + 1] = String.valueOf(dto.getSeq());
+                outPutBankValueArray[i + 1] = dto.getContents();
             }
         });
+        // 셋팅값 가져오기 > money info 에 저장하기 위해 계좌이체 항목을 찾아야함
+        // 이월처리하기 위해 forwardSeq 찾아야함
         categoryViewModel.getCategoryList().observe(getViewLifecycleOwner(), categoryList -> {
-            // 셋팅값 가져오기 > money info 에 저장하기 위해 계좌이체 항목을 찾아야함
-            // 이월처리하기 위해 forwardSeq 찾아야함
             this.categoryList = categoryList;
             for(CategoryDTO dto : categoryList) {
                 switch (dto.getCode()) {
@@ -227,6 +252,28 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
                         break;
                 }
             }
+        });
+        // 카테고리 메뉴 가져와서 카드/계좌 분류하고 리스트도 가져옴 > 팝업 띄울 때 넘겨준다.
+        categoryViewModel.getCategoryList().observe(getViewLifecycleOwner(), categoryList -> {
+            String[] categoryCodeArray = new String[categoryList.size()];
+            String[] categoryValueArray = new String[categoryList.size()];
+            String[] category01Array = new String[categoryList.size()];
+            int categorySize = 0;
+
+            for(int i=0; i<categoryList.size(); i++) {
+                CategoryDTO dto = categoryList.get(i);
+                if(dto.getCategory01().equals("99") || dto.getCategory01().equals("98")) {
+                    if(!dto.getCategory02().equals("01")) {
+                        categoryCodeArray[categorySize] = String.valueOf(dto.getSeq());
+                        categoryValueArray[categorySize] = dto.getContents();
+                        category01Array[categorySize] = dto.getCategory01();
+                        categorySize++;
+                    }
+                }
+            }
+            outPutCategoryCodeArray = Arrays.copyOf(categoryCodeArray, categorySize);
+            outPutCategoryValueArray = Arrays.copyOf(categoryValueArray, categorySize);
+            outPutcategory01Array = Arrays.copyOf(category01Array, categorySize);
         });
     }
 
@@ -252,6 +299,25 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
             String memo = result.getData().getStringExtra("memo");
 
             moneyViewModel.insertTransferMoneyInfo(incomeCode, spendingCode, date, money, memo, incomeBank, spendingBank, incomeSeq, spendingSeq);
+        }
+    });
+
+
+    // 수정화면에서 돌아왔을 때
+    @SuppressLint("SimpleDateFormat")
+    private final ActivityResultLauncher<Intent> modifyPopup = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if(result.getResultCode() == RESULT_OK) {
+            assert  result.getData() != null;
+            Intent returnIntent = result.getData();
+            int seq = returnIntent.getIntExtra("seq", 0);
+            int settingsSeq = returnIntent.getIntExtra("settingsSeq", 0);
+            int bankSeq = returnIntent.getIntExtra("bankSeq", 0);
+            String in_sp = returnIntent.getStringExtra("in_sp");
+            String inputDate = returnIntent.getStringExtra("date");
+            String inputMoney = returnIntent.getStringExtra("money");
+            String inputMemo = returnIntent.getStringExtra("memo");
+
+            moneyViewModel.modifyMoneyInfo(seq, settingsSeq, bankSeq, in_sp, inputDate, inputMoney, inputMemo, new SimpleDateFormat("yyyy-MM-dd").format(choiceDate));
         }
     });
 

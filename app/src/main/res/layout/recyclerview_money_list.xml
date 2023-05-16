@@ -18,13 +18,12 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:src="@drawable/image_delete"
-            android:background="@null"/>
+            android:background="@null" />
 
         <TextView
             android:id="@+id/reCaML_dateTv"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.2"
             android:layout_gravity="center"
             android:textColor="@color/black"
             android:textAlignment="center"/>

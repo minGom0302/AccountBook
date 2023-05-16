@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
@@ -12,11 +11,11 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:paddingVertical="10dp"
                 android:text="@string/tool_menu02"
                 android:textSize="22sp"
@@ -26,10 +25,11 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/popupTransfer_listBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:background="@null"
-                android:text="이체 내역" />
+                android:layout_height="30dp"
+                android:layout_marginEnd="5dp"
+                android:layout_gravity="end|center_vertical"
+                android:background="@drawable/background_rectangle"
+                android:text="@string/tool_menu03" />
         </FrameLayout>
 
         <TextView
@@ -38,9 +38,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginBottom="20dp"
-            android:textSize="17sp"
-            android:textColor="@color/black" />
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"
+            android:background="@drawable/background_rectangle"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
 
         <TextView
             android:layout_width="match_parent"

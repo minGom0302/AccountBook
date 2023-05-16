@@ -49,6 +49,8 @@
     <string name="endDay">사용 종료 일자</string>
     <string name="arrow">→</string>
     <string name="modify">수정</string>
+    <string name="autoLogin">자동 로그인</string>
+    <string name="saveId">아이디 저장</string>
 
 
     <string name="text01">※ 둘 중 하나 선택</string>
@@ -63,12 +65,15 @@
     <string name="text10">비밀번호를 입력해주세요.</string>
     <string name="text11">이체할 금액을 입력해주세요.</string>
     <string name="text12">지출 중분류 사용 여부</string>
-    <string name="text13">※ 날짜를 클릭하여 변경 가능</string>
+    <string name="text13">아이디를 입력해주세요.</string>
     <string name="text14">※ 계좌/카드는 설정화면에서 설정 가능</string>
     <string name="text15">(빈칸 가능)</string>
     <string name="text16">금액을 입력해주세요.</string>
     <string name="text17">메모할 내용을 입력해주세요.</string>
     <string name="text18">※ 해당 목록은 카테고리 설정에서 변경할 수 있습니다.</string>
+    <string name="text19">정보를 잊어버렸나요?</string>
+    <string name="text20">회원가입 하기</string>
+    <string name="text21">회원정보 찾기</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -66,7 +66,8 @@ public class CategorySettingViewModel extends ViewModel {
         List<CategoryDTO> dtoList = new ArrayList<>();
         for(CategoryDTO dto : Objects.requireNonNull(categoryList.getValue())) {
             // 카테고리를 선택했을 때 코드값이 99, 98인 것만 셋팅
-            if(cnd == 0 && (dto.getCategory01().equals("99") || dto.getCategory01().equals("98"))) dtoList.add(dto);
+            if(cnd == 0 && !dto.getCategory02().equals("01") && !dto.getCode().equals("9889001") && !dto.getCode().equals("9900001")
+                    && (dto.getCategory01().equals("99") || dto.getCategory01().equals("98"))) dtoList.add(dto);
             // 계좌등록을 선택했을 떄 코드값이 97, 96인 것만 셋팅
             else if(cnd == 1 && (dto.getCategory01().equals("97") || dto.getCategory01().equals("96"))) dtoList.add(dto);
         }

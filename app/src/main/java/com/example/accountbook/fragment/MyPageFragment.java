@@ -3,30 +3,23 @@ package com.example.accountbook.fragment;
 import static android.app.Activity.RESULT_OK;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.example.accountbook.R;
 import com.example.accountbook.activity.LoginActivity;
@@ -36,8 +29,6 @@ import com.example.accountbook.databinding.FragmentMyPageBinding;
 import com.example.accountbook.viewmodel.CategorySettingViewModel;
 import com.example.accountbook.viewmodel.SaveMoneyViewModel;
 import com.example.accountbook.viewmodel.UserViewModel;
-
-import java.util.Objects;
 
 public class MyPageFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
     private FragmentMyPageBinding binding;
@@ -91,9 +82,7 @@ public class MyPageFragment extends Fragment implements RadioGroup.OnCheckedChan
         binding.f03ContentsReset.setOnClickListener(v ->
             showDialog(1, "지금까지 기록한 내용을 모두 삭제하시겠습니까?")
         );
-        binding.f03InfoBtn01.setOnClickListener(v -> {
-            showDialog(99, "지출의 중분류는 고정비/변동비/준변동비를 말합니다.\n미사용 선택 시 중분류는 화면에서 보여지지 않습니다.");
-        });
+        binding.f03InfoBtn01.setOnClickListener(v -> showDialog(99, "지출의 중분류는 고정비/변동비/준변동비를 말합니다.\n미사용 선택 시 중분류는 화면에서 보여지지 않습니다."));
     }
 
 
@@ -104,6 +93,7 @@ public class MyPageFragment extends Fragment implements RadioGroup.OnCheckedChan
         if(cnd != 99) {
             builder.setPositiveButton("예", ((dialogInterface, i) -> {
                 if (cnd == 0) {
+                    userViewModel.setAutoLogin(false);
                     requireActivity().startActivity(new Intent(getContext(), LoginActivity.class));
                     requireActivity().finishAffinity();
                 } else if (cnd == 1) {

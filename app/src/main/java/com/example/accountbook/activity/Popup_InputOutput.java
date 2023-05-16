@@ -1,13 +1,11 @@
 package com.example.accountbook.activity;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,7 +16,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -26,21 +23,17 @@ import android.widget.Toast;
 import com.example.accountbook.R;
 import com.example.accountbook.adapter.SpinnerAdapter;
 import com.example.accountbook.databinding.ActivityPopupInputOutputBinding;
-import com.example.accountbook.dto.CategoryDTO;
-import com.example.accountbook.viewmodel.CategorySettingViewModel;
-import com.example.accountbook.viewmodel.SaveMoneyViewModel;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 
 public class Popup_InputOutput extends Activity implements TextWatcher {
     private ActivityPopupInputOutputBinding binding;
     private String[] codeArray;
-    private String bankSeq;
+    private String bankSeq, categorySeq, category01;
+    private int moneySeq, mYear, mMonth, mDay;
     private String result = "";
+    private boolean first = true;
     private InputMethodManager imm;
     private final DecimalFormat commaFormat = new DecimalFormat("#,###");
 
@@ -58,6 +51,8 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         // 넘긴 값 셋
         Intent intent = getIntent();
+        boolean inputType = intent.getBooleanExtra("inputType", true);
+
         String[] valueArray = intent.getStringArrayExtra("valueArray");
         codeArray = intent.getStringArrayExtra("codeArray");
 
@@ -69,12 +64,67 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 bankSeq = codeArray[i];
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }
         });
 
-        // 내용 설정
-        binding.popupIoContentsTv.setText(intent.getStringExtra("contents"));
+        // input 설정
+        if(inputType) {
+            // 내용 설정
+            binding.popupIoContentsTv.setText(intent.getStringExtra("contents"));
+            binding.popupIoOkBtn.setOnClickListener(v -> mShowDialog(0, "입력한 내용으로 저장하시겠습니까?"));
+        } else { // output 설정 > 수정 할 수 있는 화면
+            setEnable(false); // 사용 여부 설정
+            moneySeq = intent.getIntExtra("moneySeq", 0);
+            String[] category01Array = intent.getStringArrayExtra("category01Value");
+
+            // 화면 보여주기 설정
+            binding.popupIoSpinnerCategory.setVisibility(View.VISIBLE);
+            binding.popupIoModifyBtn.setVisibility(View.VISIBLE);
+            binding.popupIoTextTv01.setVisibility(View.GONE);
+            binding.popupIoTextTv02.setVisibility(View.GONE);
+            binding.popupIoTextTv03.setVisibility(View.GONE);
+
+            // 내용 설정
+            binding.popupIoTitleTv.setText("상세보기");
+            binding.popupIoContentsTv.setText(intent.getStringExtra("date"));
+            binding.popupIoMemoEt.setText(intent.getStringExtra("memo"));
+            binding.popupIoMoneyEt.setText(commaFormat.format(Integer.parseInt(intent.getStringExtra("money"))));
+
+            // 스피너 설정
+            String[] categoryCode = intent.getStringArrayExtra("categoryCodeArray");
+            String[] categoryValue = intent.getStringArrayExtra("categoryValueArray");
+            int categoryPosition = Arrays.asList(categoryValue).indexOf(intent.getStringExtra("categoryPosition"));
+            int bankPosition = Arrays.asList(valueArray).indexOf(intent.getStringExtra("bankPosition"));
+
+            SpinnerAdapter categoryAdapter02 = new SpinnerAdapter(categoryCode, categoryValue, this, 0);
+            binding.popupIoSpinnerCategory.setAdapter(categoryAdapter02);
+            binding.popupIoSpinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    categorySeq = categoryCode[i];
+                    category01 = category01Array[i];
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) { }
+            });
+            binding.popupIoSpinner.setSelection(bankPosition);
+            binding.popupIoSpinnerCategory.setSelection(categoryPosition);
+
+            // 클릭 이벤트 설정
+            binding.popupIoContentsTv.setOnClickListener(v -> dateChoice(intent.getStringExtra("date")));
+            binding.popupIoOkBtn.setOnClickListener(v -> mShowDialog(2, "입력한 내용으로 수정하시겠습니까?"));
+            binding.popupIoModifyBtn.setOnClickListener(v -> {
+                if(intent.getStringExtra("settingsCode").equals("9901001") || intent.getStringExtra("settingsCode").equals("9801001")) {
+                    mShowDialog(3, "계좌 이체는 이체 내역을 통해 수정해주시기 바랍니다.");
+                } else {
+                    setEnable(true);
+                    binding.popupIoTitleTv.setText("수정하기");
+                }
+            });
+        }
 
         // 금액 입력 시 금액 콤마 찍기
         binding.popupIoMoneyEt.addTextChangedListener(this);
@@ -82,7 +132,47 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
         // 클릭 이벤트
         binding.popupIoLayout.setOnClickListener(v -> hideKeyboard());
         binding.popupIoCloseBtn.setOnClickListener(v -> mShowDialog(1, "입력을 멈추고 해당 화면을 닫으시겠습니까?"));
-        binding.popupIoOkBtn.setOnClickListener(v -> mShowDialog(0, "입력한 내용으로 저장하시겠습니까?"));
+    }
+
+
+    // 화면 enable 한번에 설정하기
+    private void setEnable(boolean isTrue) {
+        binding.popupIoContentsTv.setEnabled(isTrue);
+        binding.popupIoSpinner.setEnabled(isTrue);
+        binding.popupIoSpinnerCategory.setEnabled(isTrue);
+        binding.popupIoMoneyEt.setEnabled(isTrue);
+        binding.popupIoMemoEt.setEnabled(isTrue);
+        binding.popupIoOkBtn.setEnabled(isTrue);
+        binding.popupIoModifyBtn.setEnabled(!isTrue);
+    }
+
+
+    // DatePicker 열고 선택 시 날짜 셋팅하게 함
+    @SuppressLint("DefaultLocale")
+    private void dateChoice(String date) {
+        if(first) {
+            mYear = Integer.parseInt(date.substring(0, 4));
+            mMonth = Integer.parseInt(date.substring(5, 7)) - 1;
+            mDay = Integer.parseInt(date.substring(8));
+            first = false;
+        }
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, android.R.style.Theme_Holo_Light_Dialog_MinWidth, (datePicker, year, month, day) -> {
+            mYear = year;
+            mMonth = month;
+            mDay = day;
+            String strMonth = String.format("%02d", month+1);
+            String strDay = String.format("%02d", day);
+
+            String mDate = year + "-" + strMonth + "-" + strDay;
+
+            binding.popupIoContentsTv.setText(mDate);
+        }, mYear, mMonth, mDay);
+        // 스피너와 캘린더뷰를 같이 보여주기 때문에 캘린더 뷰 안보이게 설정
+        datePickerDialog.getDatePicker().setCalendarViewShown(false);
+        // 뒷배경이 투명한 다이얼로그 생성
+        datePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        datePickerDialog.show();
     }
 
 
@@ -91,14 +181,20 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
         hideKeyboard();
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
         builder.setTitle("안내").setMessage(msg);
-        builder.setPositiveButton("예", ((dialogInterface, i) -> {
-            if(cnd == 0) {
-                saveInfo();
-            } else if(cnd == 1) {
-                finish();
-            }
-        }));
-        builder.setNegativeButton("아니오", (((dialogInterface, i) -> {  })));
+        if(cnd != 3) {
+            builder.setPositiveButton("예", ((dialogInterface, i) -> {
+                if (cnd == 0) {
+                    saveInfo();
+                } else if (cnd == 1) {
+                    finish();
+                } else if (cnd == 2) {
+                    modifyInfo();
+                }
+            }));
+            builder.setNegativeButton("아니오", (((dialogInterface, i) -> { })));
+        } else {
+            builder.setPositiveButton("확인", ((dialogInterface, i) -> { }));
+        }
 
         AlertDialog dialog = builder.create();
         dialog.setOnShowListener(dialogInterface -> {
@@ -108,7 +204,7 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
         dialog.show();
     }
 
-
+    // 입력 내용 저장하기
     private void saveInfo() {
         //이제 여기서 완료하면 bankSeq, memo, money 넘기기
         String money = binding.popupIoMoneyEt.getText().toString().replaceAll(",", "");
@@ -118,6 +214,22 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
         intent.putExtra("bankSeq", Integer.parseInt(bankSeq));
         intent.putExtra("money", money);
         intent.putExtra("memo", memo);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    // 입력 내용으로 수정하기
+    private void modifyInfo() {
+        if(bankSeq.equals("")) bankSeq = "0";
+        // Log.e("modify", "seq : " + moneySeq + " / settingSeq : " + categorySeq + " / bankSeq : " + bankSeq + " / in_sp : " + category01 +  " / date : " + binding.popupIoContentsTv.getText().toString() + " / money : " + binding.popupIoMoneyEt.getText().toString().replaceAll(",", "") + "/ memo : " + binding.popupIoMemoEt.getText().toString() + " / transferSeq : " + 1);
+        Intent intent = new Intent();
+        intent.putExtra("seq", moneySeq);
+        intent.putExtra("settingsSeq", Integer.parseInt(categorySeq));
+        intent.putExtra("bankSeq", Integer.parseInt(bankSeq));
+        intent.putExtra("in_sp", category01);
+        intent.putExtra("date", binding.popupIoContentsTv.getText().toString());
+        intent.putExtra("money", binding.popupIoMoneyEt.getText().toString().replaceAll(",", ""));
+        intent.putExtra("memo", binding.popupIoMemoEt.getText().toString());
         setResult(RESULT_OK, intent);
         finish();
     }

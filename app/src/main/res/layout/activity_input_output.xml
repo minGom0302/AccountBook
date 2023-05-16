@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".activity.InputOutputActivity">
@@ -89,7 +89,8 @@
                             android:id="@+id/io_expendingRv01"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4" />
+                            android:layout_weight="4"
+                            android:nestedScrollingEnabled="false" />
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -107,7 +108,8 @@
                             android:id="@+id/io_expendingRv02"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4" />
+                            android:layout_weight="4"
+                            android:nestedScrollingEnabled="false" />
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -125,13 +127,15 @@
                             android:id="@+id/io_expendingRv03"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4" />
+                            android:layout_weight="4"
+                            android:nestedScrollingEnabled="false" />
                     </LinearLayout>
                 </LinearLayout>
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/io_rv02"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
             </FrameLayout>
 
             <LinearLayout
@@ -153,5 +157,5 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </layout>

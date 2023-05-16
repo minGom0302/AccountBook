@@ -18,7 +18,10 @@ import retrofit2.http.Query;
 public interface RetrofitAPI {
     /* user info */
     @GET("user/{userId}")
-    Call<UserInfoDTO> getUserInfo(@Path("userId") String userId);
+    Call<UserInfoDTO> getUserInfo(
+            @Path("userId") String userId,
+            @Query("userPw") String userPw
+    );
 
     @PUT("user/nickname/{userSeq}")
     Call<Integer> nicknameChange(
@@ -96,6 +99,17 @@ public interface RetrofitAPI {
             @Query("expandingBank") String expandingBank,
             @Query("incomeSettingsSeq") int incomeSettingsSeq,
             @Query("expandingSettingsSeq") int expandingSettingsSeq
+    );
+
+    @PUT("money/modify/{seq}")
+    Call<Integer> modifyMoneyInfo(
+            @Path("seq") int seq,
+            @Query("settingsSeq") int settingsSeq,
+            @Query("bankSeq") int bankSeq,
+            @Query("in_sp") String in_sp,
+            @Query("date") String date,
+            @Query("money") String money,
+            @Query("memo") String memo
     );
 
     @DELETE("money/delete/all/{userSeq}")

@@ -265,6 +265,13 @@ public class SaveMoneyViewModel extends ViewModel {
         model.insertMoneyInfo(settingsSeq, bankSeq, in_sp, date, money, memo, isFinish);
     }
 
+
+    // money info 수정하기
+    public void modifyMoneyInfo(int seq, int settingsSeq, int bankSeq, String in_sp, String inputDate, String money, String memo, String choiceDate) {
+        model.modifyMoneyInfo(seq, settingsSeq, bankSeq, in_sp, inputDate, money, memo, choiceDate);
+    }
+
+
     // Getter
     public MutableLiveData<List<MoneyDTO>> getMoneyInfoByDate() {
         return returnMoneyLiveData;

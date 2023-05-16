@@ -11,6 +11,7 @@
         tools:context=".activity.Popup_InputOutput">
 
         <TextView
+            android:id="@+id/popupIo_titleTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -22,6 +23,7 @@
             android:background="@color/light_blue02"/>
 
         <TextView
+            android:id="@+id/popupIo_textTv01"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
@@ -31,6 +33,7 @@
             android:textAlignment="center"/>
 
         <TextView
+            android:id="@+id/popupIo_textTv02"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
@@ -50,7 +53,18 @@
             android:textColor="@color/black"
             android:textAlignment="center"/>
 
+        <Spinner
+            android:id="@+id/popupIo_spinnerCategory"
+            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/spinner_frame01"
+            android:spinnerMode="dropdown"
+            android:visibility="gone"/>
+
         <TextView
+            android:id="@+id/popupIo_textTv03"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
@@ -111,6 +125,16 @@
             android:layout_marginHorizontal="5dp"
             android:orientation="horizontal">
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/popupIo_modifyBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="5dp"
+                android:text="@string/modify"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_click01"
+                android:visibility="gone" />
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/popupIo_okBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -123,6 +147,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginStart="5dp"
                 android:text="@string/close"
                 android:textColor="@color/white"
                 android:background="@drawable/btn_click01"/>

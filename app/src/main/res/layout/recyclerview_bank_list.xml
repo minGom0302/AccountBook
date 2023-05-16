@@ -42,14 +42,14 @@
                     android:id="@+id/reBank_moneyTv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.7"
+                    android:layout_weight="1"
                     android:layout_marginEnd="5dp"
                     android:textColor="@color/black"
                     android:textAlignment="textEnd" />
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.3"
+                    android:layout_marginEnd="10dp"
                     android:text="@string/won"
                     android:textColor="@color/black" />
             </LinearLayout>

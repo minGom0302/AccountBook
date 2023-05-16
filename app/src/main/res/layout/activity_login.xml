@@ -1,27 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
+        android:id="@+id/loginLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:background="@color/white"
         tools:context=".activity.LoginActivity">
 
-        <Button
-            android:id="@+id/loginBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/login"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+        <ImageView
+            android:id="@+id/loginImgView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/a"
+            tools:ignore="ContentDescription" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/loginEtLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="30dp"
+            android:orientation="vertical"
+            android:visibility="invisible">
+            <EditText
+                android:id="@+id/loginIdEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:hint="@string/text13"
+                android:textSize="15sp"
+                android:textColorHint="@color/gray01"
+                android:background="@drawable/background_rectangle"
+                android:maxLines="1"
+                android:inputType="textVisiblePassword"
+                android:nextFocusDown="@id/loginPwEt"
+                tools:ignore="Autofill,TextFields" />
+            <EditText
+                android:id="@+id/loginPwEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:hint="@string/text10"
+                android:textSize="15sp"
+                android:textColorHint="@color/gray01"
+                android:background="@drawable/background_rectangle"
+                android:maxLines="1"
+                android:inputType="textPassword"
+                android:imeOptions="actionDone"
+                tools:ignore="Autofill,TextFields" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:orientation="horizontal">
+                <CheckBox
+                    android:id="@+id/loginAutoLoginCb"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/light_blue01"
+                    android:text="@string/autoLogin"/>
+                <CheckBox
+                    android:id="@+id/loginSaveIdCb"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/light_blue01"
+                    android:text="@string/saveId"/>
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/loginBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_click01"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:text="@string/text19"
+                android:textColor="@color/black" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/loginRegisterBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:background="@null"
+                    android:text="@string/text20"
+                    android:textColor="@color/black" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/loginFIndInfoBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@null"
+                    android:text="@string/text21"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
 </layout>
