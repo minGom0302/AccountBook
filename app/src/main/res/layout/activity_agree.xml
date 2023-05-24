@@ -5,7 +5,7 @@
     android:layout_width="350dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".activity.AgreeActivity">
+    tools:context=".activity.Popup_Agree">
 
     <TextView
         android:layout_width="match_parent"

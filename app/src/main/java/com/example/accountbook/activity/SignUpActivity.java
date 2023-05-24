@@ -123,7 +123,7 @@ public class SignUpActivity extends AppCompatActivity {
                 }
                 break;
             case 3 :
-                startActivity(new Intent(this, AgreeActivity.class));
+                startActivity(new Intent(this, Popup_Agree.class));
                 break;
             case 4 : // sign up 회원가입 진행
                 checkCondition();

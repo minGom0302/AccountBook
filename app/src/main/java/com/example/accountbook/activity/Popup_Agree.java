@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.example.accountbook.R;
 
-public class AgreeActivity extends Activity {
+public class Popup_Agree extends Activity {
 
     @SuppressLint("MissingInflatedId")
     @Override
