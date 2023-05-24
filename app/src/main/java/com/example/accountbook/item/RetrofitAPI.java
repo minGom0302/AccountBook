@@ -23,6 +23,21 @@ public interface RetrofitAPI {
             @Query("userPw") String userPw
     );
 
+    @GET("user")
+    Call<String> idCheck(
+            @Query("userId") String userId
+    );
+
+    @POST("user/signUp")
+    Call<Integer> signUp(
+            @Query("userId") String userId,
+            @Query("userPw") String userPw,
+            @Query("userName") String userName,
+            @Query("userNickname") String userNickname,
+            @Query("userPhone") String userPhone,
+            @Query("userAgree01") String userAgree01
+    );
+
     @PUT("user/nickname/{userSeq}")
     Call<Integer> nicknameChange(
             @Path("userSeq") int userSeq,

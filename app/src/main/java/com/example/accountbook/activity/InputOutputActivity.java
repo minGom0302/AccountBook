@@ -11,14 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.accountbook.R;
 import com.example.accountbook.adapter.CategoryListAdapter;
-import com.example.accountbook.adapter.SpinnerAdapter;
 import com.example.accountbook.databinding.ActivityInputOutputBinding;
 import com.example.accountbook.dto.CategoryDTO;
 import com.example.accountbook.dto.MoneyDTO;
@@ -159,9 +156,7 @@ public class InputOutputActivity extends AppCompatActivity {
             binding.ioRv02.setVisibility(View.VISIBLE);
 
             CategoryListAdapter exAdapter01 = new CategoryListAdapter(exList01, 2);
-            exAdapter01.setOnItemClickListener((v, settingsCode) -> {
-                lunchPopup(settingsCode, "98", (TextView) v);
-            });
+            exAdapter01.setOnItemClickListener((v, settingsCode) -> lunchPopup(settingsCode, "98", (TextView) v));
             binding.ioRv02.setAdapter(exAdapter01);
             binding.ioRv02.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         }

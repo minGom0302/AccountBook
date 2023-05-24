@@ -26,6 +26,14 @@ public class UserViewModel extends ViewModel {
         userModel.pwChange(newPw);
     }
 
+    // sign_up
+    public void idCheck(String id) {
+        userModel.idCheck(id);
+    }
+    public void signUp(UserInfoDTO userInfoDTO) {
+        userModel.signUp(userInfoDTO);
+    }
+
 
     // Getter
     public MutableLiveData<UserInfoDTO> getUserInfo() {

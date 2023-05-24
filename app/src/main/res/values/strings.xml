@@ -51,6 +51,15 @@
     <string name="modify">수정</string>
     <string name="autoLogin">자동 로그인</string>
     <string name="saveId">아이디 저장</string>
+    <string name="id">아이디</string>
+    <string name="pw">비밀번호</string>
+    <string name="name">이름</string>
+    <string name="phone">연락처</string>
+    <string name="codeSend">인증코드 요청</string>
+    <string name="reSend">재전송 요청</string>
+    <string name="signup">회원가입</string>
+    <string name="authentication_number">인증번호</string>
+    <string name="duplication_check">중복 확인</string>
 
 
     <string name="text01">※ 둘 중 하나 선택</string>
@@ -74,6 +83,18 @@
     <string name="text19">정보를 잊어버렸나요?</string>
     <string name="text20">회원가입 하기</string>
     <string name="text21">회원정보 찾기</string>
+    <string name="text22">사용 불가능한 아이디입니다.</string>
+    <string name="text23">사용 가능한 아이디입니다.</string>
+    <string name="text24">개인정보 제공에 동의합니다.</string>
+    <string name="text25">자세히 보기</string>
+    <string name="text26">초 이내에 인증을 해주시기 바랍니다.</string>
+    <string name="text27">시간이 초과되었습니다. 다시 시도해주시기 바랍니다.</string>
+    <string name="text28">본인은 귀사에 이력서를 제출함에 따라 [개인정보 보호법] 제15조 및 제17조에 따라 아래의 내용으로 개인정보를 수집, 이용 및 제공하는데 동의합니다.\n
+\n\n□ 개인정보의 수집 및 이용에 관한 사항
+ \n\t- 수집하는 개인정보 항목 (이력서 양식 내용 일체) : 성명, 전화번호, 등 그 外 이력서 기재 내용 일체
+ \n\t- 개인정보의 이용 목적 : 수집된 개인정보를 사업장 신규 채용 서류 심사 및 인사서류로 활용하며, 목적 외의 용도로는 사용하지 않습니다.\n
+\n\n□ 개인정보의 보관 및 이용 기간
+ \n\t- 귀하의 개인정보를 다음과 같이 보관하며, 수집, 이용 및 제공목적이 달성된 경우 [개인정보 보호법] 제21조에 따라 처리합니다.</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

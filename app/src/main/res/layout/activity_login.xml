@@ -36,6 +36,7 @@
                 android:textColorHint="@color/gray01"
                 android:background="@drawable/background_rectangle"
                 android:maxLines="1"
+                android:maxLength="30"
                 android:inputType="textVisiblePassword"
                 android:nextFocusDown="@id/loginPwEt"
                 tools:ignore="Autofill,TextFields" />
@@ -50,6 +51,7 @@
                 android:textColorHint="@color/gray01"
                 android:background="@drawable/background_rectangle"
                 android:maxLines="1"
+                android:maxLength="30"
                 android:inputType="textPassword"
                 android:imeOptions="actionDone"
                 tools:ignore="Autofill,TextFields" />

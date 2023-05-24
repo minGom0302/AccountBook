@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity implements Animation.Animat
         binding.loginAutoLoginCb.setOnClickListener(checkboxClickListener);
         binding.loginSaveIdCb.setOnClickListener(checkboxClickListener);
 
+        // 비밀번호 입력 후 엔터 누르면 바로 로그인 실행
         binding.loginPwEt.setOnEditorActionListener((textView, actionId, keyEvent) -> {
             if(actionId == EditorInfo.IME_ACTION_DONE) {
                 login();
@@ -62,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements Animation.Animat
         // 회원가입 버튼
         binding.loginRegisterBtn.setOnClickListener(v -> {
             hideKeyboard();
-            Toast.makeText(this, "회원가입 누름", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, SignUpActivity.class));
         });
 
         // 정보찾기 버튼
@@ -110,6 +111,10 @@ public class LoginActivity extends AppCompatActivity implements Animation.Animat
         hideKeyboard();
         userId = binding.loginIdEt.getText().toString();
         String userPw = binding.loginPwEt.getText().toString();
+        if(userPw.length() == 0) {
+            Toast.makeText(this, "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         userModel.login(userId, userPw, isAutoLogin, isSaveId);
         loading = ProgressDialog.show(this, "로그인중 ...", "잠시만 기다려주세요...", true, false);
     }
@@ -156,7 +161,6 @@ public class LoginActivity extends AppCompatActivity implements Animation.Animat
         if(isAutoLogin) {
             Toast.makeText(this, "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, MainActivity.class));
-            loading.dismiss();
             finish();
         } else if(isSaveId) {
             userId = userModel.getUserId();

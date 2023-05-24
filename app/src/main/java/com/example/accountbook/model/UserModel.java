@@ -85,6 +85,41 @@ public class UserModel {
         });
     }
 
+    public void idCheck(String id) {
+        api.idCheck(id).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                if(response.isSuccessful() && response.body() != null) {
+                    UserInfoDTO dto = new UserInfoDTO();
+                    dto.setUserId(response.body());
+                    userInfo.postValue(dto);
+                } else {
+                    // 아이디 중복 아닐 때
+                    userInfo.postValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                Toast.makeText(activity, "잠시 후 다시 변경해주세요.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void signUp(UserInfoDTO userInfoDTO) {
+        api.signUp(userInfoDTO.getUserId(), userInfoDTO.getUserPw(), userInfoDTO.getUserName(), userInfoDTO.getUserNickname(), userInfoDTO.getUserPhone(), userInfoDTO.getUserAgree01()).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
+                Toast.makeText(activity, "회원가입이 완료되었습니다.\n로그인해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
+                activity.finish();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Integer> call, @NonNull Throwable t) {
+                Toast.makeText(activity, "잠시 후 다시 시도해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     // Getter
     public MutableLiveData<UserInfoDTO> getUserInfoLiveData() {
