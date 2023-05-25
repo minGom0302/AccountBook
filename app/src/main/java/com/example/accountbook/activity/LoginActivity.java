@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements Animation.Animat
         // 정보찾기 버튼
         binding.loginFIndInfoBtn.setOnClickListener(v -> {
             hideKeyboard();
-            Toast.makeText(this, "정보찾기 누름", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, FindActivity.class));
         });
 
         // 로그인 버튼 설정

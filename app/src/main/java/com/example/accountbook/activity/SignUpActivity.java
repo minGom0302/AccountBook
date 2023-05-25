@@ -97,6 +97,8 @@ public class SignUpActivity extends AppCompatActivity {
                 id = binding.signupIdEt.getText().toString();
                 if(id.length() == 0) {
                     showDialog(99, "아이디를 입력해주시기 바랍니다.", "확인");
+                } else if(id.length() < 6) {
+                    showDialog(99, "6자리 이상으로 설정하시기 바랍니다.", "확인");
                 } else {
                     userModel.idCheck(binding.signupIdEt.getText().toString());
                     loading = ProgressDialog.show(this, "확인중 ...", "잠시만 기다려주세요...", true, false);
@@ -107,7 +109,7 @@ public class SignUpActivity extends AppCompatActivity {
                 if(phone.length() != 13) {
                     showDialog(98, "핸드폰 번호를 입력해주시기 바랍니다.", "확인");
                 } else {
-                    codeRequest();
+                    showDialog(2, "인증 번호는 해당 기기(번호)로 입력한 연락처에 문자를 보냅니다.\n그래도 진행하시겠습니까?", "예");
                 }
                 break;
             case 2 :
@@ -224,6 +226,8 @@ public class SignUpActivity extends AppCompatActivity {
                 binding.signupIdDuplicationTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.blue01));
             } else if(cnd == 1) {
                 userModel.signUp(userInfoDTO);
+            } else if(cnd == 2) {
+                codeRequest();
             } else if(cnd == 98) {
                 imm.showSoftInput(binding.signupPhoneEt, 0);
             } else if(cnd == 99) {

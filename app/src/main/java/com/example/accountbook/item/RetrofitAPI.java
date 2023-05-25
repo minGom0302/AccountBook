@@ -28,6 +28,12 @@ public interface RetrofitAPI {
             @Query("userId") String userId
     );
 
+    @GET("user/find/id")
+    Call<List<String>> idFind(
+            @Query("userName") String userName,
+            @Query("userPhone") String userPhone
+    );
+
     @POST("user/signUp")
     Call<Integer> signUp(
             @Query("userId") String userId,
@@ -46,7 +52,13 @@ public interface RetrofitAPI {
 
     @PUT("user/pw/{userSeq}")
     Call<Integer> pwChange(
-            @Path("userSeq")int userSeq,
+            @Path("userSeq") int userSeq,
+            @Query("pw") String pw
+    );
+
+    @PUT("user/pw")
+    Call<Integer> pwChange2(
+            @Query("userId") String userId,
             @Query("pw") String pw
     );
 

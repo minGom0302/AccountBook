@@ -32,6 +32,8 @@ public class SendSMS {
         }
     }
 
+    public String getCodeNumber() { return this.codeNumber; }
+
     public boolean checkCode(String codeNumber) {
         return this.codeNumber.equals(codeNumber);
     }
