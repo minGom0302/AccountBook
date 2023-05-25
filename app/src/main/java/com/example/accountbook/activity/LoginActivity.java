@@ -162,6 +162,7 @@ public class LoginActivity extends AppCompatActivity implements Animation.Animat
             Toast.makeText(this, "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, MainActivity.class));
             finish();
+            loading.dismiss();
         } else if(isSaveId) {
             userId = userModel.getUserId();
             binding.loginIdEt.setText(userId);
