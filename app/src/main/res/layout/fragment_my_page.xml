@@ -9,13 +9,13 @@
         android:orientation="vertical"
         tools:context=".fragment.MyPageFragment">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
             android:paddingTop="30dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="DisableBaselineAlignment">
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -27,7 +27,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="userName"
                     android:textSize="16sp"
                     android:textColor="@color/black"
                     tools:ignore="NestedWeights" />
@@ -41,7 +40,6 @@
                         android:id="@+id/f03_nicknameTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="userNickname"
                         android:textSize="16sp"
                         android:textColor="@color/black"/>
                     <androidx.appcompat.widget.AppCompatButton
@@ -61,6 +59,7 @@
                     android:id="@+id/f03_changePwBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
                     android:layout_marginBottom="5dp"
                     android:paddingHorizontal="10dp"
                     android:background="@drawable/btn_click01"
@@ -70,6 +69,7 @@
                     android:id="@+id/f03_logoutBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
                     android:layout_gravity="end"
                     android:background="@drawable/btn_click01"
                     android:text="@string/logout"

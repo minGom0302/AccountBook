@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:src="@drawable/a"
+            android:src="@drawable/app_icon"
             tools:ignore="ContentDescription" />
 
         <LinearLayout

@@ -12,13 +12,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.example.accountbook.R;
 import com.example.accountbook.adapter.SpinnerAdapter;
@@ -34,6 +32,7 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
     private int moneySeq, mYear, mMonth, mDay;
     private String result = "";
     private boolean first = true;
+    private boolean updateMode = false;
     private InputMethodManager imm;
     private final DecimalFormat commaFormat = new DecimalFormat("#,###");
 
@@ -72,6 +71,7 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
         // input 설정
         if(inputType) {
             // 내용 설정
+            updateMode = true;
             binding.popupIoContentsTv.setText(intent.getStringExtra("contents"));
             binding.popupIoOkBtn.setOnClickListener(v -> mShowDialog(0, "입력한 내용으로 저장하시겠습니까?"));
         } else { // output 설정 > 수정 할 수 있는 화면
@@ -122,6 +122,7 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
                 } else {
                     setEnable(true);
                     binding.popupIoTitleTv.setText("수정하기");
+                    updateMode = true;
                 }
             });
         }
@@ -131,7 +132,13 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
 
         // 클릭 이벤트
         binding.popupIoLayout.setOnClickListener(v -> hideKeyboard());
-        binding.popupIoCloseBtn.setOnClickListener(v -> mShowDialog(1, "입력을 멈추고 해당 화면을 닫으시겠습니까?"));
+        binding.popupIoCloseBtn.setOnClickListener(v -> {
+            if(updateMode) {
+                mShowDialog(1, "입력을 멈추고 해당 화면을 닫으시겠습니까?");
+            } else {
+                finish();
+            }
+        });
     }
 
 
@@ -266,6 +273,10 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
 
     @Override
     public void onBackPressed() {
-        mShowDialog(1, "입력을 멈추고 해당 화면을 닫으시겠습니까?");
+        if(updateMode) {
+            mShowDialog(1, "입력을 멈추고 해당 화면을 닫으시겠습니까?");
+        } else {
+            finish();
+        }
     }
 }
