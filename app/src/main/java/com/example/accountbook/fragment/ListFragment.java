@@ -279,7 +279,7 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
     // 화면 전환할 때 호출하여 자료 최신화
     @SuppressLint("SimpleDateFormat")
     public void listRefresh() {
-        if(moneyViewModel.getIsChange() || categorySettingViewModel.getIsChangeCa()) {
+        if(moneyViewModel.getIsChange() || categorySettingViewModel.getIsChangeCa() || categorySettingViewModel.getSpendingTypeUse() || !categorySettingViewModel.getSpendingTypeUse()) {
             if(moneyViewModel.getIsChange()) moneyViewModel.setIsChange(false);
             else if(categorySettingViewModel.getIsChangeCa()) categorySettingViewModel.setIsChangeCa(false);
 
