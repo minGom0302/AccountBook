@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".fragment.ListFragment">
+        tools:context="development.app.accountbook.fragment.ListFragment">
 
         <TextView
             android:id="@+id/f02_dateTv"

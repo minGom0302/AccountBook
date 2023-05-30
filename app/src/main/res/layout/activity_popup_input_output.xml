@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/background_rectangle02"
-        tools:context=".activity.Popup_InputOutput">
+        tools:context="development.app.accountbook.activity.Popup_InputOutput">
 
         <TextView
             android:id="@+id/popupIo_titleTv"

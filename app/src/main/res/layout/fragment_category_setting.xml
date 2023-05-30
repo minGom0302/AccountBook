@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/settingLayout"
-        tools:context=".fragment.CategorySettingFragment">
+        tools:context="development.app.accountbook.fragment.CategorySettingFragment">
 
         <LinearLayout
             android:layout_width="match_parent"

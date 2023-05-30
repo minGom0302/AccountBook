@@ -17,14 +17,14 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activity.FindActivity"
+            android:name="development.app.accountbook.activity.FindActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.Popup_Agree"
+            android:name="development.app.accountbook.activity.Popup_Agree"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.Dialog">
             <meta-data
@@ -32,7 +32,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.Popup_TransferList"
+            android:name="development.app.accountbook.activity.Popup_TransferList"
             android:exported="false"
             android:theme="@style/NoTitlePopup">
             <meta-data
@@ -40,7 +40,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.Popup_DatePicker"
+            android:name="development.app.accountbook.activity.Popup_DatePicker"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.Dialog">
             <meta-data
@@ -48,7 +48,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.Popup_InputOutput"
+            android:name="development.app.accountbook.activity.Popup_InputOutput"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.Dialog">
             <meta-data
@@ -56,7 +56,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.Popup_Transfer"
+            android:name="development.app.accountbook.activity.Popup_Transfer"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.Dialog">
             <meta-data
@@ -64,7 +64,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.Popup_PwChange"
+            android:name="development.app.accountbook.activity.Popup_PwChange"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Dialog">
             <meta-data
@@ -72,7 +72,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.Popup_change"
+            android:name="development.app.accountbook.activity.Popup_change"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Dialog">
             <meta-data
@@ -80,14 +80,14 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.InputOutputActivity"
+            android:name="development.app.accountbook.activity.InputOutputActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.MainActivity"
+            android:name="development.app.accountbook.activity.MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustNothing">
             <meta-data
@@ -95,7 +95,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.LoginActivity"
+            android:name="development.app.accountbook.activity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -108,7 +108,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.SignUpActivity"
+            android:name="development.app.accountbook.activity.SignUpActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

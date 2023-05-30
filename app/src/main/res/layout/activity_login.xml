@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/white"
-        tools:context=".activity.LoginActivity">
+        tools:context="development.app.accountbook.activity.LoginActivity">
 
         <ImageView
             android:id="@+id/loginImgView"

@@ -6,7 +6,7 @@
         android:id="@+id/findLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.FindActivity">
+        tools:context="development.app.accountbook.activity.FindActivity">
 
         <!-- select layout -->
         <LinearLayout

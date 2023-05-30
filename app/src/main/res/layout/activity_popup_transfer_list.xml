@@ -7,7 +7,7 @@
         android:layout_height="500dp"
         android:orientation="vertical"
         android:background="@color/light_blue01"
-        tools:context=".activity.Popup_TransferList">
+        tools:context="development.app.accountbook.activity.Popup_TransferList">
 
         <TextView
             android:layout_width="match_parent"
