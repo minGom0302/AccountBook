@@ -89,28 +89,6 @@ public class UserModel {
         });
     }
 
-    public void pwChange2(String userId, String newPw) {
-        api.pwChange2(userId, newPw).enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
-                if(response.isSuccessful() && response.body() != null) {
-                    if(response.body() != 0) {
-                        Toast.makeText(activity, "비밀번호 변경이 완료되었습니다.\n변경된 비밀번호로 로그인해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
-                        activity.finishAffinity();
-                        activity.startActivity(new Intent(activity, LoginActivity.class));
-                    } else {
-                        Toast.makeText(activity, "변경에 실패했습니다.\n아이디를 확인해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Integer> call, @NonNull Throwable t) {
-                Toast.makeText(activity, "잠시 후 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     public void idCheck(String id) {
         api.idCheck(id).enqueue(new Callback<String>() {
             @Override
@@ -132,8 +110,28 @@ public class UserModel {
         });
     }
 
-    public void idFind(String userName, String userPhone) {
-        api.idFind(userName, userPhone).enqueue(new Callback<List<String>>() {
+    public void idCheck2(String id, String answer) {
+        api.checkId2(id, answer).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
+                if(response.isSuccessful() && response.body() != null) {
+                    UserInfoDTO dto = new UserInfoDTO();
+                    dto.setSeq(response.body());
+                    spClient.setUserSeq(response.body());
+                    userInfo.postValue(dto);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Integer> call, @NonNull Throwable t) {
+                userInfo.postValue(null);
+                Toast.makeText(activity, "잠시 후 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void idFind(String userName, String userBirth, String userAnswer) {
+        api.idFind(userName, userBirth, userAnswer).enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
                 if(response.isSuccessful() && response.body() != null) {
@@ -150,7 +148,7 @@ public class UserModel {
     }
 
     public void signUp(UserInfoDTO userInfoDTO) {
-        api.signUp(userInfoDTO.getUserId(), userInfoDTO.getUserPw(), userInfoDTO.getUserName(), userInfoDTO.getUserNickname(), userInfoDTO.getUserPhone(), userInfoDTO.getUserAgree01()).enqueue(new Callback<Integer>() {
+        api.signUp(userInfoDTO.getUserId(), userInfoDTO.getUserPw(), userInfoDTO.getUserName(), userInfoDTO.getUserNickname(), userInfoDTO.getUserBirth(), userInfoDTO.getUserAgree01(), userInfoDTO.getUserAnswer()).enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
                 Toast.makeText(activity, "회원가입이 완료되었습니다.\n로그인해주시기 바랍니다.", Toast.LENGTH_SHORT).show();

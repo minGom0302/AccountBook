@@ -9,6 +9,7 @@
         tools:context="development.app.accountbook.activity.SignUpActivity">
 
         <LinearLayout
+            android:id="@+id/signup_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -138,6 +139,29 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
                 android:layout_marginBottom="5dp"
+                android:text="@string/birth"
+                android:textSize="15sp"
+                android:textColor="@color/light_blue02"/>
+
+            <EditText
+                android:id="@+id/signup_birthEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="15dp"
+                android:inputType="number"
+                android:padding="10dp"
+                android:textSize="15sp"
+                android:maxLines="1"
+                android:maxLength="6"
+                android:background="@drawable/background_rectangle"
+                tools:ignore="Autofill,LabelFor" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginBottom="5dp"
                 android:text="@string/name"
                 android:textSize="15sp"
                 android:textColor="@color/light_blue02"/>
@@ -171,14 +195,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="20dp"
                 android:inputType="text"
                 android:padding="10dp"
                 android:textSize="15sp"
                 android:maxLines="1"
                 android:maxLength="20"
                 android:background="@drawable/background_rectangle"
-                android:nextFocusDown="@id/signup_phoneEt"
+                android:nextFocusDown="@id/signup_answerEt"
                 tools:ignore="Autofill" />
 
             <TextView
@@ -186,92 +210,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
                 android:layout_marginBottom="5dp"
-                android:text="@string/phone"
+                android:text="@string/answer"
                 android:textSize="15sp"
                 android:textColor="@color/light_blue02"/>
-
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="15dp"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="5dp"
-                android:orientation="horizontal">
-                <EditText
-                    android:id="@+id/signup_phoneEt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="10dp"
-                    android:inputType="phone"
-                    android:padding="10dp"
-                    android:textSize="15sp"
-                    android:maxLines="1"
-                    android:maxLength="13"
-                    android:background="@drawable/background_rectangle"
-                    tools:ignore="Autofill" />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/signup_authSendBtn"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="1dp"
-                    android:layout_weight="0.4"
-                    android:text="@string/codeSend"
-                    android:textColor="@color/white"
-                    android:background="@drawable/btn_click01"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/signup_authLayout"
+                android:text="@string/text30"
+                android:textSize="14sp"
+                android:textColor="@color/light_blue02"/>
+            <EditText
+                android:id="@+id/signup_answerEt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="15dp"
-                android:orientation="horizontal"
-                android:visibility="gone" >
-                <EditText
-                    android:id="@+id/signup_authEt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="10dp"
-                    android:hint="@string/authentication_number"
-                    android:textColorHint="@color/gray01"
-                    android:inputType="number"
-                    android:padding="10dp"
-                    android:textSize="15sp"
-                    android:maxLines="1"
-                    android:maxLength="6"
-                    android:background="@drawable/background_rectangle"
-                    tools:ignore="Autofill" />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/signup_authOk"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.4"
-                    android:layout_margin="1dp"
-                    android:text="@string/ok"
-                    android:textColor="@color/white"
-                    android:background="@drawable/btn_click01"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/signup_secondLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone" >
-                <TextView
-                    android:id="@+id/signup_secondTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/red01"/>
-                <TextView
-                    android:id="@+id/signup_secondInfoTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"/>
-            </LinearLayout>
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="15dp"
+                android:inputType="text"
+                android:padding="10dp"
+                android:textSize="15sp"
+                android:maxLines="1"
+                android:maxLength="30"
+                android:background="@drawable/background_rectangle"
+                tools:ignore="Autofill,LabelFor" />
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -10,7 +10,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -18,25 +17,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import development.app.accountbook.databinding.ActivityFindBinding;
-import development.app.accountbook.item.SendSMS;
 import development.app.accountbook.viewmodel.UserViewModel;
 import development.app.accountbook.R;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FindActivity extends AppCompatActivity {
     private ActivityFindBinding binding;
     private UserViewModel userViewModel;
-    private SendSMS sendSMS;
     private InputMethodManager imm;
-    private Timer timer;
     private ProgressDialog loading;
-    boolean isAuth;
     private int layoutType = 3;
-    private String phone;
 
     private Pattern pwPattern;
     private boolean pwEquals, pwPatternOk = false;
@@ -56,7 +48,6 @@ public class FindActivity extends AppCompatActivity {
         binding.findFirstPwBtn.setOnClickListener(v -> setPwLayout());
 
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        sendSMS = new SendSMS();
     }
 
 
@@ -68,13 +59,8 @@ public class FindActivity extends AppCompatActivity {
 
         setViewModel();
 
-        // 연락처 하이픈 자동 입력
-        binding.findIdPhoneEt.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-
-        binding.findIdAuthSendBtn.setOnClickListener(v -> setBtn(0));
-        binding.findIdAuthOk.setOnClickListener(v -> setBtn(1));
-        binding.findIdFindBtn.setOnClickListener(v -> setBtn(2));
-        binding.findIdCloseBtn.setOnClickListener(v -> setBtn(3));
+        binding.findIdFindBtn.setOnClickListener(v -> setBtn(0));
+        binding.findIdCloseBtn.setOnClickListener(v -> setBtn(2));
         binding.findLayout.setOnClickListener(v -> hideKeyboard());
     }
 
@@ -93,29 +79,23 @@ public class FindActivity extends AppCompatActivity {
 
         binding.findPwPwEt.addTextChangedListener(pwTextWatcher);
         binding.findPwAgainEt.addTextChangedListener(pwTextWatcher);
-        binding.findPwPhoneEt.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
         binding.findLayout.setOnClickListener(v -> hideKeyboard());
-        binding.findPwCloseBtn.setOnClickListener(v -> setBtn(3));
-        binding.findPwAuthSendBtn.setOnClickListener(v -> setBtn(4));
-        binding.findPwAuthOk.setOnClickListener(v -> setBtn(5));
+        binding.findPwCloseBtn.setOnClickListener(v -> setBtn(2));
+        binding.findPwAuthOk.setOnClickListener(v -> setBtn(1));
         binding.findPwFindBtn.setOnClickListener(v -> pwChange());
     }
 
     private void pwChange() {
-        if(binding.findPwIdEt.getText().toString().length() == 0) {
-            Toast.makeText(this, "아이디를 입력해주세요.", Toast.LENGTH_SHORT).show();
-            imm.showSoftInput(binding.findPwIdEt, 0);
-        } else if(!pwEquals) {
+        if(!pwEquals) {
             Toast.makeText(this, "비밀번호가 서로 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
             imm.showSoftInput(binding.findPwPwEt, 0);
         } else if(!pwPatternOk){
             Toast.makeText(this, "비밀번호 조건에 맞지 않습니다.", Toast.LENGTH_SHORT).show();
             imm.showSoftInput(binding.findPwAgainEt, 0);
         } else {
-            String id = binding.findPwIdEt.getText().toString();
             String pw = binding.findPwAgainEt.getText().toString();
-            userViewModel.pwChange2(id, pw);
+            userViewModel.pwChange(pw);
         }
     }
 
@@ -165,7 +145,25 @@ public class FindActivity extends AppCompatActivity {
                     binding.findIdIdTv.setVisibility(View.VISIBLE);
                     binding.findIdIdListTv.setVisibility(View.VISIBLE);
                     binding.findIdIdListTv.setText(returnId.toString());
-                    binding.findIdFindBtn.setEnabled(false);
+                }
+
+                loading.dismiss();
+            });
+        } else if(layoutType == 1) {
+            userViewModel.getUserInfo().observe(this, dtoList -> {
+                if(dtoList != null) {
+                    if(dtoList.getSeq() != 0) {
+                        binding.findPwIdEt.setEnabled(false);
+                        binding.findPwAnswerEt.setEnabled(false);
+                        binding.findPwAuthOk.setEnabled(false);
+                        binding.findPwFindBtn.setEnabled(true);
+                        binding.findPwPwChangeLayout.setVisibility(View.VISIBLE);
+                        Toast.makeText(this, "새로운 비밀번호를 설정해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "아이디와 질문의 답에 해당하는 정보가 없습니다.\n다시 한 번 확인해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "아이디와 질문의 답에 해당하는 정보가 없습니다.\n다시 한 번 확인해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
                 }
 
                 loading.dismiss();
@@ -176,149 +174,53 @@ public class FindActivity extends AppCompatActivity {
     private void setBtn(int cnd) {
         hideKeyboard();
         switch (cnd) {
-            case 0 :
-                phone = binding.findIdPhoneEt.getText().toString();
-                if(phone.length() != 13) {
-                    Toast.makeText(this, "핸드폰 번호를 입력해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
+            case 0 : // ID 찾기 버튼
+                if(binding.findIdNameEt.getText().toString().length() == 0) {
+                    Toast.makeText(this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                } else if(binding.findIdBirthEt.getText().toString().length() < 6) {
+                    Toast.makeText(this, "정확한 생년월일을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                } else if(binding.findIdAnswerEt.getText().toString().length() == 0) {
+                    Toast.makeText(this, "질문에 대한 대답을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 } else {
-                    endDialog(1);
-                }
-                break;
-            case 1 :
-                isAuth = sendSMS.checkCode(binding.findIdAuthEt.getText().toString());
-                if(isAuth) {
-                    Toast.makeText(this, "본인인증에 성공했습니다.\n아이디 찾기를 눌러주세요.", Toast.LENGTH_SHORT).show();
-                    binding.findIdAuthEt.setEnabled(false);
-                    binding.findIdAuthOk.setEnabled(false);
-                    binding.findIdSecondLayout.setVisibility(View.GONE);
-                    binding.findIdFindBtn.setEnabled(true);
-                    timer.cancel();
-                } else {
-                    Toast.makeText(this, "코드번호를 다시 확인하시기 바랍니다.", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case 2 :
-                if(isAuth && binding.findIdNameEt.getText().toString().length() != 0) {
                     loading = ProgressDialog.show(this, "확인중 ...", "잠시만 기다려주세요...", true, false);
-                    binding.findIdNameEt.setEnabled(false);
-                    userViewModel.idFind(binding.findIdNameEt.getText().toString(), phone.replaceAll("-", ""));
-                } else {
-                    Toast.makeText(this, "이름 및 본인인증을 완료해주세요.", Toast.LENGTH_SHORT).show();
+                    userViewModel.idFind(binding.findIdNameEt.getText().toString(), binding.findIdBirthEt.getText().toString(), binding.findIdAnswerEt.getText().toString());
                 }
                 break;
-            case 3 :
-                endDialog(0);
-                break;
-            case 4 :
-                phone = binding.findPwPhoneEt.getText().toString();
-                if(phone.length() != 13) {
-                    Toast.makeText(this, "핸드폰 번호를 입력해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
+            case 1 : // pw 아이디 질문 확인
+                if(binding.findPwIdEt.getText().toString().length() == 0) {
+                    Toast.makeText(this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                } else if(binding.findPwAnswerEt.getText().toString().length() == 0) {
+                    Toast.makeText(this, "질문에 대한 대답을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 } else {
-                    endDialog(1);
+                    loading = ProgressDialog.show(this, "확인중...", "잠시만 기다려주세요...", true, false);
+                    userViewModel.idCheck2(binding.findPwIdEt.getText().toString(), binding.findPwAnswerEt.getText().toString());
                 }
                 break;
-            case 5 :
-                isAuth = sendSMS.checkCode(binding.findPwAuthEt.getText().toString());
-                if(isAuth) {
-                    Toast.makeText(this, "본인인증에 성공했습니다.", Toast.LENGTH_SHORT).show();
-                    binding.findPwAuthEt.setEnabled(false);
-                    binding.findPwAuthOk.setEnabled(false);
-                    binding.findPwSecondLayout.setVisibility(View.GONE);
-                    binding.findPwFindBtn.setEnabled(true);
-                    binding.findPwPwChangeLayout.setVisibility(View.VISIBLE);
-                    timer.cancel();
-                } else {
-                    Toast.makeText(this, "코드번호를 다시 확인하시기 바랍니다.", Toast.LENGTH_SHORT).show();
-                }
+            case 2 : // 창 닫기
+                endDialog();
                 break;
         }
-    }
-    // 인증번호 요청
-    private void codeRequest() {
-        hideKeyboard();
-        if(layoutType == 0) {
-            binding.findIdAuthLayout.setVisibility(View.VISIBLE);
-            binding.findIdSecondLayout.setVisibility(View.VISIBLE);
-            binding.findIdSecondTv.setVisibility(View.VISIBLE);
-            binding.findIdPhoneEt.setEnabled(false);
-            binding.findIdAuthSendBtn.setEnabled(false);
-            binding.findIdAuthEt.setEnabled(true);
-            binding.findIdAuthOk.setEnabled(true);
-            binding.findIdSecondInfoTv.setText(R.string.text26);
-            binding.findIdAuthEt.setText("");
-        } else if(layoutType == 1) {
-            binding.findPwAuthLayout.setVisibility(View.VISIBLE);
-            binding.findPwSecondLayout.setVisibility(View.VISIBLE);
-            binding.findPwSecondTv.setVisibility(View.VISIBLE);
-            binding.findPwPhoneEt.setEnabled(false);
-            binding.findPwAuthSendBtn.setEnabled(false);
-            binding.findPwAuthEt.setEnabled(true);
-            binding.findPwAuthOk.setEnabled(true);
-            binding.findPwSecondInfoTv.setText(R.string.text26);
-            binding.findPwAuthEt.setText("");
-        }
-
-        sendSMS.SmsSend(this, phone);
-        Toast.makeText(this, "인증번호 : " + sendSMS.getCodeNumber(), Toast.LENGTH_SHORT).show();
-
-        timer = new Timer();
-        TimerTask task = new TimerTask() {
-            int time = 60;
-            @Override
-            public void run() {
-                runOnUiThread(() -> {
-                    if(time != 0) {
-                        if(layoutType == 0) binding.findIdSecondTv.setText(String.valueOf(time));
-                        else if(layoutType == 1) binding.findPwSecondTv.setText(String.valueOf(time));
-                        time--;
-                    } else {
-                        cancel();
-                        if(layoutType == 0) {
-                            binding.findIdSecondTv.setVisibility(View.GONE);
-                            binding.findIdSecondInfoTv.setText(R.string.text27);
-                            binding.findIdAuthSendBtn.setEnabled(true);
-                            binding.findIdAuthSendBtn.setText(R.string.reSend);
-                            binding.findIdAuthEt.setEnabled(false);
-                            binding.findIdAuthOk.setEnabled(false);
-                        } else if(layoutType == 1) {
-                            binding.findPwSecondTv.setVisibility(View.GONE);
-                            binding.findPwSecondInfoTv.setText(R.string.text27);
-                            binding.findPwAuthSendBtn.setEnabled(true);
-                            binding.findPwAuthSendBtn.setText(R.string.reSend);
-                            binding.findPwAuthEt.setEnabled(false);
-                            binding.findPwAuthOk.setEnabled(false);
-                        }
-                    }
-                });
-            }
-        };
-        timer.schedule(task, 0, 1000);
     }
     // 키보드 내리기 (type 0 : 아이디 찾기, type 1 : 비밀번호 변경)
     private void hideKeyboard() {
         if(layoutType == 0) {
-            imm.hideSoftInputFromWindow(binding.findIdAuthEt.getWindowToken(), 0);
             imm.hideSoftInputFromWindow(binding.findIdNameEt.getWindowToken(), 0);
-            imm.hideSoftInputFromWindow(binding.findIdPhoneEt.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(binding.findIdAnswerEt.getWindowToken(), 0);
         } else if(layoutType == 1) {
             imm.hideSoftInputFromWindow(binding.findPwIdEt.getWindowToken(), 0);
             imm.hideSoftInputFromWindow(binding.findPwAgainEt.getWindowToken(), 0);
             imm.hideSoftInputFromWindow(binding.findPwPwEt.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(binding.findPwAnswerEt.getWindowToken(), 0);
         }
     }
     // 뒤로가기 시 화면 닫기
-    private void endDialog(int cnd) {
+    private void endDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
-        if(cnd == 0) {
-            builder.setTitle("안내").setMessage("첫 화면으로 돌아가시겠습니까?");
-            builder.setPositiveButton("예", ((dialogInterface, i) -> {
-                startActivity(new Intent(this, FindActivity.class));
-                finish();
-            }));
-        } else if(cnd == 1) {
-            builder.setTitle("안내").setMessage("인증 번호는 해당 기기(번호)로 입력한 연락처에 문자를 보냅니다.\n그래도 진행하시겠습니까?");
-            builder.setPositiveButton("예", ((dialogInterface, i) -> codeRequest()));
-        }
+        builder.setTitle("안내").setMessage("첫 화면으로 돌아가시겠습니까?");
+        builder.setPositiveButton("예", ((dialogInterface, i) -> {
+            startActivity(new Intent(this, FindActivity.class));
+            finish();
+        }));
         builder.setNegativeButton("아니오", ((dialogInterface, i) -> {}));
 
         AlertDialog alertDialog = builder.create();
@@ -332,7 +234,7 @@ public class FindActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(layoutType == 0 || layoutType == 1) {
-            endDialog(0);
+            endDialog();
         } else {
             super.onBackPressed();
         }

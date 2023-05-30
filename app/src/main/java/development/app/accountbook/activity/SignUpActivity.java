@@ -10,21 +10,16 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import development.app.accountbook.R;
 import development.app.accountbook.databinding.ActivitySignupBinding;
 import development.app.accountbook.dto.UserInfoDTO;
-import development.app.accountbook.item.SendSMS;
 import development.app.accountbook.viewmodel.UserViewModel;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,14 +29,11 @@ public class SignUpActivity extends AppCompatActivity {
     private Pattern pwPattern;
     private UserViewModel userModel;
     private ProgressDialog loading;
-    private Timer timer;
     private UserInfoDTO userInfoDTO;
-    private String id, phone;
-    private SendSMS sendSMS;
+    private String id;
     private boolean idIsUse = false;
     private boolean pwEquals = false;
     private boolean pwPatternOk = false;
-    private boolean isAuth = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,20 +49,16 @@ public class SignUpActivity extends AppCompatActivity {
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         String pwRegex = "^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$";
         pwPattern = Pattern.compile(pwRegex);
-        sendSMS = new SendSMS();
 
         // 비밀번호 정규식 및 일치 여부 설정
         binding.signupPwEt.addTextChangedListener(textWatcher);
         binding.signupPwAgainEt.addTextChangedListener(textWatcher);
-        // 연락처 하이픈 자동 입력
-        binding.signupPhoneEt.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
         // 버튼 클릭 이벤트 정리
         binding.signupDuplicationBtn.setOnClickListener(v -> btnClickEvent(0));
-        binding.signupAuthSendBtn.setOnClickListener(v -> btnClickEvent(1));
-        binding.signupAuthOk.setOnClickListener(v -> btnClickEvent(2));
-        binding.signupCb01MoreBtn.setOnClickListener(v -> btnClickEvent(3));
-        binding.signupSignupBtn.setOnClickListener(v -> btnClickEvent(4));
+        binding.signupCb01MoreBtn.setOnClickListener(v -> btnClickEvent(1));
+        binding.signupSignupBtn.setOnClickListener(v -> btnClickEvent(2));
+        binding.signupLayout.setOnClickListener(v -> hideKeyboard());
     }
 
     private void setModel() {
@@ -105,71 +93,12 @@ public class SignUpActivity extends AppCompatActivity {
                 }
                 break;
             case 1 :
-                phone = binding.signupPhoneEt.getText().toString();//.replaceAll("-", "");
-                if(phone.length() != 13) {
-                    showDialog(98, "핸드폰 번호를 입력해주시기 바랍니다.", "확인");
-                } else {
-                    showDialog(2, "인증 번호는 해당 기기(번호)로 입력한 연락처에 문자를 보냅니다.\n그래도 진행하시겠습니까?", "예");
-                }
-                break;
-            case 2 :
-                isAuth = sendSMS.checkCode(binding.signupAuthEt.getText().toString());
-                if(isAuth) {
-                    Toast.makeText(this, "본인인증 완료됐습니다.", Toast.LENGTH_SHORT).show();
-                    binding.signupAuthEt.setEnabled(false);
-                    binding.signupAuthOk.setEnabled(false);
-                    binding.signupSecondLayout.setVisibility(View.GONE);
-                    timer.cancel();
-                } else {
-                    Toast.makeText(this, "번호를 다시 확인하시기 바랍니다.", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case 3 :
                 startActivity(new Intent(this, Popup_Agree.class));
                 break;
-            case 4 : // sign up 회원가입 진행
+            case 2 : // sign up 회원가입 진행
                 checkCondition();
                 break;
         }
-    }
-
-
-    // 인증코드 요청
-    private void codeRequest() {
-        hideKeyboard();
-        binding.signupSecondLayout.setVisibility(View.VISIBLE);
-        binding.signupAuthLayout.setVisibility(View.VISIBLE);
-        binding.signupPhoneEt.setEnabled(false);
-        binding.signupAuthEt.setEnabled(true);
-        binding.signupAuthOk.setEnabled(true);
-        binding.signupAuthSendBtn.setEnabled(false);
-        binding.signupSecondInfoTv.setText(R.string.text26);
-        binding.signupAuthEt.setText("");
-
-        sendSMS.SmsSend(this, phone);
-
-        timer = new Timer();
-        TimerTask task = new TimerTask() {
-            int time = 60;
-            @Override
-            public void run() {
-                runOnUiThread(() -> {
-                    if(time != 0) {
-                        binding.signupSecondTv.setText(String.valueOf(time));
-                        time--;
-                    } else {
-                        cancel();
-                        binding.signupSecondTv.setVisibility(View.GONE);
-                        binding.signupSecondInfoTv.setText(R.string.text27);
-                        binding.signupAuthSendBtn.setEnabled(true);
-                        binding.signupAuthSendBtn.setText(R.string.reSend);
-                        binding.signupAuthEt.setEnabled(false);
-                        binding.signupAuthOk.setEnabled(false);
-                    }
-                });
-            }
-        };
-        timer.schedule(task, 0, 1000);
     }
 
 
@@ -187,11 +116,16 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(this, "비밀번호가 서로 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
             imm.showSoftInput(binding.signupPwAgainEt, 0);
             return;
+        } else if(binding.signupBirthEt.getText().toString().length() < 6) {
+            Toast.makeText(this, "올바른 생년월일을 입력해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
+            imm.showSoftInput(binding.signupBirthEt, 0);
+            return;
         } else if(binding.signupNameEt.getText().toString().equals("") || binding.signupNicknameEt.getText().toString().equals("")) {
             Toast.makeText(this, "이름 혹은 닉네임을 설정해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
             return;
-        } else if(!isAuth) {
-            Toast.makeText(this, "본인인증을 해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
+        } else if(binding.signupAnswerEt.getText().toString().equals("")) {
+            Toast.makeText(this, "질문의 답변을 작성해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
+            imm.showSoftInput(binding.signupAnswerEt, 0);
             return;
         } else if(!binding.signupCb01.isChecked()) {
             Toast.makeText(this, "개인정보 수집 동의를 해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
@@ -203,8 +137,8 @@ public class SignUpActivity extends AppCompatActivity {
         userInfoDTO.setUserPw(binding.signupPwAgainEt.getText().toString());
         userInfoDTO.setUserName(binding.signupNameEt.getText().toString());
         userInfoDTO.setUserNickname(binding.signupNicknameEt.getText().toString());
-        userInfoDTO.setUserPhone(phone.replaceAll("-", ""));
-        userInfoDTO.setUserPhone(binding.signupPhoneEt.getText().toString().replaceAll("-", ""));
+        userInfoDTO.setUserBirth(binding.signupBirthEt.getText().toString());
+        userInfoDTO.setUserAnswer(binding.signupAnswerEt.getText().toString());
         userInfoDTO.setUserAgree01("1");
 
         showDialog(1, "입력한 내용으로 회원가입을 진행하시겠습니까?", "예");
@@ -213,7 +147,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     // dialog  띄우기
     // 0 > id duplication ok, 99 > id false
-    // 98 > phone 연락처 확인
     private void showDialog(int cnd, String msg, String poBtn) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
         builder.setTitle("안내").setMessage(msg);
@@ -226,10 +159,6 @@ public class SignUpActivity extends AppCompatActivity {
                 binding.signupIdDuplicationTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.blue01));
             } else if(cnd == 1) {
                 userModel.signUp(userInfoDTO);
-            } else if(cnd == 2) {
-                codeRequest();
-            } else if(cnd == 98) {
-                imm.showSoftInput(binding.signupPhoneEt, 0);
             } else if(cnd == 99) {
                 imm.showSoftInput(binding.signupIdEt, 0);
             }
@@ -256,8 +185,7 @@ public class SignUpActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(binding.signupPwAgainEt.getWindowToken(), 0);
         imm.hideSoftInputFromWindow(binding.signupNameEt.getWindowToken(), 0);
         imm.hideSoftInputFromWindow(binding.signupNicknameEt.getWindowToken(), 0);
-        imm.hideSoftInputFromWindow(binding.signupPhoneEt.getWindowToken(), 0);
-        imm.hideSoftInputFromWindow(binding.signupAuthEt.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(binding.signupAnswerEt.getWindowToken(), 0);
     }
 
 

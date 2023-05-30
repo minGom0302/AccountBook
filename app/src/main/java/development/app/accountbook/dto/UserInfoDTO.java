@@ -6,9 +6,9 @@ public class UserInfoDTO {
     private String userPw;
     private String userName;
     private String userNickname;
-    private String userPhone;
+    private String userBirth;
     private String userAgree01;
-    private String userAgree02;
+    private String userAnswer;
 
     public int getSeq() {
         return seq;
@@ -50,12 +50,12 @@ public class UserInfoDTO {
         this.userNickname = userNickname;
     }
 
-    public String getUserPhone() {
-        return userPhone;
+    public String getUserBirth() {
+        return userBirth;
     }
 
-    public void setUserPhone(String userPhone) {
-        this.userPhone = userPhone;
+    public void setUserBirth(String userBirth) {
+        this.userBirth = userBirth;
     }
 
     public String getUserAgree01() {
@@ -66,11 +66,11 @@ public class UserInfoDTO {
         this.userAgree01 = userAgree01;
     }
 
-    public String getUserAgree02() {
-        return userAgree02;
+    public String getUserAnswer() {
+        return userAnswer;
     }
 
-    public void setUserAgree02(String userAgree02) {
-        this.userAgree02 = userAgree02;
+    public void setUserAnswer(String userAnswer) {
+        this.userAnswer = userAnswer;
     }
 }

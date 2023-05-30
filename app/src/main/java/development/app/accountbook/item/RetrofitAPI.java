@@ -31,7 +31,14 @@ public interface RetrofitAPI {
     @GET("user/find/id")
     Call<List<String>> idFind(
             @Query("userName") String userName,
-            @Query("userPhone") String userPhone
+            @Query("userBirth") String userBirth,
+            @Query("userAnswer") String userAnswer
+    );
+
+    @GET("user/check/id")
+    Call<Integer> checkId2 (
+            @Query("userId") String userId,
+            @Query("userAnswer") String userAnswer
     );
 
     @POST("user/signUp")
@@ -40,8 +47,9 @@ public interface RetrofitAPI {
             @Query("userPw") String userPw,
             @Query("userName") String userName,
             @Query("userNickname") String userNickname,
-            @Query("userPhone") String userPhone,
-            @Query("userAgree01") String userAgree01
+            @Query("userBirth") String userBirth,
+            @Query("userAgree01") String userAgree01,
+            @Query("userAnswer") String userAnswer
     );
 
     @PUT("user/nickname/{userSeq}")
@@ -53,12 +61,6 @@ public interface RetrofitAPI {
     @PUT("user/pw/{userSeq}")
     Call<Integer> pwChange(
             @Path("userSeq") int userSeq,
-            @Query("pw") String pw
-    );
-
-    @PUT("user/pw")
-    Call<Integer> pwChange2(
-            @Query("userId") String userId,
             @Query("pw") String pw
     );
 
