@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -69,8 +70,10 @@ public class SignUpActivity extends AppCompatActivity {
         userModel.getUserInfo().observe(this, userInfoDTO -> {
             loading.dismiss();
             if(userInfoDTO == null) {
+                binding.signupIdDuplicationTv.setVisibility(View.INVISIBLE);
                 showDialog(0, "해당 아이디를 사용하시겠습니까?", "예");
             } else {
+                binding.signupIdDuplicationTv.setVisibility(View.VISIBLE);
                 showDialog(99, "중복된 아이디입니다.", "확인");
             }
         });
@@ -155,6 +158,7 @@ public class SignUpActivity extends AppCompatActivity {
                 idIsUse = true;
                 binding.signupIdEt.setEnabled(false);
                 binding.signupDuplicationBtn.setEnabled(false);
+                binding.signupIdDuplicationTv.setVisibility(View.VISIBLE);
                 binding.signupIdDuplicationTv.setText(R.string.text23);
                 binding.signupIdDuplicationTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.blue01));
             } else if(cnd == 1) {
