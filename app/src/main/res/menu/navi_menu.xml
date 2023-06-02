@@ -17,5 +17,9 @@
         android:id="@+id/item_categorySettings"
         android:icon="@drawable/image_settings"
         android:title="@string/menu04"/>
+    <item
+        android:id="@+id/item_ads"
+        android:icon="@drawable/image_ads"
+        android:title="@string/menu05"/>
 
 </menu>

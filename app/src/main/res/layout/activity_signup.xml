@@ -151,6 +151,8 @@
                 android:layout_marginBottom="15dp"
                 android:inputType="number"
                 android:padding="10dp"
+                android:hint="@string/text31"
+                android:textColorHint="@color/gray01"
                 android:textSize="15sp"
                 android:maxLines="1"
                 android:maxLength="6"

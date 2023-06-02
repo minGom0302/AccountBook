@@ -15,7 +15,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+
+import development.app.accountbook.BuildConfig;
 import development.app.accountbook.R;
 import development.app.accountbook.databinding.ActivityMainBinding;
 import development.app.accountbook.fragment.CalendarFragment;
@@ -38,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private MyPageFragment f03 = null;
     private CategorySettingFragment f04 = null;
     private Singleton_Date s_date;
+    private InterstitialAd ads;
 
     @SuppressLint("SimpleDateFormat")
     @Override
@@ -69,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
+        // 광고 보여주기 위해 객체 생성
+        setUpInterstitialAd();
+
         // 네비게이션 드로어에 헤드에 로그아웃 이벤트 설정과 TextView 이름 설정
         binding.navigationView.getHeaderView(0).findViewById(R.id.logoutBtn).setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
@@ -91,6 +104,25 @@ public class MainActivity extends AppCompatActivity {
         userName.setText(userViewModel.getUserName());
     }
 
+
+    // 광고 관련 메소드
+    private void setUpInterstitialAd() {
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        InterstitialAd.load(this, BuildConfig.admobs_ad_id, adRequest, new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                // 광고 불러오기를 실패했을 때
+                ads = null;
+            }
+
+            @Override
+            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                // 광고 불러오기 성공했을 때
+                ads = interstitialAd;
+            }
+        });
+    }
 
     // 선택에 따른 화면 전환
     @SuppressLint("NonConstantResourceId")
@@ -140,6 +172,43 @@ public class MainActivity extends AppCompatActivity {
                 if(f01 != null) getSupportFragmentManager().beginTransaction().hide(f01).commit();
                 if(f02 != null) getSupportFragmentManager().beginTransaction().hide(f02).commit();
                 if(f03 != null) getSupportFragmentManager().beginTransaction().hide(f03).commit();
+                break;
+            case R.id.item_ads:
+                if(ads != null) {
+                    ads.show(MainActivity.this);
+                    ads.setFullScreenContentCallback(new FullScreenContentCallback() {
+                        @Override
+                        public void onAdClicked() {
+                            // 광고를 클릭할 때
+                        }
+
+                        @Override
+                        public void onAdDismissedFullScreenContent() {
+                            // 광고가 끝났을 때
+                            // 광고 객체를 null 설정, 다시 광고를 안띄울 경우
+                            ads = null;
+                            setUpInterstitialAd();
+                        }
+
+                        @Override
+                        public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                            // 광고 보여주기를 실패했을 때
+                            ads = null;
+                        }
+
+                        @Override
+                        public void onAdImpression() {
+                            // 광고가 시작될 때
+                        }
+
+                        @Override
+                        public void onAdShowedFullScreenContent() {
+                            // 광고가 보여질 때
+                        }
+                    });
+                } else {
+                    Toast.makeText(this, "광고 준비중입니다. ㅎㅎ", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
