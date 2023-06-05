@@ -82,6 +82,11 @@ public class CategorySettingViewModel extends ViewModel {
         model.updateCategory(dto, seq);
     }
 
+    public void updateCategoryOrder(List<CategoryDTO> categoryDTOList, int categoryType) {
+        categoryListInteger = categoryType;
+        model.updateCategoryOrder(categoryDTOList);
+    }
+
     // 카테고리 삭제
     public void deleteCategory(CategoryDTO dto, int categoryType) {
         categoryListInteger = categoryType;

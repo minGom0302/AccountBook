@@ -14,10 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import development.app.accountbook.R;
 import development.app.accountbook.dto.CategoryDTO;
+import development.app.accountbook.item.ItemTouchHelperListener;
 
 import java.util.List;
 
-public class CategoryAdapter_01 extends RecyclerView.Adapter<CategoryAdapter_01.MyViewHolder> {
+public class CategoryAdapter_01 extends RecyclerView.Adapter<CategoryAdapter_01.MyViewHolder> implements ItemTouchHelperListener {
     private final List<CategoryDTO> categoryList;
     private OnItemClickListener itemClickListener;
     private OnItemDeleteListener deleteListener;
@@ -127,4 +128,24 @@ public class CategoryAdapter_01 extends RecyclerView.Adapter<CategoryAdapter_01.
     public int getItemCount() {
         return categoryList.size();
     }
+
+
+    @Override
+    public boolean onItemMove(int from_position, int to_position) {
+        // 이동할 객체 저장
+        CategoryDTO move_category = categoryList.get(from_position);
+        // 이동할 객체 삭제
+        categoryList.remove(from_position);
+        // 이동하고 싶은 포지션에 추가
+        categoryList.add(to_position, move_category);
+
+        // 아답터에 데이터 이동 알림
+        notifyItemMoved(from_position, to_position);
+        return true;
+    }
+
+    public List<CategoryDTO> getCategoryList() {
+        return categoryList;
+    }
+
 }

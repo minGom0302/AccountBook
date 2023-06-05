@@ -5,6 +5,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
@@ -31,6 +33,7 @@ import development.app.accountbook.adapter.CategoryAdapter_01;
 import development.app.accountbook.adapter.SpinnerAdapter;
 import development.app.accountbook.databinding.FragmentCategorySettingBinding;
 import development.app.accountbook.dto.CategoryDTO;
+import development.app.accountbook.item.ItemTouchHelperCallback;
 import development.app.accountbook.viewmodel.CategorySettingViewModel;
 import development.app.accountbook.viewmodel.UserViewModel;
 import development.app.accountbook.R;
@@ -47,11 +50,14 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
     private List<String[]> categoryList02;
     private List<CategoryDTO> categoryDTOS;
     private String category01, category02, code;
-    private int year, month, categorySeq;
+    private int year, month, categorySeq, orderSeq;
     private InputMethodManager imm;
     private CategoryAdapter_01 adapter_01;
     private int rbCheckValue = 0;
     private boolean isModifyMode = false;
+    private boolean isOrderModifyMode = false;
+    private ItemTouchHelper itemTouchHelper;
+    private ProgressDialog loading;
     private final Calendar calendar = Calendar.getInstance();
 
     @Override
@@ -98,11 +104,16 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
             adapter_01.setOnItemClickListener((v, categoryDTO) -> {
                 this.categorySeq = categoryDTO.getSeq();
                 this.code = categoryDTO.getCode();
+                this.orderSeq = categoryDTO.getOrderSeq();
                 setLayoutAndBtn(0, categoryDTO.getContents(), categoryDTO.getStrEndDay(), Arrays.asList(categoryList01.get(0)).indexOf(categoryDTO.getCategory01())
                         , Arrays.asList(categoryList02.get(0)).indexOf(categoryDTO.getCategory02()), false);
             });
             // recyclerview delete btn 클릭 시 발생할 이벤트
             adapter_01.setOnItemDeleteListener((v, categoryDTO) -> showDialog(0, "'" + categoryDTO.getContents() + "' 을(를) 삭제하시겠습니까?", categoryDTO));
+
+            if(loading != null && loading.isShowing()) {
+                loading.dismiss();
+            }
         });
 
         // end day 클릭 이벤트
@@ -141,14 +152,38 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
             }
 
             if(isModifyMode) {
-                CategoryDTO modifyDto = new CategoryDTO(userViewModel.getUserSeq(), category01 + category02 + code
-                        , category01, category02, binding.f04ContentsEt.getText().toString(), endDay);
+                CategoryDTO modifyDto = new CategoryDTO(userViewModel.getUserSeq(), code
+                        , category01, category02, binding.f04ContentsEt.getText().toString(), endDay, orderSeq);
                 showDialog(4, "입력한 정보로 수정하시겠습니까?", modifyDto);
             } else {
-                int size = categoryDTOS.size() == 0 ? 2 : categoryDTOS.size();
+                int size = categoryDTOS.size() == 0 ? 2 : categoryDTOS.size()+2;
                 CategoryDTO insertDto = new CategoryDTO(userViewModel.getUserSeq(), category01 + category02 + String.format("%03d", size)
-                        , category01 , category02, binding.f04ContentsEt.getText().toString(), endDay);
+                        , category01 , category02, binding.f04ContentsEt.getText().toString(), endDay, size);
                 showDialog(2, "입력한 정보로 저장하시겠습니까?", insertDto);
+            }
+        });
+        // 순서 수정버튼 이벤트
+        binding.f04ModifyOrderBtn.setOnClickListener(v -> {
+            if(isOrderModifyMode) {
+                isOrderModifyMode = false;
+                binding.f04ModifyOrderBtn.setText(R.string.text32);
+                binding.f04ModifyOrderInfoTv.setVisibility(View.GONE);
+                itemTouchHelper.attachToRecyclerView(null);
+
+                loading = ProgressDialog.show(getContext(), "수정중 ...", "잠시만 기다려주세요...", true, false);
+
+                List<CategoryDTO> moveEndCategoryList = adapter_01.getCategoryList();
+                for(CategoryDTO category : moveEndCategoryList) {
+                    category.setOrderSeq(moveEndCategoryList.indexOf(category));
+                }
+
+                viewModel.updateCategoryOrder(moveEndCategoryList, rbCheckValue);
+            } else {
+                isOrderModifyMode = true;
+                binding.f04ModifyOrderBtn.setText(R.string.complete);
+                binding.f04ModifyOrderInfoTv.setVisibility(View.VISIBLE);
+                itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter_01));
+                itemTouchHelper.attachToRecyclerView(binding.f04Recyclerview);
             }
         });
     }

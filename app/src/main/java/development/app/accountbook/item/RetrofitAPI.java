@@ -8,6 +8,7 @@ import development.app.accountbook.dto.UserInfoDTO;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -75,7 +76,8 @@ public interface RetrofitAPI {
             @Query("category01") String category01,
             @Query("category02") String category02,
             @Query("contents") String contents,
-            @Query("endDay") int endDay
+            @Query("endDay") int endDay,
+            @Query("orderSeq") int orderSeq
     );
 
     @PUT("category/update/{seq}")
@@ -85,7 +87,13 @@ public interface RetrofitAPI {
             @Query("category01") String category01,
             @Query("category02") String category02,
             @Query("contents") String contents,
-            @Query("endDay") int endDay
+            @Query("endDay") int endDay,
+            @Query("orderSeq") int orderSeq
+    );
+
+    @PUT("category/update/order")
+    Call<Integer> updateCategoryOrder(
+            @Body List<CategoryDTO> categoryList
     );
 
     @DELETE("category/delete/{seq}")

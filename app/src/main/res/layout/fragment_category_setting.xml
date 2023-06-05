@@ -152,41 +152,64 @@
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <RadioGroup
-                android:id="@+id/f04_rbGroup"
-                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <RadioButton
-                    android:id="@+id/f04_rb01"
+                <RadioGroup
+                    android:id="@+id/f04_rbGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="15dp"
-                    android:checked="true"
-                    android:background="@drawable/check_click01"
-                    android:button="@null"
-                    android:text="@string/category"
-                    android:textColor="@drawable/text_color01" />
-                <RadioButton
-                    android:id="@+id/f04_rb02"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="15dp"
-                    android:background="@drawable/check_click01"
-                    android:button="@null"
-                    android:text="@string/backInput"
-                    android:textColor="@drawable/text_color01" />
-            </RadioGroup>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/light_blue02"
-                android:layout_gravity="bottom"/>
-        </LinearLayout>
+                    android:orientation="horizontal">
+                    <RadioButton
+                        android:id="@+id/f04_rb01"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="15dp"
+                        android:checked="true"
+                        android:background="@drawable/check_click01"
+                        android:button="@null"
+                        android:text="@string/category"
+                        android:textColor="@drawable/text_color01" />
+                    <RadioButton
+                        android:id="@+id/f04_rb02"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="15dp"
+                        android:background="@drawable/check_click01"
+                        android:button="@null"
+                        android:text="@string/backInput"
+                        android:textColor="@drawable/text_color01" />
+                </RadioGroup>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_blue02"
+                    android:layout_gravity="bottom"/>
+            </LinearLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/f04_modifyOrderBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:text="@string/text32"
+                android:background="@null"
+                android:layout_gravity="end" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/f04_modifyOrderInfoTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:background="@color/light_blue01"
+            android:text="@string/text33"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/f04_recyclerview"

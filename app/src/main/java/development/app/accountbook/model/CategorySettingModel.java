@@ -125,7 +125,7 @@ public class CategorySettingModel {
 
     // insert category by api
     public void insertCategory(CategoryDTO dto) {
-        api.insertCategoryInfo(dto.getUserSeq(), dto.getCode(), dto.getCategory01(), dto.getCategory02(), dto.getContents(), dto.getEndDay()).enqueue(new Callback<Integer>() {
+        api.insertCategoryInfo(dto.getUserSeq(), dto.getCode(), dto.getCategory01(), dto.getCategory02(), dto.getContents(), dto.getEndDay(), dto.getOrderSeq()).enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
                 setCategoryList();
@@ -143,12 +143,27 @@ public class CategorySettingModel {
 
     // update category by api
     public void updateCategory(CategoryDTO dto, int seq) {
-        api.updateCategoryInfo(seq, dto.getCode(), dto.getCategory01(), dto.getCategory02(), dto.getContents(), dto.getEndDay()).enqueue(new Callback<Integer>() {
+        api.updateCategoryInfo(seq, dto.getCode(), dto.getCategory01(), dto.getCategory02(), dto.getContents(), dto.getEndDay(), dto.getOrderSeq()).enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
                 setCategoryList();
                 spClient.setIsChangeCa(true);
                 Toast.makeText(activity, "수정되었습니다.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Integer> call, @NonNull Throwable t) {
+                Toast.makeText(activity, "잠시 후 다시 시도해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void updateCategoryOrder(List<CategoryDTO> categoryDTOList) {
+        api.updateCategoryOrder(categoryDTOList).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
+                Toast.makeText(activity, "수정되었습니다.", Toast.LENGTH_SHORT).show();
+                setCategoryList();
             }
 
             @Override
