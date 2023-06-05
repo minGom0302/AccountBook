@@ -46,7 +46,7 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
     private List<String[]> categoryList01;
     private List<String[]> categoryList02;
     private List<CategoryDTO> categoryDTOS;
-    private String category01, category02;
+    private String category01, category02, code;
     private int year, month, categorySeq;
     private InputMethodManager imm;
     private CategoryAdapter_01 adapter_01;
@@ -97,6 +97,7 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
             // recyclerview item 클릭 시 발생할 이벤트 > adapter 작성한 내용을 가져와서 작성
             adapter_01.setOnItemClickListener((v, categoryDTO) -> {
                 this.categorySeq = categoryDTO.getSeq();
+                this.code = categoryDTO.getCode();
                 setLayoutAndBtn(0, categoryDTO.getContents(), categoryDTO.getStrEndDay(), Arrays.asList(categoryList01.get(0)).indexOf(categoryDTO.getCategory01())
                         , Arrays.asList(categoryList02.get(0)).indexOf(categoryDTO.getCategory02()), false);
             });
@@ -140,11 +141,12 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
             }
 
             if(isModifyMode) {
-                CategoryDTO modifyDto = new CategoryDTO(userViewModel.getUserSeq(), category01 + category02 + String.format("%03d", categoryDTOS.size())
+                CategoryDTO modifyDto = new CategoryDTO(userViewModel.getUserSeq(), category01 + category02 + code
                         , category01, category02, binding.f04ContentsEt.getText().toString(), endDay);
                 showDialog(4, "입력한 정보로 수정하시겠습니까?", modifyDto);
             } else {
-                CategoryDTO insertDto = new CategoryDTO(userViewModel.getUserSeq(), category01 + category02 + String.format("%03d", categoryDTOS.size()+1)
+                int size = categoryDTOS.size() == 0 ? 2 : categoryDTOS.size();
+                CategoryDTO insertDto = new CategoryDTO(userViewModel.getUserSeq(), category01 + category02 + String.format("%03d", size)
                         , category01 , category02, binding.f04ContentsEt.getText().toString(), endDay);
                 showDialog(2, "입력한 정보로 저장하시겠습니까?", insertDto);
             }
