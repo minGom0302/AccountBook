@@ -11,7 +11,7 @@ public class RetrofitClient {
 
     public static void setGsonAndRetrofit() {
         Gson gson = new GsonBuilder().setLenient().create();
-        String URL = "https://port-0-spring-accountbook-17xqnr2llgx9g8iq.sel3.cloudtype.app/";
+        String URL = "test";
         retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
