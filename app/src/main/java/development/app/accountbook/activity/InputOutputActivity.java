@@ -82,7 +82,7 @@ public class InputOutputActivity extends AppCompatActivity {
         binding.ioDateTv.setText(date);
 
         binding.ioCloseBtn.setOnClickListener(v ->
-            mShowDialog()
+            mShowDialog(0, "해당 화면을 닫으시겠습니까?")
         );
     }
 
@@ -121,9 +121,8 @@ public class InputOutputActivity extends AppCompatActivity {
         }
 
         CategoryListAdapter incomeAdapter = new CategoryListAdapter(incomeList, 2);
-        incomeAdapter.setOnItemClickListener((v, settingsCode) ->
-                lunchPopup(settingsCode, "99", (TextView) v)
-        );
+        incomeAdapter.setOnItemClickListener((v, settingsCode) -> lunchPopup(settingsCode, "99", (TextView) v));
+        incomeAdapter.setInfoOnItemClickListener(v -> mShowDialog(1, "※ 계좌이체와 이월은 수입/지출 금액에 합산되지 않습니다.\n(잔액에서만 합산됩니다.)"));
         binding.ioIncomeRv.setAdapter(incomeAdapter);
         binding.ioIncomeRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
@@ -135,15 +134,12 @@ public class InputOutputActivity extends AppCompatActivity {
             CategoryListAdapter exAdapter01 = new CategoryListAdapter(exList01, 2);
             CategoryListAdapter exAdapter02 = new CategoryListAdapter(exList02, 2);
             CategoryListAdapter exAdapter03 = new CategoryListAdapter(exList03, 2);
-            exAdapter01.setOnItemClickListener((v, settingsCode) ->
-                    lunchPopup(settingsCode, "98", (TextView) v)
-            );
-            exAdapter02.setOnItemClickListener((v, settingsCode) ->
-                    lunchPopup(settingsCode, "98", (TextView) v)
-            );
-            exAdapter03.setOnItemClickListener((v, settingsCode) ->
-                    lunchPopup(settingsCode, "98", (TextView) v)
-            );
+            exAdapter01.setOnItemClickListener((v, settingsCode) -> lunchPopup(settingsCode, "98", (TextView) v));
+            exAdapter02.setOnItemClickListener((v, settingsCode) -> lunchPopup(settingsCode, "98", (TextView) v));
+            exAdapter03.setOnItemClickListener((v, settingsCode) -> lunchPopup(settingsCode, "98", (TextView) v));
+            exAdapter01.setInfoOnItemClickListener(v -> mShowDialog(1, "※ 계좌이체와 이월은 수입/지출 금액에 합산되지 않습니다.\n(잔액에서만 합산됩니다.)"));
+            exAdapter02.setInfoOnItemClickListener(v -> mShowDialog(1, "※ 계좌이체와 이월은 수입/지출 금액에 합산되지 않습니다.\n(잔액에서만 합산됩니다.)"));
+            exAdapter03.setInfoOnItemClickListener(v -> mShowDialog(1, "※ 계좌이체와 이월은 수입/지출 금액에 합산되지 않습니다.\n(잔액에서만 합산됩니다.)"));
             binding.ioExpendingRv01.setAdapter(exAdapter01);
             binding.ioExpendingRv02.setAdapter(exAdapter02);
             binding.ioExpendingRv03.setAdapter(exAdapter03);
@@ -157,6 +153,7 @@ public class InputOutputActivity extends AppCompatActivity {
 
             CategoryListAdapter exAdapter01 = new CategoryListAdapter(exList01, 2);
             exAdapter01.setOnItemClickListener((v, settingsCode) -> lunchPopup(settingsCode, "98", (TextView) v));
+            exAdapter01.setInfoOnItemClickListener(v -> mShowDialog(1, "※ 계좌이체와 이월은 수입/지출 금액에 합산되지 않습니다.\n(잔액에서만 합산됩니다.)"));
             binding.ioRv02.setAdapter(exAdapter01);
             binding.ioRv02.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         }
@@ -186,16 +183,23 @@ public class InputOutputActivity extends AppCompatActivity {
 
 
     // 다이얼로그 띄우기
-    private void mShowDialog() {
+    private void mShowDialog(int cnd, String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
-        builder.setTitle("안내").setMessage("해당 화면을 닫으시겠습니까?");
-        builder.setPositiveButton("예", ((dialogInterface, i) -> {
-            Intent intent = new Intent();
-            intent.putExtra("date", date);
-            setResult(RESULT_OK, intent);
-            finish();
-        }));
-        builder.setNegativeButton("아니오", (((dialogInterface, i) -> {  })));
+        builder.setTitle("안내").setMessage(msg);
+        if(cnd == 0) {
+            builder.setPositiveButton("예", ((dialogInterface, i) -> {
+                Intent intent = new Intent();
+                intent.putExtra("date", date);
+                setResult(RESULT_OK, intent);
+                finish();
+            }));
+            builder.setNegativeButton("아니오", (((dialogInterface, i) -> {
+            })));
+        } else if(cnd == 1) {
+            builder.setPositiveButton("확인", (((dialog, which) -> {
+
+            })));
+        }
 
         AlertDialog dialog = builder.create();
         dialog.setOnShowListener(dialogInterface -> {
@@ -225,6 +229,6 @@ public class InputOutputActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        mShowDialog();
+        mShowDialog(0, "해당 화면을 닫으시겠습니까?");
     }
 }

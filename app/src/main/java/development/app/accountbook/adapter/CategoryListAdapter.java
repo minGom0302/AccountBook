@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import development.app.accountbook.dto.MoneyDTO;
@@ -19,6 +20,7 @@ import java.util.List;
 public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapter.MyViewHolder>{
     private final List<MoneyDTO> moneyList;
     private OnItemClickListener itemClickListener;
+    private InfoOnItemClickListener infoOnItemClickListener;
     private final DecimalFormat decimalFormat = new DecimalFormat("#,###");
     private final int type;
 
@@ -28,10 +30,17 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         void onItemClick(View v, String settingsCode);
     }
 
+    public interface InfoOnItemClickListener {
+        void onItemClick(View v);
+    }
+
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.itemClickListener = listener;
     }
 
+    public void setInfoOnItemClickListener(InfoOnItemClickListener infoOnItemClickListener) {
+        this.infoOnItemClickListener = infoOnItemClickListener;
+    }
 
     public CategoryListAdapter(List<MoneyDTO> moneyList, int type) {
         this.moneyList = moneyList;
@@ -41,12 +50,14 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder {
         LinearLayout layout;
         TextView contentsTv, moneyTv;
+        AppCompatButton infoBtn;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             layout = itemView.findViewById(R.id.reCaLi_layout);
             contentsTv = itemView.findViewById(R.id.reCaLi_contents);
             moneyTv = itemView.findViewById(R.id.reCaLi_money);
+            infoBtn = itemView.findViewById(R.id.reCali_infoBtn);
 
             // 클릭 명령어
             moneyTv.setOnClickListener(view -> {
@@ -60,6 +71,12 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
                         itemClickListener.onItemClick(view, code);
                     }
 
+                }
+            });
+
+            infoBtn.setOnClickListener(view -> {
+                if(infoOnItemClickListener != null) {
+                    infoOnItemClickListener.onItemClick(view);
                 }
             });
         }
@@ -89,6 +106,12 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
             holder.moneyTv.setText(decimalFormat.format(Integer.parseInt(dto.getMoney())));
         } else if(type == 1) {
             holder.moneyTv.setText(decimalFormat.format(dto.getIntMoney()));
+        }
+
+        if(dto.getSettingsContents().equals("이월")) {
+            holder.infoBtn.setVisibility(View.VISIBLE);
+        } else {
+            holder.infoBtn.setVisibility(View.GONE);
         }
     }
 

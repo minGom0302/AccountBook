@@ -62,6 +62,7 @@
                     android:textColor="@drawable/text_color01" />
             </RadioGroup>
             <LinearLayout
+                android:id="@+id/f02_moneyTvLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

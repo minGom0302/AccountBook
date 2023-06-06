@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -129,6 +130,7 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
                     moneyViewModel.setSecondMoneyLiveData(settingsCode, 0);
                     changeTextColor((TextView) v);
                 });
+                adapter.setInfoOnItemClickListener(v -> mShowDialog());
             } else if(cnd == 1) {
                 // 지출의 고정, 변동, 준변동비를 나눠서 사용할 경우 > myPage 에서 설정
                 // 지출 > 고정비, 변동비, 준변동비가 있어 3개로 돌림
@@ -171,6 +173,9 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
                         moneyViewModel.setSecondMoneyLiveData(settingsCode, 0);
                         changeTextColor((TextView) v);
                     });
+                    adapter01.setInfoOnItemClickListener(v -> mShowDialog());
+                    adapter02.setInfoOnItemClickListener(v -> mShowDialog());
+                    adapter03.setInfoOnItemClickListener(v -> mShowDialog());
                 } else {
                     // 지출의 고정, 변동, 준변동비를 나눠서 사용하지 않을 경우 > myPage 에서 설정
                     CategoryListAdapter adapter = new CategoryListAdapter(dtoList, 0);
@@ -180,6 +185,7 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
                         moneyViewModel.setSecondMoneyLiveData(settingsCode, 0);
                         changeTextColor((TextView) v);
                     });
+                    adapter.setInfoOnItemClickListener(v -> mShowDialog());
                 }
             } else if(cnd == 2) {
                 CategoryListAdapter adapter = new CategoryListAdapter(dtoList, 1);
@@ -189,6 +195,7 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
                     moneyViewModel.setSecondMoneyLiveData(settingsCode, 1);
                     changeTextColor((TextView) v);
                 });
+                adapter.setInfoOnItemClickListener(v -> mShowDialog());
             }
         });
         // 상단에서 목록 클릭 시 하단 리사이클러뷰에 내역 보여주기위해 live data 감시
@@ -241,11 +248,13 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
         if(binding.f02Rb01.isChecked()) {
             moneyViewModel.setMoneyInfo(0); // 수입
+            binding.f02MoneyTvLayout.setVisibility(View.VISIBLE); // 합계 금액 보여주기
             binding.f02CategoryRecyclerView01.setVisibility(View.GONE);
             binding.f02CategoryRecyclerView02.setVisibility(View.VISIBLE);
             cnd = 0;
         } else if(binding.f02Rb02.isChecked()) {
             moneyViewModel.setMoneyInfo(1); // 지출
+            binding.f02MoneyTvLayout.setVisibility(View.VISIBLE); // 합계 금액 보여주기
             if(categorySettingViewModel.getSpendingTypeUse()) {
                 // 고정비, 변동비, 준변동비를 나눠서 보여줄 때
                 binding.f02CategoryRecyclerView01.setVisibility(View.VISIBLE);
@@ -258,6 +267,7 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
             cnd = 1;
         } else if(binding.f02Rb03.isChecked()) {
             moneyViewModel.setMoneyInfo(2); // 잔액
+            binding.f02MoneyTvLayout.setVisibility(View.GONE); // 합계 금액 숨기기
             binding.f02CategoryRecyclerView01.setVisibility(View.GONE);
             binding.f02CategoryRecyclerView02.setVisibility(View.VISIBLE);
             cnd = 2;
@@ -335,5 +345,21 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.setGroupVisible(R.id.toolbar_menu, false);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    // 다이얼로그 띄우기
+    private void mShowDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.DialogTheme);
+        builder.setTitle("안내").setMessage("※ 계좌이체와 이월은 수입/지출 금액에 합산되지 않습니다.\n(잔액에서만 합산됩니다.)");
+        builder.setPositiveButton("확인", (((dialog, which) -> {
+
+            })));
+
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(dialogInterface -> {
+            dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+            dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+        });
+        dialog.show();
     }
 }

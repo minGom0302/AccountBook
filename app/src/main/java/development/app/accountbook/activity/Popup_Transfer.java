@@ -59,6 +59,7 @@ public class Popup_Transfer extends Activity implements TextWatcher {
         binding.popupTransferDateTv.setOnClickListener(v -> dateChoice());
         binding.popupTransferOkBtn.setOnClickListener(v -> showDialog(0, "입력한 정보로 저장하시겠습니까?"));
         binding.popupTransferCloseBtn.setOnClickListener(v -> showDialog(1, "해당 창을 종료하시겠습니까?"));
+        binding.popupTransferInfoBtn.setOnClickListener(v -> showDialog(99, "※ 계좌이체와 이월은 수입/지출 금액에 합산되지 않습니다.\n(잔액에서만 합산됩니다.)"));
         binding.popupTransferListBtn.setOnClickListener(v -> {
             Intent intent = new Intent(this, Popup_TransferList.class);
             intent.putExtra("date", date);
