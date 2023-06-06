@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -324,9 +325,10 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
     // MainActivity 에서 화면 전환할 때 호출하여 자료 최신화
     @SuppressLint("SimpleDateFormat")
     public void calendarRefresh() {
-        if(moneyViewModel.getIsChange() || moneyViewModel.getIsChangeCal()) {
+        if(moneyViewModel.getIsChange() || moneyViewModel.getIsChangeCal() || categoryViewModel.getIsChangeCaForCal()) {
             if(moneyViewModel.getIsChange()) moneyViewModel.setIsChange(false);
-            else if(moneyViewModel.getIsChangeCal()) moneyViewModel.setIsChangeCal(false);
+            if(moneyViewModel.getIsChangeCal()) moneyViewModel.setIsChangeCal(false);
+            if(categoryViewModel.getIsChangeCaForCal()) categoryViewModel.setIsChangeCaForCal(false);
 
             moneyViewModel.againSet(new SimpleDateFormat("yyyy-MM-dd").format(choiceDate), 99);
         }

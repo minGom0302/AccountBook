@@ -86,10 +86,10 @@ public class MoneyListAdapter extends RecyclerView.Adapter<MoneyListAdapter.MyVi
 
         holder.dateTv.setText(dto.getDate()); // 날짜 셋팅
         // 메모 셋팅 > 자료를 가져올 때 null 은 0으로 대체했기에 "" 처리
-        if(dto.getMoneyMemo().equals("0")) {
+        if(dto.getSettingsContents().equals("0")) {
             holder.memoTv.setText("");
         } else {
-            holder.memoTv.setText(dto.getMoneyMemo());
+            holder.memoTv.setText(dto.getSettingsContents());
         }
 
         // 리스트화면에서 잔액 부분에서만 +, - 구분해서 표현 그 외는 그냥 금액만 표기

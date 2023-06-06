@@ -103,5 +103,10 @@ public class CategorySettingViewModel extends ViewModel {
     public boolean getSpendingTypeUse() { return model.getSpendingTypeUse(); }
     public MutableLiveData<List<CategoryDTO>> getCategoryList() { return categoryList; }
     public boolean getIsChangeCa() { return model.getIsChangeCa(); }
+    public boolean getIsChangeCaForCal() { return model.getIsChangeCaForCal(); }
+
+    // setter
     public void setIsChangeCa(boolean isChangeCa) { model.setIsChangeCa(isChangeCa); }
+    public void setIsChangeCaForCal(boolean isChangeCaForCal) { model.setIsChangeCaForCal(isChangeCaForCal); }
+
 }

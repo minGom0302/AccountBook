@@ -148,6 +148,7 @@ public class CategorySettingModel {
             public void onResponse(@NonNull Call<Integer> call, @NonNull Response<Integer> response) {
                 setCategoryList();
                 spClient.setIsChangeCa(true);
+                spClient.setIsChangeCaForCal(true);
                 Toast.makeText(activity, "수정되었습니다.", Toast.LENGTH_SHORT).show();
             }
 
@@ -179,9 +180,12 @@ public class CategorySettingModel {
     }
     public boolean getSpendingTypeUse() { return spClient.getSpendingTypeUse(); }
     public boolean getIsChangeCa() { return spClient.getIsChangeCa(); }
+    public boolean getIsChangeCaForCal() { return spClient.getIsChangeCaForCal(); }
+
+    // setter
     public void setIsChangeCa(boolean isChangeCa) { spClient.setIsChangeCa(isChangeCa); }
-    // 중분류 사용 여부 저장
     public void setSpendingTypeUse(boolean isUse) {
         spClient.setSpendingTypeUse(isUse);
     }
+    public void setIsChangeCaForCal(boolean isChangeCaForCal) { spClient.setIsChangeCaForCal(isChangeCaForCal); }
 }

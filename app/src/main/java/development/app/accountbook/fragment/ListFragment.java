@@ -281,7 +281,7 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
     public void listRefresh() {
         if(moneyViewModel.getIsChange() || categorySettingViewModel.getIsChangeCa() || categorySettingViewModel.getSpendingTypeUse() || !categorySettingViewModel.getSpendingTypeUse()) {
             if(moneyViewModel.getIsChange()) moneyViewModel.setIsChange(false);
-            else if(categorySettingViewModel.getIsChangeCa()) categorySettingViewModel.setIsChangeCa(false);
+            if(categorySettingViewModel.getIsChangeCa()) categorySettingViewModel.setIsChangeCa(false);
 
             moneyViewModel.againSet(searchDate, cnd);
             if (binding.f02Rb02.isChecked()) {
