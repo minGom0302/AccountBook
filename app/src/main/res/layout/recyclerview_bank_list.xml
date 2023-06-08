@@ -76,7 +76,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="@color/black"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
             </LinearLayout>
 
         </LinearLayout>

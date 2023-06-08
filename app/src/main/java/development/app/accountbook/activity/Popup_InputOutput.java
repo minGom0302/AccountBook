@@ -228,7 +228,6 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
     // 입력 내용으로 수정하기
     private void modifyInfo() {
         if(bankSeq.equals("")) bankSeq = "0";
-        // Log.e("modify", "seq : " + moneySeq + " / settingSeq : " + categorySeq + " / bankSeq : " + bankSeq + " / in_sp : " + category01 +  " / date : " + binding.popupIoContentsTv.getText().toString() + " / money : " + binding.popupIoMoneyEt.getText().toString().replaceAll(",", "") + "/ memo : " + binding.popupIoMemoEt.getText().toString() + " / transferSeq : " + 1);
         Intent intent = new Intent();
         intent.putExtra("seq", moneySeq);
         intent.putExtra("settingsSeq", Integer.parseInt(categorySeq));

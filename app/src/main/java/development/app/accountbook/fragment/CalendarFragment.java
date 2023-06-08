@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -318,6 +317,7 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
             String inputMemo = returnIntent.getStringExtra("memo");
 
             moneyViewModel.modifyMoneyInfo(seq, settingsSeq, bankSeq, in_sp, inputDate, inputMoney, inputMemo, new SimpleDateFormat("yyyy-MM-dd").format(choiceDate));
+            moneyViewModel.againSet(new SimpleDateFormat("yyyy-MM-dd").format(choiceDate), 99);
         }
     });
 
