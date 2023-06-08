@@ -131,9 +131,9 @@ public class InputOutputActivity extends AppCompatActivity {
             binding.ioRv01.setVisibility(View.VISIBLE);
             binding.ioRv02.setVisibility(View.GONE);
 
-            CategoryListAdapter exAdapter01 = new CategoryListAdapter(exList01, 2);
-            CategoryListAdapter exAdapter02 = new CategoryListAdapter(exList02, 2);
-            CategoryListAdapter exAdapter03 = new CategoryListAdapter(exList03, 2);
+            CategoryListAdapter exAdapter01 = new CategoryListAdapter(exList02, 2);
+            CategoryListAdapter exAdapter02 = new CategoryListAdapter(exList03, 2);
+            CategoryListAdapter exAdapter03 = new CategoryListAdapter(exList01, 2);
             exAdapter01.setOnItemClickListener((v, settingsCode) -> lunchPopup(settingsCode, "98", (TextView) v));
             exAdapter02.setOnItemClickListener((v, settingsCode) -> lunchPopup(settingsCode, "98", (TextView) v));
             exAdapter03.setOnItemClickListener((v, settingsCode) -> lunchPopup(settingsCode, "98", (TextView) v));

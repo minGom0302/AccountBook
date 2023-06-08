@@ -331,6 +331,7 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
             if(categoryViewModel.getIsChangeCaForCal()) categoryViewModel.setIsChangeCaForCal(false);
 
             moneyViewModel.againSet(new SimpleDateFormat("yyyy-MM-dd").format(choiceDate), 99);
+            categoryViewModel.setViewModel(getActivity(), this, 1);
         }
     }
 

@@ -116,7 +116,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:background="@drawable/background_rectangle02"
-                            android:text="@string/semiCategory01"
+                            android:text="@string/semiCategory02"
                             android:textColor="@color/black" />
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/f02_rView01_01"
@@ -135,7 +135,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:background="@drawable/background_rectangle02"
-                            android:text="@string/semiCategory02"
+                            android:text="@string/semiCategory03"
                             android:textColor="@color/black" />
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/f02_rView01_02"
@@ -154,7 +154,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:background="@drawable/background_rectangle02"
-                            android:text="@string/semiCategory03"
+                            android:text="@string/semiCategory01"
                             android:textColor="@color/black" />
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/f02_rView01_03"

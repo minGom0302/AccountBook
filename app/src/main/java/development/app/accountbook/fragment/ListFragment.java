@@ -152,9 +152,9 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
                         }
                     }
 
-                    CategoryListAdapter adapter01 = new CategoryListAdapter(money01, 0);
-                    CategoryListAdapter adapter02 = new CategoryListAdapter(money02, 0);
-                    CategoryListAdapter adapter03 = new CategoryListAdapter(money03, 0);
+                    CategoryListAdapter adapter01 = new CategoryListAdapter(money02, 0);
+                    CategoryListAdapter adapter02 = new CategoryListAdapter(money03, 0);
+                    CategoryListAdapter adapter03 = new CategoryListAdapter(money01, 0);
                     binding.f02RView0101.setAdapter(adapter01);
                     binding.f02RView0102.setAdapter(adapter02);
                     binding.f02RView0103.setAdapter(adapter03);
