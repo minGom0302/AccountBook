@@ -17,10 +17,10 @@ android {
         applicationId "development.app.accountbook"
         minSdk 21
         targetSdk 33
-        versionCode 6
+        versionCode 7
         // versionName : 보통 <major>, <minor>, <point> 순으로 표기
         // major : 앱의 큰 틀이 변화된 경우, major : 기능 추가 삭제 등 사양이 변경될 때, point : 버그와 디자인 수정 등
-        versionName "2.3.2"
+        versionName "2.3.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

@@ -130,7 +130,7 @@ public class MoneyListAdapter extends RecyclerView.Adapter<MoneyListAdapter.MyVi
 
         if(cnd == 0) {
             builder.setTitle("경고").setMessage(msg);
-            builder.setPositiveButton("예", ((dialogInterface, i) -> saveMoneyViewModel.deleteSaveMoneyInfo(dto.getMoneySeq())));
+            builder.setPositiveButton("예", ((dialogInterface, i) -> saveMoneyViewModel.deleteSaveMoneyInfo(dto.getMoneySeq(), dto.getDate())));
             builder.setNegativeButton("아니오", ((dialogInterface, i) -> { }));
         } else if(cnd == 1) {
             builder.setTitle("안내").setMessage(msg);

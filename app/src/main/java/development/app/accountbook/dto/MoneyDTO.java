@@ -14,6 +14,7 @@ public class MoneyDTO {
     private String bankContents;
     private String moneyMemo;
     private int intMoney;
+    private int bankOrderSeq;
 
     public MoneyDTO(String settingsCode, String category02, String date, String money, String settingsContents) {
         this.settingsCode = settingsCode;
@@ -23,11 +24,12 @@ public class MoneyDTO {
         this.category02 = category02;
     }
 
-    public MoneyDTO(String category01, int intMoney, String bankCode, String bankContents) {
+    public MoneyDTO(String category01, int intMoney, String bankCode, String bankContents, int bankOrderSeq) {
         this.category01 = category01;
         this.intMoney = intMoney;
         this.bankCode = bankCode;
         this.bankContents = bankContents;
+        this.bankOrderSeq = bankOrderSeq;
     }
 
     public int getUserSeq() {
@@ -82,6 +84,10 @@ public class MoneyDTO {
         return moneySeq;
     }
 
+    public int getBankOrderSeq() {
+        return bankOrderSeq;
+    }
+
     public void setUserSeq(int userSeq) {
         this.userSeq = userSeq;
     }
@@ -132,5 +138,9 @@ public class MoneyDTO {
 
     public void setMoneySeq(int moneySeq) {
         this.moneySeq = moneySeq;
+    }
+
+    public void setBankOrderSeq(int bankOrderSeq) {
+        this.bankOrderSeq = bankOrderSeq;
     }
 }

@@ -108,10 +108,12 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
             holder.moneyTv.setText(decimalFormat.format(dto.getIntMoney()));
         }
 
-        if(dto.getSettingsContents().equals("이월")) {
-            holder.infoBtn.setVisibility(View.VISIBLE);
-        } else {
-            holder.infoBtn.setVisibility(View.GONE);
+        if(dto.getSettingsContents() != null) {
+            if (dto.getSettingsContents().equals("이월")) {
+                holder.infoBtn.setVisibility(View.VISIBLE);
+            } else {
+                holder.infoBtn.setVisibility(View.GONE);
+            }
         }
     }
 

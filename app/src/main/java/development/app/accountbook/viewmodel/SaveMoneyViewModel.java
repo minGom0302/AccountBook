@@ -1,5 +1,6 @@
 package development.app.accountbook.viewmodel;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 
 import androidx.lifecycle.LifecycleOwner;
@@ -11,6 +12,7 @@ import development.app.accountbook.dto.TransferMoneyDTO;
 import development.app.accountbook.model.SaveMoneyModel;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -68,7 +70,8 @@ public class SaveMoneyViewModel extends ViewModel {
 
 
     // 특정 기록 선택 삭제 > saveMoneyInfo table
-    public void deleteSaveMoneyInfo(int moneySeq) {
+    public void deleteSaveMoneyInfo(int moneySeq, String date) {
+        setCalendarDate = date;
         model.deleteSaveMoneyInfo(moneySeq, setCalendarDate);
     }
 
@@ -94,10 +97,12 @@ public class SaveMoneyViewModel extends ViewModel {
 
 
     // money info list 를 상황에 맞게 리스트를 만들어서 리턴해줌
+    @SuppressLint("NewApi")
     public void setMoneyInfo(int cnd) {
         setMoneyInfoCnd = cnd;
         List<MoneyDTO> dtoList = new ArrayList<>();
         List<String> codeList = new ArrayList<>(); // code 값 중복 체크를 위해 리스트를 따로 만듬
+        List<Integer> bankOrderSeqList = new ArrayList<>(); // bank 순서 설정을 위해서
         String category = "";
         if(cnd == 0) category = "99";
         else if(cnd == 1) category = "98";
@@ -127,6 +132,7 @@ public class SaveMoneyViewModel extends ViewModel {
                     if(dto.getBankCode().equals("0")) {
                         dto.setBankCode("미설정");
                         dto.setBankContents("미설정 계좌");
+                        dto.setBankOrderSeq(-1);
                     }
                     // 잔액 표시를 위한 것 > 은행코드 확인하여 있으면 계산하고 없으면 추가
                     if (codeList.contains(dto.getBankCode())) {
@@ -143,6 +149,9 @@ public class SaveMoneyViewModel extends ViewModel {
                         }
                         dtoList.get(position).setIntMoney(afterMoney);
                     } else {
+                        bankOrderSeqList.add(dto.getBankOrderSeq());
+                        bankOrderSeqList.sort(Comparator.naturalOrder());
+
                         // 들어있지 않으면 새로 추가하기
                         int money = 0;
                         if (dto.getCategory01().equals("99")) {
@@ -153,8 +162,11 @@ public class SaveMoneyViewModel extends ViewModel {
                         if(dto.getBankContents().equals("0")) {
                             dto.setBankContents("");
                         }
-                        dtoList.add(new MoneyDTO(dto.getCategory01(), money, dto.getBankCode(), dto.getBankContents()));
-                        codeList.add(dto.getBankCode());
+
+                        int index = bankOrderSeqList.indexOf(dto.getBankOrderSeq());
+                        if(index > dtoList.size()) index = dtoList.size();
+                        dtoList.add(index, new MoneyDTO(dto.getCategory01(), money, dto.getBankCode(), dto.getBankContents(), dto.getBankOrderSeq()));
+                        codeList.add(index, dto.getBankCode());
                     }
                 }
             }
