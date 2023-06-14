@@ -59,6 +59,9 @@ dependencies {
     // google 광고 라이브러리
     implementation 'com.google.android.gms:play-services-ads:22.1.0'
 
+    // 구글 스토어에 앱 버전 확인하여 업데이트 시키기
+    implementation 'com.google.android.play:app-update:2.1.0'
+
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

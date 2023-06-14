@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -13,6 +14,13 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.Task;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.UpdateAvailability;
 
 import development.app.accountbook.R;
 import development.app.accountbook.databinding.ActivityLoginBinding;
@@ -27,7 +35,7 @@ public class LoginActivity extends AppCompatActivity implements Animation.Animat
     private InputMethodManager imm;
     private BackspaceHandler bsh;
     private String userId;
-    private boolean isSaveId, isAutoLogin;
+    private boolean isSaveId, isAutoLogin, maintainUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +82,21 @@ public class LoginActivity extends AppCompatActivity implements Animation.Animat
 
         // 로그인 버튼 설정
         binding.loginBtn.setOnClickListener(v -> login());
+
+        AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(this);
+        Task<AppUpdateInfo> appUpdateInfo = appUpdateManager.getAppUpdateInfo();
+        appUpdateInfo.addOnSuccessListener(appUpdateInfo1 -> {
+           if(appUpdateInfo1.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo1.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+               // 유효한 업데이트가 있을 때 스토어에서 앱 업데이트 하기
+               maintainUpdate = true;
+               Intent intent = new Intent(Intent.ACTION_VIEW);
+               intent.setData(Uri.parse("market://details?id=" + getPackageName()));
+               startActivity(intent);
+           } else {
+               // 유효한 업데이트가 없을 때 바로 실행하기
+               maintainUpdate = false;
+           }
+        });
 
         // 에니멘이션 설정 > 초반 이미지 밑에서 올라온 다음 화면에 로그인 입력화면 보여줌
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.anim_translate);
@@ -158,7 +181,7 @@ public class LoginActivity extends AppCompatActivity implements Animation.Animat
         // 종료될 떄
         binding.loginEtLayout.setVisibility(View.VISIBLE);
 
-        if(isAutoLogin) {
+        if(isAutoLogin && !maintainUpdate) {
             Toast.makeText(this, "로그인에 성공했습니다.", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, MainActivity.class));
             finish();
