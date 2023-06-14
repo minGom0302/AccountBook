@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private CategorySettingFragment f04 = null;
     private Singleton_Date s_date;
     private InterstitialAd ads;
+    private int choiceLayout = 0;
 
     @SuppressLint("SimpleDateFormat")
     @Override
@@ -129,25 +130,37 @@ public class MainActivity extends AppCompatActivity {
     private void changeFragment(int type) {
         switch (type) {
             case R.id.item_calendar:
-                Objects.requireNonNull(getSupportActionBar()).setTitle(s_date.getDate()); // title 변경
-                getSupportFragmentManager().beginTransaction().show(f01).commit();
-                f01.calendarRefresh(); // 화면 갱신
-                if(f02 != null) getSupportFragmentManager().beginTransaction().hide(f02).commit();
-                if(f03 != null) getSupportFragmentManager().beginTransaction().hide(f03).commit();
-                if(f04 != null) getSupportFragmentManager().beginTransaction().hide(f04).commit();
+                if(choiceLayout != 0) {
+                    choiceLayout = 0;
+                    Objects.requireNonNull(getSupportActionBar()).setTitle(s_date.getDate()); // title 변경
+                    getSupportFragmentManager().beginTransaction().show(f01).commit();
+                    f01.calendarRefresh(); // 화면 갱신
+                    if (f02 != null)
+                        getSupportFragmentManager().beginTransaction().hide(f02).commit();
+                    if (f03 != null)
+                        getSupportFragmentManager().beginTransaction().hide(f03).commit();
+                    if (f04 != null)
+                        getSupportFragmentManager().beginTransaction().hide(f04).commit();
+                }
                 break;
             case R.id.item_list:
-                Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu02); // title 변경
-                if(f02 == null) {
-                    f02 = new ListFragment();
-                    getSupportFragmentManager().beginTransaction().add(R.id.containerLayout, f02).commit();
-                } else {
-                    getSupportFragmentManager().beginTransaction().show(f02).commit();
-                    f02.listRefresh(); // 화면 갱신
+                if(choiceLayout != 1) {
+                    choiceLayout = 1;
+                    Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu02); // title 변경
+                    if (f02 == null) {
+                        f02 = new ListFragment();
+                        getSupportFragmentManager().beginTransaction().add(R.id.containerLayout, f02).commit();
+                    } else {
+                        getSupportFragmentManager().beginTransaction().show(f02).commit();
+                        f02.listRefresh(); // 화면 갱신
+                    }
+                    if (f01 != null)
+                        getSupportFragmentManager().beginTransaction().hide(f01).commit();
+                    if (f03 != null)
+                        getSupportFragmentManager().beginTransaction().hide(f03).commit();
+                    if (f04 != null)
+                        getSupportFragmentManager().beginTransaction().hide(f04).commit();
                 }
-                if(f01 != null) getSupportFragmentManager().beginTransaction().hide(f01).commit();
-                if(f03 != null) getSupportFragmentManager().beginTransaction().hide(f03).commit();
-                if(f04 != null) getSupportFragmentManager().beginTransaction().hide(f04).commit();
                 break;
             case R.id.item_myPage:
                 Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu03); // title 변경

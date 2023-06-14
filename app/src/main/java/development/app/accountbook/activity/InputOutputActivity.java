@@ -120,7 +120,7 @@ public class InputOutputActivity extends AppCompatActivity {
             }
         }
 
-        CategoryListAdapter incomeAdapter = new CategoryListAdapter(incomeList, 2);
+        CategoryListAdapter incomeAdapter = new CategoryListAdapter(incomeList, 0);
         incomeAdapter.setOnItemClickListener((v, settingsCode) -> lunchPopup(settingsCode, "99", (TextView) v));
         incomeAdapter.setInfoOnItemClickListener(v -> mShowDialog(1, "※ 계좌이체와 이월은 수입/지출 금액에 합산되지 않습니다.\n(잔액에서만 합산됩니다.)"));
         binding.ioIncomeRv.setAdapter(incomeAdapter);
@@ -131,9 +131,9 @@ public class InputOutputActivity extends AppCompatActivity {
             binding.ioRv01.setVisibility(View.VISIBLE);
             binding.ioRv02.setVisibility(View.GONE);
 
-            CategoryListAdapter exAdapter01 = new CategoryListAdapter(exList02, 2);
-            CategoryListAdapter exAdapter02 = new CategoryListAdapter(exList03, 2);
-            CategoryListAdapter exAdapter03 = new CategoryListAdapter(exList01, 2);
+            CategoryListAdapter exAdapter01 = new CategoryListAdapter(exList02, 0);
+            CategoryListAdapter exAdapter02 = new CategoryListAdapter(exList03, 0);
+            CategoryListAdapter exAdapter03 = new CategoryListAdapter(exList01, 0);
             exAdapter01.setOnItemClickListener((v, settingsCode) -> lunchPopup(settingsCode, "98", (TextView) v));
             exAdapter02.setOnItemClickListener((v, settingsCode) -> lunchPopup(settingsCode, "98", (TextView) v));
             exAdapter03.setOnItemClickListener((v, settingsCode) -> lunchPopup(settingsCode, "98", (TextView) v));
@@ -151,7 +151,7 @@ public class InputOutputActivity extends AppCompatActivity {
             binding.ioRv01.setVisibility(View.GONE);
             binding.ioRv02.setVisibility(View.VISIBLE);
 
-            CategoryListAdapter exAdapter01 = new CategoryListAdapter(exList01, 2);
+            CategoryListAdapter exAdapter01 = new CategoryListAdapter(exList01, 0);
             exAdapter01.setOnItemClickListener((v, settingsCode) -> lunchPopup(settingsCode, "98", (TextView) v));
             exAdapter01.setInfoOnItemClickListener(v -> mShowDialog(1, "※ 계좌이체와 이월은 수입/지출 금액에 합산되지 않습니다.\n(잔액에서만 합산됩니다.)"));
             binding.ioRv02.setAdapter(exAdapter01);

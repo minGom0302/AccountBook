@@ -5,6 +5,7 @@ import androidx.databinding.DataBindingUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.widget.NumberPicker;
 
@@ -29,6 +30,7 @@ public class Popup_DatePicker extends Activity implements NumberPicker.OnValueCh
         Intent intent = getIntent();
         int year = intent.getIntExtra("year", 1900);
         int month = intent.getIntExtra("month", 0);
+        boolean needClear = intent.getBooleanExtra("needClear", false);
         returnYear = year;
         returnMonth = month;
 
@@ -46,13 +48,18 @@ public class Popup_DatePicker extends Activity implements NumberPicker.OnValueCh
 
         // 버튼 설정
         binding.popupDateCloseBtn.setOnClickListener(v -> finish());
-        binding.popupDateOkBtn.setOnClickListener(v -> {
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("year", returnYear);
-            returnIntent.putExtra("month", returnMonth);
-            setResult(RESULT_OK, returnIntent);
-            finish();
-        });
+        binding.popupDateOkBtn.setOnClickListener(v -> returnFinish());
+
+        if(needClear) {
+            binding.popupDateClearBtn.setVisibility(View.VISIBLE);
+            binding.popupDateClearBtn.setOnClickListener(v -> {
+                returnYear = 0;
+                returnMonth = 0;
+                returnFinish();
+            });
+        } else {
+            binding.popupDateClearBtn.setVisibility(View.GONE);
+        }
     }
 
     // NumberPicker 값 변화 감지하여 설정
@@ -63,5 +70,13 @@ public class Popup_DatePicker extends Activity implements NumberPicker.OnValueCh
         } else if (numberPicker == binding.popupDateNumberPicker02) {
             returnMonth = newValue;
         }
+    }
+
+    private void returnFinish() {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("year", returnYear);
+        returnIntent.putExtra("month", returnMonth);
+        setResult(RESULT_OK, returnIntent);
+        finish();
     }
 }

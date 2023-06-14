@@ -182,9 +182,9 @@ public class SaveMoneyViewModel extends ViewModel {
         int plusMoney = 0;
         int minusMoney = 0;
         for(MoneyDTO dto : Objects.requireNonNull(moneyLiveData.getValue())) {
-            if(dto.getCategory01().equals("99") && !dto.getCategory02().equals("01") && !dto.getSettingsContents().equals("이월")) {
+            if(dto.getCategory01().equals("99") && !dto.getCategory02().equals("01") && (!dto.getSettingsContents().equals("이월(+)") || dto.getSettingsContents().equals("이월(-)"))) {
                 plusMoney += Integer.parseInt(dto.getMoney());
-            } else if(dto.getCategory01().equals("98") && !dto.getCategory02().equals("01") && !dto.getSettingsContents().equals("이월")) {
+            } else if(dto.getCategory01().equals("98") && !dto.getCategory02().equals("01") && (!dto.getSettingsContents().equals("이월(+)") || dto.getSettingsContents().equals("이월(-)"))) {
                 minusMoney += Integer.parseInt(dto.getMoney());
             }
         }
@@ -224,9 +224,9 @@ public class SaveMoneyViewModel extends ViewModel {
         for(MoneyDTO dto : Objects.requireNonNull(moneyLiveData.getValue())) {
             if(dto.getDate().equals(date) && !dto.getCategory02().equals("01")) {
                 dtoList.add(dto);
-                if(dto.getCategory01().equals("99") && !dto.getCategory02().equals("01") && !dto.getSettingsContents().equals("이월")) {
+                if(dto.getCategory01().equals("99") && !dto.getCategory02().equals("01") && (!dto.getSettingsContents().equals("이월(+)") || dto.getSettingsContents().equals("이월(-)"))) {
                     plusMoney += Integer.parseInt(dto.getMoney());
-                } else if(dto.getCategory01().equals("98") && !dto.getCategory02().equals("01") && !dto.getSettingsContents().equals("이월")) {
+                } else if(dto.getCategory01().equals("98") && !dto.getCategory02().equals("01") && (!dto.getSettingsContents().equals("이월(+)") || dto.getSettingsContents().equals("이월(-)"))) {
                     minusMoney += Integer.parseInt(dto.getMoney());
                 }
             }

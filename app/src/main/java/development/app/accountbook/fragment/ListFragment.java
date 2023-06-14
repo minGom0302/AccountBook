@@ -16,6 +16,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,6 +57,9 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
     private String[] outPutBankCodeArray, outPutBankValueArray, outPutCategoryCodeArray, outPutCategoryValueArray, outPutcategory01Array;
     private TextView beforeTextView = null;
     private final Calendar calendar = Calendar.getInstance();
+
+    private String settingsCode = null;
+    private int type = -1;
 
     @Nullable
     @Override
@@ -123,14 +127,7 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
         // live data (수입/지출 묶음) 감지하여 값이 바뀔 경우 실행
         moneyViewModel.getMoneyInfoByDate().observe(getViewLifecycleOwner(), dtoList -> {
             if(cnd == 0) { // 수입
-                CategoryListAdapter adapter = new CategoryListAdapter(dtoList, 0);
-                binding.f02CategoryRecyclerView02.setAdapter(adapter);
-                binding.f02CategoryRecyclerView02.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
-                adapter.setOnItemClickListener((v, settingsCode) -> { // 클릭 시 하단에 메뉴 보여주기
-                    moneyViewModel.setSecondMoneyLiveData(settingsCode, 0);
-                    changeTextColor((TextView) v);
-                });
-                adapter.setInfoOnItemClickListener(v -> mShowDialog());
+                categoryAdapterSet(dtoList, 0, binding.f02CategoryRecyclerView02);
             } else if(cnd == 1) {
                 // 지출의 고정, 변동, 준변동비를 나눠서 사용할 경우 > myPage 에서 설정
                 // 지출 > 고정비, 변동비, 준변동비가 있어 3개로 돌림
@@ -152,50 +149,16 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
                         }
                     }
 
-                    CategoryListAdapter adapter01 = new CategoryListAdapter(money02, 0);
-                    CategoryListAdapter adapter02 = new CategoryListAdapter(money03, 0);
-                    CategoryListAdapter adapter03 = new CategoryListAdapter(money01, 0);
-                    binding.f02RView0101.setAdapter(adapter01);
-                    binding.f02RView0102.setAdapter(adapter02);
-                    binding.f02RView0103.setAdapter(adapter03);
-                    binding.f02RView0101.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
-                    binding.f02RView0102.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
-                    binding.f02RView0103.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
-                    adapter01.setOnItemClickListener((v, settingsCode) -> { // 클릭 시 하단에 메뉴 보여주기
-                        moneyViewModel.setSecondMoneyLiveData(settingsCode, 0);
-                        changeTextColor((TextView) v);
-                    });
-                    adapter02.setOnItemClickListener((v, settingsCode) -> { // 클릭 시 하단에 메뉴 보여주기
-                        moneyViewModel.setSecondMoneyLiveData(settingsCode, 0);
-                        changeTextColor((TextView) v);
-                    });
-                    adapter03.setOnItemClickListener((v, settingsCode) -> { // 클릭 시 하단에 메뉴 보여주기
-                        moneyViewModel.setSecondMoneyLiveData(settingsCode, 0);
-                        changeTextColor((TextView) v);
-                    });
-                    adapter01.setInfoOnItemClickListener(v -> mShowDialog());
-                    adapter02.setInfoOnItemClickListener(v -> mShowDialog());
-                    adapter03.setInfoOnItemClickListener(v -> mShowDialog());
+                    categoryAdapterSet(money02, 0, binding.f02RView0101);
+                    categoryAdapterSet(money03, 0, binding.f02RView0102);
+                    categoryAdapterSet(money01, 0, binding.f02RView0103);
                 } else {
                     // 지출의 고정, 변동, 준변동비를 나눠서 사용하지 않을 경우 > myPage 에서 설정
-                    CategoryListAdapter adapter = new CategoryListAdapter(dtoList, 0);
-                    binding.f02CategoryRecyclerView02.setAdapter(adapter);
-                    binding.f02CategoryRecyclerView02.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
-                    adapter.setOnItemClickListener((v, settingsCode) -> {
-                        moneyViewModel.setSecondMoneyLiveData(settingsCode, 0);
-                        changeTextColor((TextView) v);
-                    });
-                    adapter.setInfoOnItemClickListener(v -> mShowDialog());
+                    categoryAdapterSet(dtoList, 0, binding.f02CategoryRecyclerView02);
                 }
             } else if(cnd == 2) {
-                CategoryListAdapter adapter = new CategoryListAdapter(dtoList, 1);
-                binding.f02CategoryRecyclerView02.setAdapter(adapter);
-                binding.f02CategoryRecyclerView02.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
-                adapter.setOnItemClickListener((v, settingsCode) -> { // 클릭 시 하단에 메뉴 보여주기
-                    moneyViewModel.setSecondMoneyLiveData(settingsCode, 1);
-                    changeTextColor((TextView) v);
-                });
-                adapter.setInfoOnItemClickListener(v -> mShowDialog());
+                // 계좌별 보기
+                categoryAdapterSet(dtoList, 1, binding.f02CategoryRecyclerView02);
             }
         });
         // 상단에서 목록 클릭 시 하단 리사이클러뷰에 내역 보여주기위해 live data 감시
@@ -272,17 +235,38 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
             binding.f02CategoryRecyclerView02.setVisibility(View.VISIBLE);
             cnd = 2;
         }
+
+        this.settingsCode = null;
+        this.type = -1;
     }
 
-    @SuppressLint("ResourceAsColor")
-    private void changeTextColor(TextView textView) {
-        if(beforeTextView != null) {
-            beforeTextView.setTextColor(Color.parseColor("#000000"));
-            beforeTextView.setBackgroundResource(R.drawable.background_rectangle03);
+    // 수입/지출/계좌 별 카테고리 리사이클러뷰 셋팅
+    private void categoryAdapterSet(List<MoneyDTO> dtoList, int type, RecyclerView recyclerView) {
+        CategoryListAdapter adapter = new CategoryListAdapter(dtoList, type);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+        adapter.setOnItemClickListener((v, settingsCode) -> { // 클릭 시 하단에 메뉴 보여주기
+            moneyViewModel.setSecondMoneyLiveData(settingsCode, type);
+
+            // 텍스트 뷰 색상 변경
+            if(beforeTextView != null) {
+                beforeTextView.setTextColor(Color.parseColor("#000000"));
+                beforeTextView.setBackgroundResource(R.drawable.background_rectangle03);
+            }
+            TextView textView = (TextView) v;
+            textView.setTextColor(Color.parseColor("#FFFFFF"));
+            textView.setBackgroundColor(Color.parseColor("#99CCFF"));
+            beforeTextView = textView;
+
+            this.settingsCode = settingsCode;
+            this.type = type;
+        });
+        adapter.setInfoOnItemClickListener(v -> mShowDialog());
+
+        if(this.settingsCode != null && this.type != -1) {
+            adapter.setClickColor(this.settingsCode);
+            moneyViewModel.setSecondMoneyLiveData(this.settingsCode, type);
         }
-        textView.setTextColor(Color.parseColor("#FFFFFF"));
-        textView.setBackgroundColor(Color.parseColor("#99CCFF"));
-        beforeTextView = textView;
     }
 
 
@@ -293,7 +277,10 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
             if(moneyViewModel.getIsChange()) moneyViewModel.setIsChange(false);
             if(categorySettingViewModel.getIsChangeCa()) categorySettingViewModel.setIsChangeCa(false);
 
+            this.settingsCode = null;
+            this.type = -1;
             moneyViewModel.againSet(searchDate, cnd);
+
             if (binding.f02Rb02.isChecked()) {
                 if (categorySettingViewModel.getSpendingTypeUse()) {
                     // 고정비, 변동비, 준변동비를 나눠서 보여줄 때
@@ -308,7 +295,7 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
         }
     }
 
-    // startActivityForResult가 deprecated 되어 사용하지 않고 아래 방식으로 사용함 > 월 바꾼 것을 리턴받아 자료를 다시 가져옴
+    // 월 바꾸는 화면에서 돌아왔을 때
     @SuppressLint("DefaultLocale")
     private final ActivityResultLauncher<Intent> Popup_datePickerResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if(result.getResultCode() == RESULT_OK) {
@@ -318,6 +305,9 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
             String m = String.format("%02d", month);
 
             setDateTitle(year + "년 " + m + "월");
+
+            this.settingsCode = null;
+            this.type = -1;
             moneyViewModel.againSet(searchDate, cnd); // 월이 바뀌면 다시 정보 가져오기
         }
     });

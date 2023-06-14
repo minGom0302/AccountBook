@@ -77,7 +77,7 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
         imm = (InputMethodManager) requireActivity().getSystemService(INPUT_METHOD_SERVICE);
         adapter_01 = new CategoryAdapter_01(null);
         year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
+        month = calendar.get(Calendar.MONTH) + 1;
         // 클릭 이벤트 설정
         binding.settingLayout.setOnClickListener(v -> hideKeyboard());
 
@@ -121,6 +121,7 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
             Intent intent = new Intent(getContext(), Popup_DatePicker.class);
             intent.putExtra("year", year);
             intent.putExtra("month", month);
+            intent.putExtra("needClear", true);
             Popup_datePickerResult.launch(intent);
         });
 
@@ -253,12 +254,10 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
         hideKeyboard();
         if(binding.f04Rb01.isChecked()) {
-            binding.f04EndDayLayout.setVisibility(View.VISIBLE);
             viewModel.setCategoryList01(0); // 대분류 셋팅 (수입, 지출)
             viewModel.setCategoryList(0); // recyclerview setting
             rbCheckValue = 0;
         } else if(binding.f04Rb02.isChecked()) {
-            binding.f04EndDayLayout.setVisibility(View.INVISIBLE);
             viewModel.setCategoryList01(1); // 대분류 셋팅 (계좌, 카드)
             viewModel.setCategoryList(1); // recyclerview setting
             rbCheckValue = 1;
@@ -326,9 +325,13 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
     private final ActivityResultLauncher<Intent> Popup_datePickerResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if(result.getResultCode() == RESULT_OK) {
             assert result.getData() != null;
-            this.year = result.getData().getIntExtra("year", calendar.get(Calendar.YEAR));
-            this.month = result.getData().getIntExtra("month", calendar.get(Calendar.MONTH));
-            binding.f04EndDayTv.setText(year + "-" + String.format("%02d", month));
+            if(result.getData().getIntExtra("year", 0) == 0) {
+                binding.f04EndDayTv.setText("");
+            } else {
+                this.year = result.getData().getIntExtra("year", calendar.get(Calendar.YEAR));
+                this.month = result.getData().getIntExtra("month", calendar.get(Calendar.MONTH) + 1);
+                binding.f04EndDayTv.setText(year + "-" + String.format("%02d", month));
+            }
         }
     });
 

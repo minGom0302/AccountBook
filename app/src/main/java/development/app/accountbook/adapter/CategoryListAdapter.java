@@ -1,6 +1,7 @@
 package development.app.accountbook.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     private InfoOnItemClickListener infoOnItemClickListener;
     private final DecimalFormat decimalFormat = new DecimalFormat("#,###");
     private final int type;
-
+    private String settingsCode = null;
 
     // interface 선언
     public interface OnItemClickListener {
@@ -66,7 +67,6 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
                     String code = null;
                     if(type == 0) code = moneyList.get(position).getSettingsCode();
                     else if(type == 1) code = moneyList.get(position).getBankCode();
-                    else if(type == 2) code = moneyList.get(position).getSettingsCode();
                     if(itemClickListener != null) {
                         itemClickListener.onItemClick(view, code);
                     }
@@ -96,23 +96,39 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         MoneyDTO dto = moneyList.get(position);
 
-        if(type == 0 || type == 2) {
+        if(type == 0) {
             holder.contentsTv.setText(dto.getSettingsContents());
         } else if(type == 1){
             holder.contentsTv.setText(dto.getBankContents());
         }
 
-        if(type == 0 || type == 2) {
+        if(type == 0) {
             holder.moneyTv.setText(decimalFormat.format(Integer.parseInt(dto.getMoney())));
         } else if(type == 1) {
             holder.moneyTv.setText(decimalFormat.format(dto.getIntMoney()));
         }
 
         if(dto.getSettingsContents() != null) {
-            if (dto.getSettingsContents().equals("이월")) {
+            if (dto.getSettingsContents().equals("이월(+)") || dto.getSettingsContents().equals("이월(-)")) {
                 holder.infoBtn.setVisibility(View.VISIBLE);
             } else {
                 holder.infoBtn.setVisibility(View.GONE);
+            }
+        }
+
+        if(settingsCode != null) {
+            if(type == 0) {
+                if (dto.getSettingsCode().equals(settingsCode)) {
+                    holder.moneyTv.setTextColor(Color.parseColor("#FFFFFF"));
+                    holder.moneyTv.setBackgroundColor(Color.parseColor("#99CCFF"));
+                    settingsCode = null;
+                }
+            } else if(type == 1) {
+                if (dto.getBankCode().equals(settingsCode)) {
+                    holder.moneyTv.setTextColor(Color.parseColor("#FFFFFF"));
+                    holder.moneyTv.setBackgroundColor(Color.parseColor("#99CCFF"));
+                    settingsCode = null;
+                }
             }
         }
     }
@@ -120,5 +136,9 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     @Override
     public int getItemCount() {
         return moneyList.size();
+    }
+
+    public void setClickColor(String settingsCode) {
+        this.settingsCode = settingsCode;
     }
 }
