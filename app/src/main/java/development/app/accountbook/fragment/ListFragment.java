@@ -3,6 +3,7 @@ package development.app.accountbook.fragment;
 import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -57,7 +58,7 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
     private String[] outPutBankCodeArray, outPutBankValueArray, outPutCategoryCodeArray, outPutCategoryValueArray, outPutcategory01Array;
     private TextView beforeTextView = null;
     private final Calendar calendar = Calendar.getInstance();
-
+    private ProgressDialog loading;
     private String settingsCode = null;
     private int type = -1;
 
@@ -73,6 +74,8 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
 
     @SuppressLint("SetTextI18n")
     private void init() {
+        loading = ProgressDialog.show(getContext(), "로딩중...", "잠시만 기다려주세요...", false, false);
+
         setHasOptionsMenu(true);
         // 첫 화면 년월 설정
         Date date = new Date(System.currentTimeMillis());
@@ -267,6 +270,8 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
             adapter.setClickColor(this.settingsCode);
             moneyViewModel.setSecondMoneyLiveData(this.settingsCode, type);
         }
+
+        loading.dismiss();
     }
 
 
@@ -309,6 +314,7 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
             this.settingsCode = null;
             this.type = -1;
             moneyViewModel.againSet(searchDate, cnd); // 월이 바뀌면 다시 정보 가져오기
+            loading = ProgressDialog.show(getContext(), "로딩중...", "잠시만 기다려주세요.", false, false);
         }
     });
 
@@ -327,6 +333,8 @@ public class ListFragment extends Fragment implements RadioGroup.OnCheckedChange
             String inputMemo = returnIntent.getStringExtra("memo");
 
             moneyViewModel.modifyMoneyInfo(seq, settingsSeq, bankSeq, in_sp, inputDate, inputMoney, inputMemo, searchDate);
+
+            loading = ProgressDialog.show(getContext(), "로딩중...", "잠시만 기다려주세요.", false, false);
         }
     });
 

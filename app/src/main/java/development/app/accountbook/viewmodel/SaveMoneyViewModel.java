@@ -182,9 +182,9 @@ public class SaveMoneyViewModel extends ViewModel {
         int plusMoney = 0;
         int minusMoney = 0;
         for(MoneyDTO dto : Objects.requireNonNull(moneyLiveData.getValue())) {
-            if(dto.getCategory01().equals("99") && !dto.getCategory02().equals("01") && (!dto.getSettingsContents().equals("이월(+)") || dto.getSettingsContents().equals("이월(-)"))) {
+            if(dto.getCategory01().equals("99") && !dto.getCategory02().equals("01") && !dto.getSettingsContents().equals("이월(+)")) {
                 plusMoney += Integer.parseInt(dto.getMoney());
-            } else if(dto.getCategory01().equals("98") && !dto.getCategory02().equals("01") && (!dto.getSettingsContents().equals("이월(+)") || dto.getSettingsContents().equals("이월(-)"))) {
+            } else if(dto.getCategory01().equals("98") && !dto.getCategory02().equals("01") && !dto.getSettingsContents().equals("이월(-)")) {
                 minusMoney += Integer.parseInt(dto.getMoney());
             }
         }
@@ -196,17 +196,28 @@ public class SaveMoneyViewModel extends ViewModel {
 
 
     // 아래 recyclerview 셋팅을 위한 live data 설정
+    @SuppressLint("NewApi")
     public void setSecondMoneyLiveData(String code, int type) {
         List<MoneyDTO> dtoList = new ArrayList<>();
+        List<String> dateList = new ArrayList<>();
 
         for(MoneyDTO dto : Objects.requireNonNull(moneyLiveData.getValue())) {
+            // 날짜 순으로 정렬
             if(type == 0) {
                 if(dto.getSettingsCode().equals(code)) {
-                    dtoList.add(dto);
+                    dateList.add(dto.getDate());
+                    dateList.sort(Comparator.naturalOrder());
+
+                    int index = dateList.lastIndexOf(dto.getDate());
+                    dtoList.add(index, dto);
                 }
             } else if(type == 1) {
                 if(dto.getBankCode().equals(code)) {
-                    dtoList.add(dto);
+                    dateList.add(dto.getDate());
+                    dateList.sort(Comparator.naturalOrder());
+
+                    int index = dateList.lastIndexOf(dto.getDate());
+                    dtoList.add(index, dto);
                 }
             }
         }
@@ -224,9 +235,9 @@ public class SaveMoneyViewModel extends ViewModel {
         for(MoneyDTO dto : Objects.requireNonNull(moneyLiveData.getValue())) {
             if(dto.getDate().equals(date) && !dto.getCategory02().equals("01")) {
                 dtoList.add(dto);
-                if(dto.getCategory01().equals("99") && !dto.getCategory02().equals("01") && (!dto.getSettingsContents().equals("이월(+)") || dto.getSettingsContents().equals("이월(-)"))) {
+                if(dto.getCategory01().equals("99") && !dto.getCategory02().equals("01") && !dto.getSettingsContents().equals("이월(+)")) {
                     plusMoney += Integer.parseInt(dto.getMoney());
-                } else if(dto.getCategory01().equals("98") && !dto.getCategory02().equals("01") && (!dto.getSettingsContents().equals("이월(+)") || dto.getSettingsContents().equals("이월(-)"))) {
+                } else if(dto.getCategory01().equals("98") && !dto.getCategory02().equals("01") && !dto.getSettingsContents().equals("이월(-)")) {
                     minusMoney += Integer.parseInt(dto.getMoney());
                 }
             }

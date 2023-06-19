@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.item_myPage:
+                choiceLayout = 2;
                 Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu03); // title 변경
                 if(f03 == null) {
                     f03 = new MyPageFragment();
@@ -175,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 if(f04 != null) getSupportFragmentManager().beginTransaction().hide(f04).commit();
                 break;
             case R.id.item_categorySettings:
+                choiceLayout = 2;
                 Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.menu04); // title 변경
                 if(f04 == null) {
                     f04 = new CategorySettingFragment();

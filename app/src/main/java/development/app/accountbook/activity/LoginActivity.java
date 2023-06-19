@@ -172,7 +172,7 @@ public class LoginActivity extends AppCompatActivity implements Animation.Animat
         // 시작할 때
         isAutoLogin = userModel.getAutoLogin();
         isSaveId = userModel.getSaveId();
-        if(isAutoLogin) {
+        if(isAutoLogin && !maintainUpdate) {
             loading = ProgressDialog.show(this, "로그인중 ...", "잠시만 기다려주세요...", true, false);
         }
     }

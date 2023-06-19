@@ -3,6 +3,7 @@ package development.app.accountbook.fragment;
 import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -65,6 +66,7 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
     private String[] bankCodeArray, bankValueArray, outPutBankCodeArray, outPutBankValueArray, outPutCategoryCodeArray, outPutCategoryValueArray, outPutcategory01Array;
     private Date nowDate, choiceDate;
     private EventDecorator oldEd = null;
+    private ProgressDialog loading;
 
     @Nullable
     @Override
@@ -78,6 +80,8 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
 
     @SuppressLint("SimpleDateFormat")
     private void init() {
+        loading = ProgressDialog.show(getContext(), "로딩중...", "잠시만 기다려주세요...", false, false);
+
         setHasOptionsMenu(true); // 상단에 메뉴 표시하기
 
         s_date = Singleton_Date.getInstance();
@@ -141,6 +145,8 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
         // 셋팅한 날짜로 자료 가져오기
         moneyViewModel.againSet(new SimpleDateFormat("yyyy-MM-dd").format(choiceDate), 99);
         binding.calendar.setSelectedDate(choiceDate);
+
+        loading = ProgressDialog.show(getContext(), "로딩중...", "잠시만 기다려주세요...", false, false);
     }
 
 
@@ -213,6 +219,8 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
             EventDecorator newEd = new EventDecorator(Color.GREEN, calendarDayList);
             binding.calendar.addDecorator(newEd);
             oldEd = newEd;
+
+            loading.dismiss();
         });
         // 월 마감을 위해 잔액을 항상 가지고 있고 바뀔 때 마다 감지
         moneyViewModel.getMoneyInfoByDate().observe(getViewLifecycleOwner(), moneyList -> this.forwardList = moneyList);
@@ -282,6 +290,7 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
         if(result.getResultCode() == RESULT_OK) {
             assert result.getData() != null;
             moneyViewModel.againSet(result.getData().getStringExtra("date"), 99);
+            loading = ProgressDialog.show(getContext(), "로딩중...", "잠시만 기다려주세요...", false, false);
         }
     });
 
@@ -318,6 +327,7 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
 
             moneyViewModel.modifyMoneyInfo(seq, settingsSeq, bankSeq, in_sp, inputDate, inputMoney, inputMemo, new SimpleDateFormat("yyyy-MM-dd").format(choiceDate));
             moneyViewModel.againSet(new SimpleDateFormat("yyyy-MM-dd").format(choiceDate), 99);
+            loading = ProgressDialog.show(getContext(), "로딩중...", "잠시만 기다려주세요...", false, false);
         }
     });
 

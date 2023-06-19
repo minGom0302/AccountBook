@@ -148,7 +148,7 @@ public class Popup_InputOutput extends Activity implements TextWatcher {
         binding.popupIoSpinner.setEnabled(isTrue);
         binding.popupIoSpinnerCategory.setEnabled(isTrue);
         binding.popupIoMoneyEt.setEnabled(isTrue);
-        binding.popupIoMemoEt.setEnabled(isTrue);
+        binding.popupIoMemoEt.setFocusableInTouchMode(isTrue);
         binding.popupIoOkBtn.setEnabled(isTrue);
         binding.popupIoModifyBtn.setEnabled(!isTrue);
     }
