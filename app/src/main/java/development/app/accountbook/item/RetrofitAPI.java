@@ -100,6 +100,15 @@ public interface RetrofitAPI {
     Call<Integer> deleteCategoryInfo(@Path("seq") int seq);
 
 
+    // 2024-01-06 카테고리 추가 시 코드값 셋팅을 위해 MAX값 가져옴
+    @GET("category/get/maxCode")
+    Call<String> getMaxCodeVal(
+            @Query("userSeq") int userSeq,
+            @Query("category01") String category01,
+            @Query("category02") String category02
+    );
+
+
     /* save money info */
     @GET("money/search/{userSeq}")
     Call<List<MoneyDTO>> getMoneyInfo(

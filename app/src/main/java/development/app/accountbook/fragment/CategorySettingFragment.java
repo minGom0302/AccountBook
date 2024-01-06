@@ -51,6 +51,7 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
     private List<CategoryDTO> categoryDTOS;
     private String category01, category02, code;
     private int year, month, categorySeq, orderSeq;
+    int endDay;
     private InputMethodManager imm;
     private CategoryAdapter_01 adapter_01;
     private int rbCheckValue = 0;
@@ -116,6 +117,19 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
             }
         });
 
+        // 2024-01-06 추가 시 코드값 설정을 위한 MAX 값 가져오고 정보 저장하기
+        viewModel.getMaxCode().observe(getViewLifecycleOwner(), maxCode -> {
+            int size = categoryDTOS.size() == 0 ? 2 : categoryDTOS.size()+2;
+            CategoryDTO insertDto = new CategoryDTO(userViewModel.getUserSeq(), String.valueOf(Integer.parseInt(maxCode)+1)
+                    , category01 , category02, binding.f04ContentsEt.getText().toString(), endDay, size);
+
+            if(loading != null && loading.isShowing()) {
+                loading.dismiss();
+            }
+
+            showDialog(2, "" + binding.f04ContentsEt.getText().toString() + " (으)로 저장하시겠습니까?", insertDto);
+        });
+
         // end day 클릭 이벤트
         binding.f04EndDayTv.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), Popup_DatePicker.class);
@@ -145,7 +159,7 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
                 showDialog(3, "내용을 입력해주시기 바랍니다.", null);
                 return;
             }
-            int endDay;
+
             if (binding.f04EndDayTv.getText().toString().equals("")) {
                 endDay = 999999;
             } else {
@@ -157,10 +171,13 @@ public class CategorySettingFragment extends Fragment implements RadioGroup.OnCh
                         , category01, category02, binding.f04ContentsEt.getText().toString(), endDay, orderSeq);
                 showDialog(4, "입력한 정보로 수정하시겠습니까?", modifyDto);
             } else {
-                int size = categoryDTOS.size() == 0 ? 2 : categoryDTOS.size()+2;
+                // 2024-01-06 추가 시 코드값 설정을 위한 MAX 값 가져오고 정보 저장하기
+                loading = ProgressDialog.show(getContext(), "", "잠시만 기다려주세요...", true, false);
+                viewModel.setMaxCode(userViewModel.getUserSeq(), category01, category02);
+                /* int size = categoryDTOS.size() == 0 ? 2 : categoryDTOS.size()+2;
                 CategoryDTO insertDto = new CategoryDTO(userViewModel.getUserSeq(), category01 + category02 + String.format("%03d", size)
                         , category01 , category02, binding.f04ContentsEt.getText().toString(), endDay, size);
-                showDialog(2, "입력한 정보로 저장하시겠습니까?", insertDto);
+                showDialog(2, "입력한 정보로 저장하시겠습니까?", insertDto); */
             }
         });
         // 순서 수정버튼 이벤트

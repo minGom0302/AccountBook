@@ -358,12 +358,34 @@ public class CalendarFragment extends Fragment implements OnMonthChangedListener
         switch (item.getItemId()) {
             case R.id.tool_menu01:
                 String beforeDate = new SimpleDateFormat("yyyy-MM-dd").format(choiceDate);
-                String saveDate = beforeDate.substring(0, 4) + "-" + String.format("%02d", Integer.parseInt(beforeDate.substring(5, 7))+1) + "-01";
+
+                // 2024-01-06 12월 넘어가면 년도 넘기도록 설정
+                String saveDate;
+                if (Integer.parseInt(beforeDate.substring(5, 7))+1 > 12) {
+                    saveDate = String.format("%02d", Integer.parseInt(beforeDate.substring(0, 4))+1) + "-01-01";
+                } else {
+                    saveDate = beforeDate.substring(0, 4) + "-" + String.format("%02d", Integer.parseInt(beforeDate.substring(5, 7)) + 1) + "-01";
+                }
+
                 int size = forwardList.size();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.DialogTheme);
                 builder.setTitle("안내").setMessage("월마감을 하면 잔액이 이월처리됩니다.\n계속하시곘습니까?");
                 builder.setPositiveButton("예", ((dialogInterface, i) -> {
+                    // 2024-01-06 월마감 잔액 없을 경우 안내 후 멈추기
+                    if (size == 0) {
+                        AlertDialog.Builder warningBuilder = new AlertDialog.Builder(requireContext(), R.style.DialogTheme);
+                        warningBuilder.setTitle("안내").setMessage("월마감을 할 잔액이 없습니다. \n확인해주시기 바랍니다.");
+                        warningBuilder.setPositiveButton("확인", ((dialog, which) -> {}));
+                        AlertDialog warningAlertDialog = warningBuilder.create();
+                        warningAlertDialog.setOnShowListener(dialogInterface2 -> {
+                            warningAlertDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+                            warningAlertDialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                        });
+                        warningAlertDialog.show();
+                        return;
+                    }
+
                     int count = 1;
                     int isFinish = 2;
                     for(MoneyDTO dto : forwardList) {

@@ -19,6 +19,7 @@ public class CategorySettingViewModel extends ViewModel {
     private final MutableLiveData<List<String[]>> categoryList01 = new MutableLiveData<>();
     private final MutableLiveData<List<String[]>> categoryList02 = new MutableLiveData<>();
     private final MutableLiveData<List<CategoryDTO>> categoryListForShow = new MutableLiveData<>();
+    private MutableLiveData<String> maxCode;
     private int categoryListInteger;
 
     public void setViewModel(Activity activity, LifecycleOwner owner, int cnd) {
@@ -26,6 +27,7 @@ public class CategorySettingViewModel extends ViewModel {
         categoryListInteger = cnd;
         categoryList = model.getCategoryList(); // model에 있는 list와 연결
         categoryList.observe(owner, categoryDTOS -> setCategoryList(categoryListInteger));
+        maxCode = model.getMaxCodeVal(); // 카테고리 추가 시 코드값 셋팅을 위해 MAX값 Live Data 설정
 
         valueSettings(0, 99);
         model.setCategoryList(); // 서버에서 카테고리 리스트 가져오기
@@ -93,6 +95,11 @@ public class CategorySettingViewModel extends ViewModel {
         model.deleteCategory(dto.getSeq());
     }
 
+    // 2024-01-06 카테고리 추가 시 코드값 셋팅을 위해 MAX값 가져옴
+    public void setMaxCode(int userSeq, String category01, String category02) {
+        model.getMaxCode(userSeq, category01, category02);
+    }
+
     // 지출 중분류 사용 여부
     public void setSpendingTypeUse(boolean isUse) {
         model.setSpendingTypeUse(isUse);
@@ -104,6 +111,9 @@ public class CategorySettingViewModel extends ViewModel {
     public MutableLiveData<List<CategoryDTO>> getCategoryList() { return categoryList; }
     public boolean getIsChangeCa() { return model.getIsChangeCa(); }
     public boolean getIsChangeCaForCal() { return model.getIsChangeCaForCal(); }
+    public MutableLiveData<String> getMaxCode() {
+        return maxCode;
+    }
 
     // setter
     public void setIsChangeCa(boolean isChangeCa) { model.setIsChangeCa(isChangeCa); }

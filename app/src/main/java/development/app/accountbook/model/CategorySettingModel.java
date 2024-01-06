@@ -1,6 +1,7 @@
 package development.app.accountbook.model;
 
 import android.app.Activity;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import development.app.accountbook.item.SharedPreferencesClient;
 import development.app.accountbook.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -24,6 +26,7 @@ public class CategorySettingModel {
     private final Activity activity;
     private final SharedPreferencesClient spClient;
     private final MutableLiveData<List<CategoryDTO>> categoryList = new MutableLiveData<>();
+    private final MutableLiveData<String> MaxCodeVal = new MutableLiveData<>(); // 카테고리 추가 시 코드값 셋팅을 위해 MAX값 가져옴
 
     public CategorySettingModel(Activity activity) {
         this.activity = activity;
@@ -174,10 +177,36 @@ public class CategorySettingModel {
         });
     }
 
+
+    // 2024-01-06 카테고리 추가 시 코드값 셋팅을 위해 MAX값 가져옴
+    public void getMaxCode(int userInfo, String category01, String category02) {
+        api.getMaxCodeVal(userInfo, category01, category02).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
+                if(response.isSuccessful() && response.body() != null) {
+                    MaxCodeVal.postValue(response.body());
+                } else {
+                    assert response.errorBody() != null;
+                    Log.e("ERROR", response.errorBody().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                t.printStackTrace();
+                Log.e("ERROR", Arrays.toString(t.getStackTrace()));
+                Log.e("ERROR", "ERROR");
+            }
+        });
+    }
+
     // Getter
     public MutableLiveData<List<CategoryDTO>> getCategoryList() {
         return categoryList;
     }
+    public MutableLiveData<String> getMaxCodeVal() {
+        return MaxCodeVal;
+    } // 2024-01-06 카테고리 추가 시 코드값 셋팅을 위해 MAX값 가져옴
     public boolean getSpendingTypeUse() { return spClient.getSpendingTypeUse(); }
     public boolean getIsChangeCa() { return spClient.getIsChangeCa(); }
     public boolean getIsChangeCaForCal() { return spClient.getIsChangeCaForCal(); }
